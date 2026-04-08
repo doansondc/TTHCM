@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nhóm 5 – Tư tưởng Hồ Chí Minh | Mô phỏng căng thẳng Trung Đông</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=Playfair+Display:wght@700;900&display=swap');
+:root {
+  --bg-primary:#0a0e1a;--bg-card:#111827;--accent-gold:#d4a843;--accent-gold-light:#f0c860;
+  --text-primary:#f0f4f8;--text-secondary:#a0aec0;--text-muted:#64748b;
+  --border-subtle:rgba(255,255,255,0.08);--border-gold:rgba(212,168,67,0.4);
+  --gradient-gold:linear-gradient(135deg,#d4a843 0%,#f0c860 50%,#c8922a 100%);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg-primary);color:var(--text-primary);line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:'Playfair Display',serif}
+
+/* ---- HERO ---- */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 60px 32px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(212,168,67,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 110%, rgba(41,128,185,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Animated orbs */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.25;
+  animation: orbFloat 8s ease-in-out infinite;
+}
+.orb-1 { width:400px;height:400px;background:#d4a843;top:-100px;left:-100px;animation-delay:0s; }
+.orb-2 { width:300px;height:300px;background:#2980b9;bottom:-80px;right:-80px;animation-delay:3s; }
+.orb-3 { width:200px;height:200px;background:#c0392b;top:40%;right:5%;animation-delay:5s; }
+
+@keyframes orbFloat {
+  0%,100%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-30px) scale(1.05)}
+}
+
+/* Stars */
+.stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 40%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 20% 80%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 90%, rgba(255,255,255,0.5) 0%, transparent 100%);
+}
+
+.hero-content { position: relative; z-index: 2; max-width: 900px; }
+
+.course-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  background: rgba(212,168,67,0.1);
+  border: 1px solid var(--border-gold);
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 32px;
+  animation: fadeInUp 0.6s ease both;
+}
+
+.hero-title {
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 900;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  animation: fadeInUp 0.7s 0.1s ease both;
+  line-height: 1.15;
+}
+
+.hero-title .highlight {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: clamp(18px, 2.5vw, 24px);
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-bottom: 40px;
+  animation: fadeInUp 0.7s 0.2s ease both;
+}
+
+.hero-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 48px;
+  animation: fadeInUp 0.7s 0.3s ease both;
+}
+
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.pill .dot { width:8px;height:8px;border-radius:50%; }
+.dot-gold{background:var(--accent-gold)}
+.dot-red{background:#e74c3c}
+.dot-blue{background:#3498db}
+.dot-green{background:#27ae60}
+
+/* ---- SCROLL INDICATOR ---- */
+.scroll-indicator {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  animation: fadeInUp 1s 0.6s ease both;
+}
+
+.scroll-mouse {
+  width: 24px; height: 38px;
+  border: 2px solid var(--text-muted);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+}
+
+.scroll-wheel {
+  width: 4px; height: 8px;
+  background: var(--accent-gold);
+  border-radius: 2px;
+  animation: scrollAnim 1.5s ease infinite;
+}
+
+@keyframes scrollAnim {
+  0%{opacity:1;transform:translateY(0)}
+  100%{opacity:0;transform:translateY(12px)}
+}
+
+/* ---- INFO SECTION ---- */
+.info-section {
+  background: linear-gradient(180deg, #0a0e1a 0%, #0d1220 100%);
+  padding: 80px 32px;
+}
+
+.info-inner { max-width: 1100px; margin: 0 auto; }
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+.info-card {
+  background: #111827;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 32px;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+.info-card:hover { transform: translateY(-4px); border-color: var(--border-gold); }
+
+.info-card-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 14px;
+}
+.info-row:last-child { border-bottom: none; }
+
+.info-label { color: var(--text-muted); min-width: 120px; flex-shrink: 0; font-size: 13px; }
+.info-value { color: var(--text-primary); font-weight: 500; }
+
+/* ---- MEMBERS GRID ---- */
+.members-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.member-card {
+  background: #0d1220;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.3s;
+}
+.member-card:hover { border-color: var(--border-gold); transform: translateX(4px); }
+
+.member-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--gradient-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0a0e1a;
+  flex-shrink: 0;
+}
+
+.member-name { font-size: 14px; font-weight: 600; color: var(--text-primary); line-height: 1.3; }
+.member-id { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+.member-role {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: rgba(212,168,67,0.15);
+  color: var(--accent-gold);
+  margin-top: 4px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ---- SECTION OVERVIEW ---- */
+.overview-section {
+  padding: 80px 32px;
+  background: #0a0e1a;
+}
+
+.overview-inner { max-width: 1100px; margin: 0 auto; }
+
+.section-label {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  background: rgba(212,168,67,0.1);
+  border: 1px solid var(--border-gold);
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.overview-title {
+  font-size: clamp(28px, 4vw, 42px);
+  margin-bottom: 16px;
+}
+.overview-title span { background: var(--gradient-gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+.overview-desc {
+  font-size: 15px;
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin-bottom: 48px;
+}
+
+.gold-line { width: 80px; height: 3px; background: var(--gradient-gold); border-radius: 2px; margin: 20px 0 48px; }
+
+/* ---- PART CARDS ---- */
+.parts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.part-card {
+  background: #111827;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+.part-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(212,168,67,0.12); border-color: var(--border-gold); }
+
+.part-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.part-card.p1::before { background: linear-gradient(90deg, #d4a843, #f0c860); }
+.part-card.p2::before { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+.part-card.p3::before { background: linear-gradient(90deg, #2980b9, #3498db); }
+.part-card.p4::before { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+
+.part-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 56px;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 16px;
+  opacity: 0.12;
+  position: absolute;
+  top: 16px;
+  right: 24px;
+}
+.p1 .part-number { color: #d4a843; }
+.p2 .part-number { color: #e74c3c; }
+.p3 .part-number { color: #3498db; }
+.p4 .part-number { color: #2ecc71; }
+
+.part-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.p1 .part-badge { background: rgba(212,168,67,0.15); color: #f0c860; border: 1px solid rgba(212,168,67,0.3); }
+.p2 .part-badge { background: rgba(231,76,60,0.15); color: #f1948a; border: 1px solid rgba(231,76,60,0.3); }
+.p3 .part-badge { background: rgba(52,152,219,0.15); color: #89c6f7; border: 1px solid rgba(52,152,219,0.3); }
+.p4 .part-badge { background: rgba(46,204,113,0.15); color: #6dcc94; border: 1px solid rgba(46,204,113,0.3); }
+
+.part-title {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.part-desc { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6; }
+
+.part-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.part-time {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.part-responsible {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: right;
+  max-width: 180px;
+  line-height: 1.4;
+}
+
+/* ---- ANIMATIONS ---- */
+@keyframes fadeInUp {
+  from{opacity:0;transform:translateY(24px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+@media(max-width:768px) {
+  .info-grid, .parts-grid { grid-template-columns: 1fr; }
+  .members-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ======== HERO ======== -->
+<section class="hero">
+  <div class="stars"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="hero-content">
+    <div class="course-tag">🎓 Tư tưởng Hồ Chí Minh · SSH1151 · Nhóm 5</div>
+
+    <h1 class="hero-title">
+      Mô phỏng<br>
+      <span class="highlight">Căng thẳng Trung Đông</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      Phân tích địa-chính trị · Nhập vai quốc gia · Kịch bản tương lai · Bài học Việt Nam
+    </p>
+
+    <div class="hero-pills">
+      <div class="pill"><div class="dot dot-gold"></div>4 Phần trình bày chính</div>
+      <div class="pill"><div class="dot dot-red"></div>Nhập vai 5 quốc gia</div>
+      <div class="pill"><div class="dot dot-blue"></div>13 câu hỏi mô phỏng</div>
+      <div class="pill"><div class="dot dot-green"></div>3 kịch bản tương lai</div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+    <span>Cuộn xuống</span>
+  </div>
+</section>
+
+<!-- ======== INFO ======== -->
+<section class="info-section">
+  <div class="info-inner">
+
+    <div style="text-align:center;margin-bottom:48px">
+      <div class="section-label">📋 Thông tin học phần</div>
+      <h2 style="font-size:clamp(24px,3.5vw,38px);margin-bottom:12px">Kế hoạch báo cáo <span style="background:linear-gradient(135deg,#d4a843,#f0c860);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">chi tiết</span></h2>
+      <p style="color:#a0aec0;font-size:15px">Nhóm 5 chủ trì · Lớp 170265 · Địa điểm: D5-101 · Tuần 32/35</p>
+      <div style="width:80px;height:3px;background:linear-gradient(135deg,#d4a843,#f0c860);border-radius:2px;margin:20px auto 0"></div>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-title">📚 Thông tin học phần</div>
+        <div class="info-row"><span class="info-label">Học phần</span><span class="info-value">Tư tưởng Hồ Chí Minh</span></div>
+        <div class="info-row"><span class="info-label">Mã HP</span><span class="info-value">SSH1151</span></div>
+        <div class="info-row"><span class="info-label">Mã lớp LT</span><span class="info-value">170263</span></div>
+        <div class="info-row"><span class="info-label">Mã lớp BT</span><span class="info-value">170265</span></div>
+        <div class="info-row"><span class="info-label">GVHD</span><span class="info-value">Phạm Thị Mai Duyên</span></div>
+        <div class="info-row"><span class="info-label">Nhóm chủ trì</span><span class="info-value" style="color:#f0c860">Nhóm 5</span></div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">📅 Chi tiết buổi báo cáo</div>
+        <div class="info-row"><span class="info-label">Chủ đề</span><span class="info-value">Mô phỏng căng thẳng Trung Đông</span></div>
+        <div class="info-row"><span class="info-label">Địa điểm</span><span class="info-value">D5-101</span></div>
+        <div class="info-row"><span class="info-label">Thời điểm</span><span class="info-value">Tuần 32/35</span></div>
+        <div class="info-row"><span class="info-label">Thời lượng</span><span class="info-value">~40 phút</span></div>
+        <div class="info-row"><span class="info-label">Hình thức</span><span class="info-value">Trình bày · Nhập vai · Tranh luận</span></div>
+        <div class="info-row"><span class="info-label">Tổng số phần</span><span class="info-value" style="color:#f0c860">4 phần chính</span></div>
+      </div>
+    </div>
+
+    <!-- MEMBERS -->
+    <div style="margin-top:40px">
+      <h3 style="font-family:'Be Vietnam Pro',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#d4a843;margin-bottom:24px;display:flex;align-items:center;gap:8px">👥 Thành viên thực hiện</h3>
+      <div class="members-grid">
+        <div class="member-card">
+          <div class="member-avatar">TM</div>
+          <div>
+            <div class="member-name">Nguyễn Thị Trà My</div>
+            <div class="member-id">202419868</div>
+          </div>
+        </div>
+        <div class="member-card" style="border-color:rgba(212,168,67,0.3)">
+          <div class="member-avatar">DT</div>
+          <div>
+            <div class="member-name">Nguyễn Duy Thái</div>
+            <div class="member-id">20232543</div>
+            <div class="member-role">Nhóm Trưởng</div>
+          </div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar">NS</div>
+          <div>
+            <div class="member-name">Đoàn Ngọc Sơn</div>
+            <div class="member-id">20203824</div>
+          </div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar">TS</div>
+          <div>
+            <div class="member-name">Tống Thái Sơn</div>
+            <div class="member-id">20232290</div>
+          </div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar">CN</div>
+          <div>
+            <div class="member-name">Cao Xuân Nam</div>
+            <div class="member-id">20233080</div>
+          </div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar">TM</div>
+          <div>
+            <div class="member-name">Nguyễn Viết Tuấn Minh</div>
+            <div class="member-id">20226391</div>
+          </div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar">ĐM</div>
+          <div>
+            <div class="member-name">Nguyễn Đăng Minh</div>
+            <div class="member-id">20221236</div>
+          </div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar">TN</div>
+          <div>
+            <div class="member-name">Đinh Thị Trang Nhung</div>
+            <div class="member-id">20221253</div>
+          </div>
+        </div>
+        <div class="member-card">
+          <div class="member-avatar">BN</div>
+          <div>
+            <div class="member-name">Hoàng Thị Bé Nhi</div>
+            <div class="member-id">20223299</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== SECTION OVERVIEW ======== -->
+<section class="overview-section">
+  <div class="overview-inner">
+    <div style="text-align:center;margin-bottom:48px">
+      <div class="section-label">🗺️ Tổng quan kịch bản</div>
+      <h2 class="overview-title" style="font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,42px);margin-bottom:16px">Cấu trúc <span>4 Phần Trình Bày</span></h2>
+      <p class="overview-desc">Kịch bản được thiết kế theo trình tự logic: từ bối cảnh lý thuyết → mô phỏng thực tế → phân tích diễn biến → liên hệ Việt Nam. Tổng thời lượng khoảng 40 phút.</p>
+      <div class="gold-line"></div>
+    </div>
+
+    <div class="parts-grid">
+      <!-- Part I -->
+      <div class="part-card p1">
+        <div class="part-number">I</div>
+        <div class="part-badge">⏱ ~10 phút</div>
+        <div class="part-title">Giới thiệu bối cảnh & Phân tích nguyên nhân</div>
+        <p class="part-desc">Giới thiệu chủ đề "thùng thuốc súng" Trung Đông. Phân tích các mâu thuẫn cốt lõi: Israel–Palestine, Iran–Israel–Mỹ, Iran–Saudi Arabia. Câu hỏi khởi động tranh luận.</p>
+        <div class="part-meta">
+          <div class="part-time">⏰ 0:00 – 10:00</div>
+          <div class="part-responsible">Đinh Thị Trang Nhung<br>Nguyễn Thị Trà My</div>
+        </div>
+      </div>
+      <!-- Part II -->
+      <div class="part-card p2">
+        <div class="part-number">II</div>
+        <div class="part-badge">⏱ ~20 phút</div>
+        <div class="part-title">Nhập vai quốc gia & Mô phỏng quyết định chiến lược</div>
+        <p class="part-desc">Mô phỏng lãnh đạo 5 quốc gia: Mỹ, Israel, Iran, Saudi Arabia, Palestine. 13 câu hỏi tình huống với đáp án thực tế và giả định. Cây quyết định chiến lược và 3 kịch bản kết thúc.</p>
+        <div class="part-meta">
+          <div class="part-time">⏰ 10:00 – 30:00</div>
+          <div class="part-responsible">Nguyễn Duy Thái<br>Tuấn Minh · Đăng Minh</div>
+        </div>
+      </div>
+      <!-- Part III -->
+      <div class="part-card p3">
+        <div class="part-number">III</div>
+        <div class="part-badge">⏱ ~10 phút</div>
+        <div class="part-title">Diễn biến thực tế và Dự báo tương lai</div>
+        <p class="part-desc">Cập nhật diễn biến tháng 4/2026: xung đột trực tiếp Israel–Iran, eo biển Hormuz, Houthi. So sánh với kịch bản roleplay. 3 kịch bản dự báo tương lai và phân tích được–thua.</p>
+        <div class="part-meta">
+          <div class="part-time">⏰ 30:00 – 40:00</div>
+          <div class="part-responsible">Cao Xuân Nam<br>Hoàng Thị Bé Nhi</div>
+        </div>
+      </div>
+      <!-- Part IV -->
+      <div class="part-card p4">
+        <div class="part-number">IV</div>
+        <div class="part-badge">⏱ ~10 phút</div>
+        <div class="part-title">Liên hệ Việt Nam & Bài học chính trị – ngoại giao</div>
+        <p class="part-desc">Phân tích vị trí địa lý Việt Nam. Chính sách "Ngoại giao Cây tre" và "Bốn Không". Bài học rút ra từ căng thẳng Trung Đông. Liên hệ tư tưởng Hồ Chí Minh về độc lập tự chủ.</p>
+        <div class="part-meta">
+          <div class="part-time">⏰ 40:00 – 50:00</div>
+          <div class="part-responsible">Đoàn Ngọc Sơn<br>Tống Thái Sơn</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phan IV – Lien he Viet Nam &amp; Bai hoc | Nhom 5</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap');
+:root{--bg:#0a0e1a;--card:#111827;--gold:#d4a843;--gold-l:#f0c860;--red:#e74c3c;--blue:#3498db;--green:#2ecc71;--txt:#f0f4f8;--txt2:#a0aec0;--muted:#64748b;--border:rgba(255,255,255,0.08);--bgold:rgba(212,168,67,0.4);--ggold:linear-gradient(135deg,#d4a843,#f0c860,#c8922a)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Playfair Display',serif}
+.wrap{max-width:1100px;margin:0 auto;padding:64px 32px}
+.part-header{background:linear-gradient(160deg,#0a100d,#0a0e1a);border-bottom:1px solid var(--border);padding:56px 32px;text-align:center;position:relative;overflow:hidden}
+.part-header::before{content:'IV';position:absolute;right:2%;top:50%;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:160px;font-weight:900;color:rgba(46,204,113,0.04);pointer-events:none;line-height:1}
+.ptag{display:inline-block;padding:7px 20px;background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.35);border-radius:30px;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#6dcc94;margin-bottom:22px}
+.part-header h1{font-size:clamp(26px,4vw,46px);margin-bottom:14px;line-height:1.2}
+.part-header h1 span{background:var(--ggold);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tbadge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:20px;font-size:13px;color:var(--txt2);margin-top:10px}
+.rlist{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.rchip{padding:5px 14px;background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.25);border-radius:20px;font-size:13px;color:var(--gold)}
+.stl{display:flex;align-items:center;gap:16px;margin-bottom:28px;margin-top:48px}
+.stl h2{font-size:clamp(18px,2.5vw,28px);white-space:nowrap}
+.stl .ln{flex:1;height:1px;background:var(--border)}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:40px}
+.cmp-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px}
+.cmp-card.me{border-left:4px solid #e74c3c}
+.cmp-card.vn{border-left:4px solid var(--green)}
+.cmp-flag{font-size:32px;margin-bottom:10px}
+.cmp-title{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.me .cmp-title{color:#f1948a}.vn .cmp-title{color:#6dcc94}
+.cmp-list{list-style:none}
+.cmp-list li{font-size:13px;color:var(--txt2);padding:7px 0;border-bottom:1px solid rgba(255,255,255,.04);padding-left:16px;position:relative;line-height:1.5}
+.cmp-list li::before{content:'>>';position:absolute;left:0;color:var(--gold);font-weight:700}
+.cmp-list li:last-child{border-bottom:none}
+.cmp-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;margin-left:6px;text-transform:uppercase;letter-spacing:1px}
+.t-opp{background:rgba(255,153,0,.15);color:#ffa64d}
+.t-risk{background:rgba(231,76,60,.15);color:#f1948a}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:40px}
+.pillar{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;position:relative;overflow:hidden;transition:all .3s;cursor:pointer}
+.pillar:hover{transform:translateY(-4px);border-color:var(--bgold);box-shadow:0 8px 24px rgba(212,168,67,.1)}
+.pillar::after{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.pl1::after{background:linear-gradient(90deg,#27ae60,#2ecc71)}
+.pl2::after{background:linear-gradient(90deg,#2980b9,#3498db)}
+.pl3::after{background:linear-gradient(90deg,#d4a843,#f0c860)}
+.pillar-icon{font-size:36px;margin-bottom:14px}
+.pillar-title{font-size:14px;font-weight:700;margin-bottom:6px;color:var(--gold-l)}
+.pillar-keyword{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;color:var(--muted)}
+.pillar ul{list-style:none}
+.pillar ul li{font-size:12px;color:var(--txt2);padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);padding-left:13px;position:relative;line-height:1.5}
+.pillar ul li::before{content:'.';position:absolute;left:0;color:var(--gold)}
+.pillar ul li:last-child{border-bottom:none}
+.pillar-example{display:none;margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.08);font-size:12px;color:var(--txt2);line-height:1.6}
+.pillar.open .pillar-example{display:block;animation:fadeUp .3s forwards}
+.pillar-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(212,168,67,.12);border:1px solid rgba(212,168,67,.3);color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-top:6px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.lesson-grid{display:flex;flex-direction:column;gap:16px;margin-bottom:40px}
+.flip-card{perspective:1400px;cursor:pointer}
+.flip-card-inner{position:relative;transition:transform 0.7s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d;min-height:90px}
+.flip-card.flipped .flip-card-inner{transform:rotateY(180deg)}
+.flip-front,.flip-back{backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;padding:20px 24px}
+.flip-front{background:var(--card);border:1px solid var(--border);display:flex;gap:16px;align-items:flex-start;transition:border-color .3s}
+.flip-front:hover{border-color:rgba(212,168,67,.4)}
+.flip-back{background:linear-gradient(135deg,rgba(212,168,67,.12),rgba(39,174,96,.06));border:1px solid rgba(212,168,67,.3);position:absolute;top:0;left:0;width:100%;transform:rotateY(180deg);min-height:100%}
+.flip-hint{font-size:10px;color:var(--muted);margin-top:10px;font-style:italic;text-align:right;letter-spacing:.5px}
+.flip-back-title{font-size:14px;font-weight:700;color:var(--gold-l);margin-bottom:10px}
+.flip-back-body{font-size:13px;color:var(--txt2);line-height:1.65}
+.flip-back-body strong{color:var(--txt)}
+.lesson-num{width:36px;height:36px;border-radius:50%;background:rgba(212,168,67,.15);border:1px solid var(--bgold);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--gold);flex-shrink:0;margin-top:2px}
+.lesson-body h4{font-family:'Be Vietnam Pro',sans-serif;font-size:14px;font-weight:700;color:var(--txt);margin-bottom:5px}
+.lesson-body p{font-size:13px;color:var(--txt2);line-height:1.6}
+.lesson-body strong{color:var(--gold-l)}
+.speech-section{background:linear-gradient(135deg,rgba(212,168,67,.07),rgba(39,174,96,.04));border:1px solid var(--bgold);border-radius:20px;padding:36px;margin-top:40px}
+.speech-tag{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.speech-timeline{display:flex;flex-direction:column;gap:20px}
+.speech-item{display:flex;gap:16px}
+.speech-time-badge{background:rgba(212,168,67,.15);border:1px solid var(--bgold);border-radius:8px;padding:4px 10px;font-size:12px;font-weight:700;color:var(--gold);white-space:nowrap;align-self:flex-start;margin-top:2px}
+.speech-content h4{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:6px}
+.speech-quote{font-size:13px;color:var(--txt2);font-style:italic;border-left:2px solid var(--gold);padding-left:14px;line-height:1.6;margin-bottom:8px}
+.speech-note{font-size:12px;color:var(--muted)}
+.closing-box{background:var(--card);border:1px solid var(--bgold);border-radius:18px;padding:32px;text-align:center;margin-top:40px}
+.closing-box h3{font-size:clamp(18px,2.5vw,26px);margin-bottom:16px;line-height:1.3}
+.closing-box p{font-size:14px;color:var(--txt2);max-width:700px;margin:0 auto 16px}
+.hcm-quote{font-size:16px;font-style:italic;color:var(--gold-l);font-family:'Playfair Display',serif;border:1px solid var(--bgold);border-radius:10px;padding:16px 24px;display:inline-block;margin-top:10px}
+@media(max-width:768px){.compare-grid,.pillars{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="part-header">
+  <div class="ptag">&#x1F1FB;&#x1F1F3; Phan IV &middot; 40:00 &ndash; 50:00</div>
+  <h1>Lien he Viet Nam &amp;<br><span>Bai hoc Chinh tri &ndash; Ngoai giao</span></h1>
+  <div class="tbadge">&#9200; Thoi luong: ~10 phut &middot; Goc nhin Tu tuong Ho Chi Minh</div>
+  <div class="rlist">
+    <div class="rchip">Doan Ngoc Son (~5 phut)</div>
+    <div class="rchip">Tong Thai Son (~5 phut)</div>
+  </div>
+</div>
+<div class="wrap">
+  <div class="stl"><h2>&#x1F5FA;&#xFE0F; 1. Anh huong dia ly: Trung Dong &amp; Viet Nam</h2><div class="ln"></div></div>
+  <div class="compare-grid">
+    <div class="cmp-card me">
+      <div class="cmp-flag">&#x1F30D;</div>
+      <div class="cmp-title">Trung Dong &mdash; Bai hoc</div>
+      <ul class="cmp-list">
+        <li>Nga ba A&ndash;Au&ndash;Phi + "Ron dau" the gioi <span class="cmp-tag t-risk">Rui ro</span></li>
+        <li>Tro thanh tam diem canh tranh cua cac sieu cuong</li>
+        <li>Bien gioi lich su khong phu hop sac toc &rarr; xung dot</li>
+        <li>Dia hinh sa mac khien nha nuoc kho quan ly ngoai vi</li>
+        <li>Phu thuoc dau mo duy nhat &rarr; de ton thuong dia chinh tri</li>
+      </ul>
+    </div>
+    <div class="cmp-card vn">
+      <div class="cmp-flag">&#x1F1FB;&#x1F1F3;</div>
+      <div class="cmp-title">Viet Nam &mdash; Dac diem</div>
+      <ul class="cmp-list">
+        <li>Ria phia Dong ban dao Dong Duong, mat tien Bien Dong <span class="cmp-tag t-opp">Loi the</span></li>
+        <li>Bo bien 3.000km &mdash; tuyen hang hai nhon nhip bac nhat</li>
+        <li>Giap Trung Quoc (Bac), Lao, Campuchia (Tay) &rarr; ap luc lon</li>
+        <li>Co hoi: FDI, kinh te bien, logistics khu vuc</li>
+        <li>Thach thuc: tranh chap Bien Dong, canh tranh chien luoc</li>
+      </ul>
+    </div>
+  </div>
+  <div style="background:rgba(212,168,67,.07);border:1px solid rgba(212,168,67,.2);border-radius:12px;padding:16px 22px;margin-bottom:48px;font-size:14px;color:var(--txt2)">
+    &#x1F4A1; <strong style="color:var(--gold-l)">Diem mau chot:</strong> Ca hai khu vuc deu co vi tri chien luoc quan trong va deu doi mat voi suc ep tu cac nuoc lon. Su khac biet nam o <strong style="color:var(--txt)">cach ung pho</strong> &mdash; day la ly do can lien he chinh sach Viet Nam.
+  </div>
+  <div class="stl"><h2>&#x1F3DB;&#xFE0F; 2. Ba tru cot chinh sach cua Viet Nam <span style="font-size:12px;font-family:'Be Vietnam Pro',sans-serif;font-weight:400;color:var(--muted);letter-spacing:0;text-transform:none">(bam de xem vi du thuc te)</span></h2><div class="ln"></div></div>
+  <div class="pillars">
+    <div class="pillar pl1" onclick="togglePillar(this)">
+      <div class="pillar-icon">&#x1F38B;</div>
+      <div class="pillar-title">Ngoai giao Cay Tre</div>
+      <div class="pillar-keyword">Chinh sach doi ngoai</div>
+      <ul>
+        <li>Goc vung: kien dinh doc lap, tu chu, loi ich quoc gia</li>
+        <li>Canh uyen chuyen: linh hoat trong sach luoc</li>
+        <li>Khong chon phe &mdash; chon chinh nghia</li>
+        <li>Da phuong hoa, da dang hoa quan he quoc te</li>
+        <li>"Viet Nam la ban, doi tac tin cay cua cong dong quoc te"</li>
+      </ul>
+      <div class="pillar-example">
+        &#x1F4CC; <strong style="color:var(--gold-l)">Vi du thuc te:</strong> Trong xung dot Iran&ndash;Israel 4/2026, Viet Nam khong ra tuyen bo dung phe ben nao. Viet Nam dac cu Hoi dong Bao an LHQ (2020&ndash;2021) va tham gia dieu hoa tranh chap quoc te da chieu.
+        <div class="pillar-badge">&#x21BA; An de an</div>
+      </div>
+    </div>
+    <div class="pillar pl2" onclick="togglePillar(this)">
+      <div class="pillar-icon">&#x1F6E1;&#xFE0F;</div>
+      <div class="pillar-title">Nguyen tac "Bon Khong"</div>
+      <div class="pillar-keyword">Chinh sach quoc phong</div>
+      <ul>
+        <li>(1) Khong tham gia lien minh quan su</li>
+        <li>(2) Khong lien ket voi nuoc nay de chong nuoc kia</li>
+        <li>(3) Khong cho nuoc ngoai dat can cu quan su</li>
+        <li>(4) Khong dung vu luc trong quan he quoc te</li>
+        <li>&rarr; Tranh tro thanh "chien truong uy nhiem" nhu Syria, Yemen</li>
+      </ul>
+      <div class="pillar-example">
+        &#x1F4CC; <strong style="color:var(--gold-l)">So sanh thuc te:</strong> Yemen, Syria, Lebanon de nuoc ngoai dat can cu &rarr; tro thanh bai chien cua cac sieu cuong. Viet Nam mo rong hop tac quoc phong voi nhieu nuoc nhung khong cho dat can cu nuoc ngoai tren lanh tho.
+        <div class="pillar-badge">&#x21BA; An de an</div>
+      </div>
+    </div>
+    <div class="pillar pl3" onclick="togglePillar(this)">
+      <div class="pillar-icon">&#x1F310;</div>
+      <div class="pillar-title">Doc lap &amp; Hoi nhap</div>
+      <div class="pillar-keyword">Chinh sach kinh te</div>
+      <ul>
+        <li>Tham gia CPTPP, EVFTA, RCEP</li>
+        <li>Da dang hoa chuoi cung ung &mdash; khong phu thuoc mot thi truong</li>
+        <li>Phat trien kinh te bien, cang bien, logistics</li>
+        <li>Suc chong chiu truoc cac cu soc dia chinh tri</li>
+        <li>Chuyen doi so va kinh te xanh</li>
+      </ul>
+      <div class="pillar-example">
+        &#x1F4CC; <strong style="color:var(--gold-l)">So lieu:</strong> Viet Nam tham gia 17 FTA, xuat khau dat 371 ty USD nam 2024. Khi eo bien Hormuz bi siet, Viet Nam tang nhap khau tu Malaysia, Australia va My Latin &mdash; giam dan phu thuoc nang luong Trung Dong.
+        <div class="pillar-badge">&#x21BA; An de an</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stl"><h2>&#x1F4DA; 3. Bai hoc rut ra &amp; Kha nang van dung</h2><div class="ln"></div></div>
+  <p style="color:var(--txt2);font-size:14px;margin-bottom:24px">Phu trach: <strong style="color:var(--txt)">Tong Thai Son</strong> &middot; <em style="color:var(--muted)">&#x1F504; Bam vao moi the de lat va xem vi du van dung thuc te</em></p>
+
+  <div class="lesson-grid">
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-front"><div class="lesson-num">1</div><div class="lesson-body"><h4>Kien dinh doc lap &mdash; khong de bi le thuoc vao cuong quoc</h4><p>Tai Trung Dong, nhieu quoc gia phu thuoc vao nuoc lon &rarr; bi bien thanh "ban co" dia chinh tri.</p><div class="flip-hint">&#x1F504; Bam de xem van dung</div></div></div>
+        <div class="flip-back"><div class="flip-back-title">&#x1F33F; Ap dung cho Viet Nam</div><div class="flip-back-body"><strong>Tu tuong HCM:</strong> "Dem suc ta ma tu giai phong cho ta." Viet Nam duy tri duong loi doc lap tu chu, khong tham gia lien minh, kien dinh du chiu ap luc tu moi phia.<br><br>&#x1F4CC; Yemen de Saudi va Iran chia cat lam chien truong uy nhiem &rarr; noi chien 9 nam, nan doi, thuoc men can kiet.</div><div class="flip-hint" style="text-align:left;margin-top:10px">&#x1F504; Bam de quay lai</div></div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-front"><div class="lesson-num">2</div><div class="lesson-body"><h4>Uu tien giai phap hoa binh &mdash; ton trong luat phap quoc te</h4><p>Cac cuoc xung dot Trung Dong cho thay bao luc khong giai quyet duoc nguon goc van de. Thieu luat phap quoc te = hon loan.</p><div class="flip-hint">&#x1F504; Bam de xem van dung</div></div></div>
+        <div class="flip-back"><div class="flip-back-title">&#x1F7E6; Tai sao Bien Dong khac Trung Dong?</div><div class="flip-back-body">Viet Nam nhat quan chu truong giai quyet tranh chap Bien Dong bang <strong>doi thoai, tren co so UNCLOS 1982</strong> va xay dung long tin. Trai nguoc mo hinh Trung Dong noi cac ben "phan cong truoc roi dam phan sau."</div><div class="flip-hint" style="text-align:left;margin-top:10px">&#x1F504; Bam de quay lai</div></div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-front"><div class="lesson-num">3</div><div class="lesson-body"><h4>Cung co noi tai &mdash; khong de mau thuan noi bo bi loi dung</h4><p>Trung Dong: xung dot noi bo ton giao, sac toc bi the luc ben ngoai loi dung. Viet Nam phai rut ra bai hoc nay.</p><div class="flip-hint">&#x1F504; Bam de xem van dung</div></div></div>
+        <div class="flip-back"><div class="flip-back-title">&#x1F91D; Dai doan ket dan toc</div><div class="flip-back-body">"Doan ket, doan ket, dai doan ket" &mdash; HCM. 54 dan toc anh em, <strong>khong vao phe nuoc nay chong nuoc kia.</strong> Viet Nam can duy tri on dinh chinh tri&ndash;xa hoi, phat trien kinh te bao trum de khong bi the luc ben ngoai khai thac mau thuan.</div><div class="flip-hint" style="text-align:left;margin-top:10px">&#x1F504; Bam de quay lai</div></div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-front"><div class="lesson-num">4</div><div class="lesson-body"><h4>Da dang hoa quan he &mdash; tranh phu thuoc kinh te don chieu</h4><p>Cac nuoc Trung Dong phu thuoc dau mo &rarr; de ton thuong. Viet Nam dang van dung bai hoc nay qua hoi nhap nhieu FTA.</p><div class="flip-hint">&#x1F504; Bam de xem van dung</div></div></div>
+        <div class="flip-back"><div class="flip-back-title">&#x1F4C8; So lieu va thuc tien</div><div class="flip-back-body">2024: Viet Nam xuat khau dat <strong>371 ty USD</strong>. FTA voi 60+ quoc gia. Samsung, Intel, LG deu co nha may lon. Trong khi Saudi/UAE bi ep vi phu thuoc xang dau &rarr; Viet Nam da dang ca dau vao lan dau ra tu truoc.</div><div class="flip-hint" style="text-align:left;margin-top:10px">&#x1F504; Bam de quay lai</div></div>
+      </div>
+    </div>
+    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+      <div class="flip-card-inner">
+        <div class="flip-front"><div class="lesson-num">5</div><div class="lesson-body"><h4>Vi tri dia ly: tan dung loi the song song kiem soat rui ro</h4><p>Trung Dong: vi tri quan trong &rarr; thu hut canh tranh cac cuong quoc. Viet Nam can phat huy vai tro cau noi khu vuc.</p><div class="flip-hint">&#x1F504; Bam de xem van dung</div></div></div>
+        <div class="flip-back"><div class="flip-back-title">&#x1F30A; Dia ly = Co hoi neu biet tan dung</div><div class="flip-back-body">Bo bien 3.260 km, gan cac tuyen hang hai trong yeu nhat the gioi. <strong>Cang nuoc sau Cai Mep, Van Phong, Tran De</strong> dang duoc dau tu manh. Muc tieu: tro thanh trung tam logistics khu vuc ma khong bi keo vao xung dot dia chinh tri.</div><div class="flip-hint" style="text-align:left;margin-top:10px">&#x1F504; Bam de quay lai</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="speech-section">
+    <div class="speech-tag">&#x1F4DD; Kich ban loi thoai &mdash; Doan Ngoc Son (~4.5 phut)</div>
+    <div class="speech-timeline">
+      <div class="speech-item"><div class="speech-time-badge">[0:00&ndash;0:30]</div><div class="speech-content"><h4>Loi mo dau &amp; Dan nhap</h4><div class="speech-quote">"Cam on phan trinh bay rat truc quan cua ban Nam va ban Nhi. Kinh thua co va cac ban, dung truoc 'chao lua' Trung Dong nhu vay, cau hoi dat ra la: tu goc do Viet Nam, chung ta nhin nhan van de nay nhu the nao?"</div><div class="speech-note">Hanh dong: Buoc len, gat dau chao, trinh chieu slide ban do doi chieu.</div></div></div>
+      <div class="speech-item"><div class="speech-time-badge">[0:30&ndash;2:00]</div><div class="speech-content"><h4>Anh huong dia ly &amp; Dac diem Viet Nam</h4><div class="speech-quote">"Tuong tu nhu Trung Dong, Viet Nam cung so huu vi tri dia ly chien luoc cuc ky cao. Vi tri nay mang lai co hoi kinh te nhung cung nay sinh nhung rui ro va thach thuc an ninh khong lo..."</div><div class="speech-note">Hanh dong: Chi tay ve ban do Trung Dong roi chuyen sang ban do Viet Nam.</div></div></div>
+      <div class="speech-item"><div class="speech-time-badge">[2:00&ndash;4:00]</div><div class="speech-content"><h4>Ba tru cot chinh sach</h4><div class="speech-quote">"Dang va Nha nuoc ta da van dung xuat sac Tu tuong Ho Chi Minh voi phuong cham 'Di bat bien, ung van bien' &mdash; the hien qua Ngoai giao Cay tre, Bon Khong va kinh te doc lap hoi nhap..."</div><div class="speech-note">Click de xuat hien lan luot tung tru cot. Giong dieu chac chan, nhip dieu ro rang.</div></div></div>
+      <div class="speech-item"><div class="speech-time-badge">[4:00&ndash;4:30]</div><div class="speech-content"><h4>Ket thuc &amp; Chuyen giao cho Tong Thai Son</h4><div class="speech-quote">"Tom lai, vi tri dia ly tao ra boi canh, nhung chinh sach va duong loi moi la yeu to quyet dinh van menh quoc gia. Xin moi ban Tong Thai Son tiep tuc!"</div><div class="speech-note">Nhin thang khan gia, giong dieu chot ha, dung tay khong bam slide nua.</div></div></div>
+    </div>
+  </div>
+
+  <div class="closing-box">
+    <h3>&#x1F33F; Ket luan chung &mdash; Tu tuong Ho Chi Minh trong thoi dai moi</h3>
+    <p>Nhung gi dang xay ra o Trung Dong khong chi la bi kich cua mot khu vuc, ma la bai hoc sinh dong cho moi quoc gia ve tam quan trong cua doc lap, tu chu va ngoai giao khon kheo.</p>
+    <p>Viet Nam, voi lich su hang nghin nam dung nuoc va giu nuoc, da va dang van dung con duong cua rieng minh &mdash; khong bi cuon vao loc xoay cua cac sieu cuong, van duy tri hoa binh va phat trien.</p>
+    <div class="hcm-quote">"Khong co gi quy hon doc lap, tu do." &mdash; Ho Chi Minh</div>
+  </div>
+
+</div>
+<script>
+function togglePillar(el) {
+  var wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.pillar').forEach(function(p){ p.classList.remove('open'); });
+  if (!wasOpen) el.classList.add('open');
+  if (window.parent && window.parent.autoHeight && window.frameElement) {
+    setTimeout(function(){ window.parent.autoHeight(window.frameElement); }, 400);
+  }
+}
+</script>
+</body>
+</html>

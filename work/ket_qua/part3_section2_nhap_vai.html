@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phần II – Nhập vai & Mô phỏng | Nhóm 5</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap');
+:root{--bg:#0a0e1a;--card:#111827;--gold:#d4a843;--gold-l:#f0c860;--red:#e74c3c;--blue:#3498db;--green:#2ecc71;--purple:#9b59b6;--orange:#e67e22;--txt:#f0f4f8;--txt2:#a0aec0;--muted:#64748b;--border:rgba(255,255,255,0.08);--bgold:rgba(212,168,67,0.4);--ggold:linear-gradient(135deg,#d4a843,#f0c860,#c8922a)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Playfair Display',serif}
+.wrap{max-width:1100px;margin:0 auto;padding:64px 32px}
+
+.part-header{background:linear-gradient(160deg,#0d1220,#0a0e1a);border-bottom:1px solid var(--border);padding:56px 32px;text-align:center;position:relative;overflow:hidden}
+.part-header::before{content:'II';position:absolute;right:4%;top:50%;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:200px;font-weight:900;color:rgba(231,76,60,0.04);pointer-events:none;line-height:1}
+.ptag{display:inline-block;padding:7px 20px;background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.35);border-radius:30px;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#f1948a;margin-bottom:22px}
+.part-header h1{font-size:clamp(26px,4vw,46px);margin-bottom:14px;line-height:1.2}
+.part-header h1 span{background:var(--ggold);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tbadge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:20px;font-size:13px;color:var(--txt2);margin-top:10px}
+.rlist{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.rchip{padding:5px 14px;background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.25);border-radius:20px;font-size:13px;color:var(--gold)}
+
+/* CONTEXT BANNER */
+.ctx-banner{background:linear-gradient(135deg,rgba(231,76,60,0.1),rgba(192,57,43,0.06));border:1px solid rgba(231,76,60,0.3);border-radius:18px;padding:28px 32px;margin-bottom:48px}
+.ctx-banner h3{font-family:'Be Vietnam Pro',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#f1948a;margin-bottom:12px}
+.ctx-banner p{font-size:14px;color:var(--txt2)}
+.ctx-banner strong{color:var(--txt)}
+
+/* ROLES GRID */
+.roles-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:48px}
+.role-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 14px;text-align:center;transition:all .3s}
+.role-card:hover{transform:translateY(-4px);border-color:var(--bgold);box-shadow:0 8px 24px rgba(212,168,67,.1)}
+.role-flag{font-size:36px;margin-bottom:8px}
+.role-country{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.role-leader{font-size:12px;color:var(--txt);font-weight:600;line-height:1.3;margin-bottom:4px}
+.role-style{font-size:11px;color:var(--muted);font-style:italic;line-height:1.4}
+
+/* QUESTION BLOCK */
+.country-section{margin-bottom:56px}
+.country-header{display:flex;align-items:center;gap:16px;margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.country-flag-big{font-size:42px}
+.country-info h2{font-size:clamp(18px,2.5vw,26px);margin-bottom:4px}
+.country-info p{font-size:13px;color:var(--txt2)}
+.country-tag{display:inline-block;padding:4px 12px;border-radius:10px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:6px}
+.tag-us{background:rgba(41,128,185,.2);color:#89c6f7;border:1px solid rgba(52,152,219,.4)}
+.tag-il{background:rgba(52,152,219,.2);color:#aed6f1;border:1px solid rgba(52,152,219,.4)}
+.tag-ir{background:rgba(39,174,96,.2);color:#6dcc94;border:1px solid rgba(46,204,113,.4)}
+.tag-sa{background:rgba(212,168,67,.2);color:var(--gold-l);border:1px solid var(--bgold)}
+.tag-ps{background:rgba(231,76,60,.2);color:#f1948a;border:1px solid rgba(231,76,60,.4)}
+
+.q-block{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;margin-bottom:20px}
+.q-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+.q-text{font-size:16px;font-weight:700;color:var(--txt);margin-bottom:20px;line-height:1.4}
+
+/* INTERACTIVE QUIZ LOGIC */
+.ans { border-radius:12px; padding:14px 18px; margin-bottom:10px; border-left:4px solid transparent; background:rgba(255,255,255,0.03); cursor:pointer; transition:all 0.3s; position:relative; }
+.ans:hover { background:rgba(255,255,255,0.07); transform:translateY(-2px); border-left-color:rgba(255,255,255,0.2); }
+.ans .badge, .ans .consequence { display:none; }
+
+/* REVEALED STATE */
+.q-block.revealed .ans { pointer-events:none; transform:none; }
+.q-block.revealed .ans:not(.selected):not(.ans-real) { opacity:0.3; }
+
+.q-block.revealed .ans-real { background:rgba(39,174,96,.08); border-left-color:var(--green); opacity:1; }
+.q-block.revealed .ans-fake.selected { background:rgba(192,57,43,.08); border-left-color:var(--red); opacity:1; }
+
+.q-block.revealed .ans-real .badge, 
+.q-block.revealed .ans-fake.selected .badge { display:inline-block; animation:popIn 0.5s forwards; }
+
+.q-block.revealed .ans-real .consequence, 
+.q-block.revealed .ans-fake.selected .consequence { display:block; animation:slideUp 0.5s forwards; }
+
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes slideUp { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
+
+.ans-header{display:flex;align-items:flex-start;gap:10px;margin-bottom:0}
+.q-block.revealed .ans-real .ans-header, .q-block.revealed .ans-fake.selected .ans-header {margin-bottom:8px;}
+.ans-key{font-size:13px;font-weight:800;color:var(--txt);min-width:20px;margin-top:2px}
+.ans-text{font-size:13px;color:var(--txt);font-weight:500;line-height:1.5}
+
+.badge{padding:2px 10px;border-radius:10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-left:8px;vertical-align:middle;margin-top:-2px}
+.badge-r{background:rgba(39,174,96,.2);color:var(--green);border:1px solid rgba(46,204,113,.4)}
+.badge-f{background:rgba(192,57,43,.15);color:#e88879;border:1px solid rgba(192,57,43,.35)}
+
+.consequence{font-size:12px;color:var(--txt2);font-style:italic;padding-top:8px;border-top:1px solid rgba(255,255,255,.05);margin-top:6px;line-height:1.5}
+.consequence strong{color:var(--gold);font-style:normal}
+
+/* DECISION TREE */
+.dtree-section{margin-bottom:56px}
+.branches{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:24px}
+.branch{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;position:relative;overflow:hidden}
+.branch::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.br1::before{background:linear-gradient(90deg,#e74c3c,#c0392b)}
+.br2::before{background:linear-gradient(90deg,#f39c12,#e67e22)}
+.br3::before{background:linear-gradient(90deg,#3498db,#2980b9)}
+.branch-title{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.branch ul{list-style:none}
+.branch ul li{font-size:12px;color:var(--txt2);padding:4px 0;padding-left:14px;border-bottom:1px solid rgba(255,255,255,.04);position:relative}
+.branch ul li::before{content:'›';position:absolute;left:0;color:var(--gold);font-weight:700}
+.branch ul li:last-child{border-bottom:none}
+.branch-result{margin-top:14px;padding:10px 14px;border-radius:8px;font-size:12px;font-weight:600}
+.br1 .branch-result{background:rgba(231,76,60,.1);color:#f1948a}
+.br2 .branch-result{background:rgba(243,156,18,.1);color:#f5d06a}
+.br3 .branch-result{background:rgba(52,152,219,.1);color:#89c6f7}
+
+/* ENDINGS */
+.endings{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:24px}
+.ending{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition:all .3s}
+.ending:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.ending-good{border-color:rgba(39,174,96,.35)}
+.ending-bad1{border-color:rgba(231,76,60,.35)}
+.ending-bad2{border-color:rgba(142,68,173,.35)}
+.ending-icon{font-size:32px;margin-bottom:12px}
+.ending-title{font-family:'Be Vietnam Pro',sans-serif;font-size:14px;font-weight:700;margin-bottom:12px}
+.ending-good .ending-title{color:var(--green)}
+.ending-bad1 .ending-title{color:#f1948a}
+.ending-bad2 .ending-title{color:#c39bd3}
+.ending ul{list-style:none}
+.ending ul li{font-size:12px;color:var(--txt2);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);padding-left:13px;position:relative}
+.ending ul li::before{content:'·';position:absolute;left:0;color:var(--muted)}
+.ending-note{margin-top:12px;font-size:12px;font-style:italic;color:var(--muted)}
+
+/* SECTION TITLE LINE */
+.stl{display:flex;align-items:center;gap:16px;margin-bottom:28px;margin-top:48px}
+.stl h2{font-size:clamp(18px,2.5vw,28px);white-space:nowrap}
+.stl .ln{flex:1;height:1px;background:var(--border)}
+
+@media(max-width:768px){.roles-grid{grid-template-columns:repeat(2,1fr)}.branches,.endings{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- SCORE TRACKER -->
+<div id="score-tracker" style="position:fixed;top:0;left:0;right:0;background:rgba(10,14,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;justify-content:space-between;align-items:center;z-index:9999;transform:translateY(-100%);transition:transform 0.4s ease;">
+  <div style="font-size:13px;font-weight:700;color:var(--gold)">Hồ sơ chiến lược: <span id="st-rank" style="color:var(--txt)">Đang theo dõi...</span></div>
+  <div style="font-size:13px;font-weight:600;color:var(--txt2)">Độ chính xác lịch sử: <span id="st-score" style="color:var(--green);font-weight:800;font-size:16px">0</span><span style="color:var(--muted)">/13</span></div>
+</div>
+
+<div class="part-header">
+  <div class="ptag">⚔️ Phần II · 10:00 – 30:00</div>
+  <h1>Nhập vai Quốc gia &<br><span>Mô phỏng Quyết định Chiến lược</span></h1>
+  <div class="tbadge">⏱ Thời lượng: ~20 phút · 13 câu hỏi tình huống</div>
+  <div class="rlist">
+    <div class="rchip">Nguyễn Duy Thái (MC)</div>
+    <div class="rchip">Nguyễn Viết Tuấn Minh</div>
+    <div class="rchip">Nguyễn Đăng Minh</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- CONTEXT BANNER -->
+  <div class="ctx-banner">
+    <h3>⚡ Bối cảnh tình huống</h3>
+    <p><strong>Ngày 28/2/2026</strong> — Mỹ và Israel bất ngờ tấn công Iran giữa lúc đang đàm phán hạt nhân, ám sát lãnh tụ Khamenei. Iran phản công bằng tên lửa vào Israel, các căn cứ Mỹ và toàn bộ vùng Vịnh kể cả Saudi Arabia. <strong>Eo biển Hormuz đóng cửa, giá dầu vượt 120 USD/thùng.</strong></p>
+    <p style="margin-top:10px;color:var(--muted);font-size:13px">🎯 Hướng dẫn: Đóng vai Lãnh đạo và tự click chọn đáp án bạn cho là hợp lý nhất. Tình huống sẽ lập tức bật mở hệ quả, đồng thời lưu điểm để đánh giá cấp bậc "Nhà phân tích" của bạn!</p>
+  </div>
+
+  <!-- ROLES -->
+  <div class="stl"><h2>🎭 Phân công vai diễn</h2><div class="ln"></div></div>
+  <div class="roles-grid">
+    <div class="role-card">
+      <div class="role-flag">🇺🇸</div>
+      <div class="role-country">Mỹ</div>
+      <div class="role-leader">Donald Trump</div>
+      <div class="role-style">Trực tiếp, "America First", thích thương lượng từ thế mạnh</div>
+    </div>
+    <div class="role-card">
+      <div class="role-flag">🇮🇱</div>
+      <div class="role-country">Israel</div>
+      <div class="role-leader">Benjamin Netanyahu</div>
+      <div class="role-style">Ám ảnh mối đe dọa Iran, tự coi là người bảo vệ sự tồn vong Israel</div>
+    </div>
+    <div class="role-card">
+      <div class="role-flag">🇮🇷</div>
+      <div class="role-country">Iran</div>
+      <div class="role-leader">Masoud Pezeshkian</div>
+      <div class="role-style">Tương đối ôn hòa nhưng bị IRGC và Hội đồng bảo vệ kiểm soát</div>
+    </div>
+    <div class="role-card">
+      <div class="role-flag">🇸🇦</div>
+      <div class="role-country">Saudi Arabia</div>
+      <div class="role-leader">Mohammed bin Salman</div>
+      <div class="role-style">Cân bằng giữa Vision 2030 và áp lực dư luận Hồi giáo</div>
+    </div>
+    <div class="role-card">
+      <div class="role-flag">🇵🇸</div>
+      <div class="role-country">Palestine/Hamas</div>
+      <div class="role-leader">Đại diện Hamas</div>
+      <div class="role-style">Gaza bị tàn phá 2+ năm, hơn 75.000 người thiệt mạng, Hamas suy yếu</div>
+    </div>
+  </div>
+
+  <!-- ===== MỸ ===== -->
+  <div class="country-section">
+    <div class="country-header">
+      <div class="country-flag-big">🇺🇸</div>
+      <div class="country-info">
+        <h2>Donald Trump — Tổng thống Mỹ</h2>
+        <p>Câu 1–3 · Vai trò: người phán quyết chiến tranh, cân bằng "America First" với nghĩa vụ đồng minh</p>
+        <span class="country-tag tag-us">🇺🇸 PHẦN 1</span>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Câu 1 / 13</div>
+      <div class="q-text">Tại sao Mỹ tấn công Iran trong lúc đang đàm phán hạt nhân?</div>
+      <div class="ans ans-real">
+        <div class="ans-header"><span class="ans-key">A.</span><span class="ans-text">"Iran đang câu giờ — tôi có bằng chứng tình báo họ sắp tấn công trước."<span class="badge badge-r">✅ Thực tế</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Đây là lập trường thực tế của Trump. CIA xác nhận vị trí họp của Khamenei. Chiến tranh nổ ra — dù Lầu Năm Góc sau đó nói với Quốc hội rằng không có bằng chứng Iran chuẩn bị tấn công trước.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">B.</span><span class="ans-text">"5 vòng đàm phán thất bại, đã đến lúc dùng sức mạnh."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Mất ưu thế đạo đức vì tự thừa nhận phá vỡ đàm phán đang tiến triển. Áp lực nội địa và quốc tế sẽ lớn hơn nhiều.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">C.</span><span class="ans-text">"Netanyahu thuyết phục tôi — ông ấy có thông tin tình báo quan trọng."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Trump thực tế phủ nhận, nói "Tôi có thể đã kéo Israel vào chứ không phải ngược lại." Thừa nhận bị Netanyahu dẫn dắt sẽ phá hình ảnh "lãnh đạo mạnh".</div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Câu 2 / 13</div>
+      <div class="q-text">Iran đang tấn công Saudi Arabia. Mỹ sẽ bảo vệ Saudi đến mức nào?</div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">A.</span><span class="ans-text">"Đưa quân bộ binh vào Saudi phản công Iran trực tiếp."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Không xảy ra. Mỹ tăng cường phòng thủ tên lửa cho Saudi nhưng không điều quân bộ binh đánh trực tiếp.</div>
+      </div>
+      <div class="ans ans-real">
+        <div class="ans-header"><span class="ans-key">B.</span><span class="ans-text">"Hỗ trợ hệ thống phòng thủ tên lửa, nhưng phản công là quyết định của Saudi."<span class="badge badge-r">✅ Thực tế</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Đúng với thực tế. Mỹ tăng cường Patriot và hệ thống đánh chặn. Saudi Arabia tự xử lý bằng phòng thủ, không phản công Iran trực tiếp.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">C.</span><span class="ans-text">"Saudi phải tự lo — họ có đủ vũ khí Mỹ rồi."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Bỏ rơi Saudi → quan hệ đồng minh vùng Vịnh sụp đổ → Trung Quốc lập tức lấp chỗ trống.</div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Câu 3 / 13</div>
+      <div class="q-text">Mục tiêu cuối cùng của Mỹ ở Iran là gì?</div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">A.</span><span class="ans-text">"Tiêu diệt hoàn toàn chính quyền Iran."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Bài học Iraq 2003 khiến Mỹ e ngại. Trump sau đó nói "rất muốn đàm phán" với Iran.</div>
+      </div>
+      <div class="ans ans-real">
+        <div class="ans-header"><span class="ans-key">B.</span><span class="ans-text">"Iran không được có hạt nhân — nếu lãnh đạo mới ký thỏa thuận tốt, sẵn sàng đàm phán."<span class="badge badge-r">✅ Thực tế</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Trump kêu gọi người Iran "tự giải phóng" nhưng đồng thời nói "rất muốn đạt thỏa thuận." Mục tiêu: phi hạt nhân hóa, không phải chiếm đóng.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">C.</span><span class="ans-text">"Chúng ta muốn dầu của Iran."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Không phải lập trường chính thức. Nếu xác nhận sẽ gây phản ứng ngoại giao toàn cầu rất nghiêm trọng.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ISRAEL ===== -->
+  <div class="country-section">
+    <div class="country-header">
+      <div class="country-flag-big">🇮🇱</div>
+      <div class="country-info">
+        <h2>Benjamin Netanyahu — Thủ tướng Israel</h2>
+        <p>Câu 4–6 · Vai trò: bảo vệ "sự tồn vong Israel", ngăn chặn hạt nhân Iran, tận dụng chiến tranh bình thường hóa</p>
+        <span class="country-tag tag-il">🇮🇱 PHẦN 2</span>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Câu 4 / 13</div>
+      <div class="q-text">Israel và Mỹ tấn công Iran trong lúc đàm phán. Netanyahu giải thích thế nào?</div>
+      <div class="ans ans-real">
+        <div class="ans-header"><span class="ans-key">A.</span><span class="ans-text">"Đây là tự vệ phòng ngừa — Iran sắp có đủ uranium làm bom."<span class="badge badge-r">✅ Thực tế</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Netanyahu gọi đây là "tấn công phòng ngừa" loại bỏ "hai mối đe dọa sinh tồn". Tuyên bố Iran đã bị "tàn phá hoàn toàn" về năng lực hạt nhân.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">B.</span><span class="ans-text">"Iran chuẩn bị tấn công Israel trước trong vòng 48 giờ."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> IAEA và nhiều chuyên gia không xác nhận. Nếu sai → thảm họa ngoại giao cho Israel.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">C.</span><span class="ans-text">"Tôi đã thuyết phục Trump — đây là quyết định chung."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Cả Netanyahu và Trump đều cố giữ hình ảnh "chủ động". Nhận bị thuyết phục → suy yếu vị thế lãnh đạo cả hai.</div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Câu 5 / 13</div>
+      <div class="q-text">Iran tấn công Saudi Arabia — nước đang chuẩn bị bình thường hóa với Israel. Netanyahu phản ứng?</div>
+      <div class="ans ans-real">
+        <div class="ans-header"><span class="ans-key">A.</span><span class="ans-text">"Đây chứng minh Iran là kẻ thù chung. Con đường bình thường hóa với Saudi sẽ ngắn hơn."<span class="badge badge-r">✅ Thực tế</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Đúng hướng lập trường thực tế. Dù kế hoạch bình thường hóa tạm đình trệ nhưng không hoàn toàn sụp đổ.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">B.</span><span class="ans-text">"Israel xin lỗi Saudi vì để chiến tranh lan ra."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Không xảy ra. Netanyahu ngầm hưởng lợi từ việc Iran tấn công Saudi vì khiến Saudi xích lại gần Israel về an ninh.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">C.</span><span class="ans-text">"Israel sẽ bảo vệ Saudi bằng không quân của mình."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Không xảy ra và không thực tế. Hai nước chưa có hiệp ước phòng thủ chính thức.</div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Câu 6 / 13</div>
+      <div class="q-text">Sau khi Iran phản công, Netanyahu nói gì về khả năng tấn công trên bộ vào Iran?</div>
+      <div class="ans ans-real">
+        <div class="ans-header"><span class="ans-key">A.</span><span class="ans-text">"Không thể làm cách mạng chỉ từ trên không — cần yếu tố trên bộ. Tôi không tiết lộ chi tiết."<span class="badge badge-r">✅ Thực tế</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Chính xác là những gì Netanyahu nói. Gợi ý tấn công trên bộ hạn chế → gây lo ngại lớn về leo thang.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">B.</span><span class="ans-text">"Đã đạt mục tiêu — sẽ ngừng bắn sớm."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Ngược thực tế. Netanyahu liên tục thúc đẩy tiếp tục tấn công và thảo luận "vòng 2" với Trump.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">C.</span><span class="ans-text">"Israel sẽ tấn công chương trình hạt nhân Triều Tiên tiếp theo."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Không có và sẽ tạo khủng hoảng hoàn toàn mới. Israel không có năng lực triển khai lực lượng đến Triều Tiên.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== IRAN ===== -->
+  <div class="country-section">
+    <div class="country-header">
+      <div class="country-flag-big">🇮🇷</div>
+      <div class="country-info">
+        <h2>Masoud Pezeshkian — Tổng thống Iran</h2>
+        <p>Câu 7–9 · Vai trò: cân bằng giữa IRGC cứng rắn và ngoại giao tìm lối thoát</p>
+        <span class="country-tag tag-ir">🇮🇷 PHẦN 3</span>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Câu 7 / 13</div>
+      <div class="q-text">Iran tấn công Saudi Arabia dù vừa bình thường hóa quan hệ. Tehran giải thích thế nào?</div>
+      <div class="ans ans-real">
+        <div class="ans-header"><span class="ans-key">A.</span><span class="ans-text">"Chúng tôi chỉ nhắm vào căn cứ Mỹ — thiệt hại dân sự Saudi là ngoài ý muốn, chúng tôi xin lỗi."<span class="badge badge-r">✅ Thực tế</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Pezeshkian xin lỗi các nước vùng Vịnh về thiệt hại dân sự — bước đi hiếm có của Iran. Luôn nhấn mạnh mục tiêu là "căn cứ Mỹ và Israel."</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">B.</span><span class="ans-text">"Saudi là kẻ thù — họ để Mỹ dùng lãnh thổ tấn công chúng tôi."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Coi Saudi là kẻ thù → cô lập hoàn toàn trong khu vực, mất mọi khả năng đàm phán thoát khỏi chiến tranh.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">C.</span><span class="ans-text">"Chúng tôi không tấn công Saudi — đây là tin giả."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Không thể phủ nhận vì có quá nhiều bằng chứng. Iran xác nhận tấn công "các căn cứ kẻ thù trong khu vực."</div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Câu 8 / 13</div>
+      <div class="q-text">Iran sẵn sàng dừng chiến tranh với điều kiện gì?</div>
+      <div class="ans ans-real">
+        <div class="ans-header"><span class="ans-key">A.</span><span class="ans-text">"Mỹ ngừng tấn công, công nhận quyền Iran, bồi thường và đảm bảo không tấn công lần nữa."<span class="badge badge-r">✅ Thực tế</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Chính xác tuyên bố của Pezeshkian. Iran đặt điều kiện cao để giữ thể diện trong nước.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">B.</span><span class="ans-text">"Ngừng bắn vô điều kiện để bảo vệ dân thường."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> IRGC coi là đầu hàng. Pezeshkian không có quyền đơn phương quyết định điều này.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">C.</span><span class="ans-text">"Sẵn sàng từ bỏ hoàn toàn chương trình hạt nhân."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Bị dư luận trong nước coi là thất bại toàn diện — đặc biệt nguy hiểm trong thời chiến.</div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Câu 9 / 13</div>
+      <div class="q-text">Lãnh tụ mới Mojtaba Khamenei vừa lên nắm quyền. Iran đi theo hướng nào?</div>
+      <div class="ans ans-real">
+        <div class="ans-header"><span class="ans-key">A.</span><span class="ans-text">Tiếp tục chiến tranh dưới IRGC trong khi lãnh đạo chính trị tìm kiếm lối thoát ngoại giao song song.<span class="badge badge-r">✅ Thực tế</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> NYT mô tả "ban lãnh đạo Iran tê liệt." IRGC tiếp tục tấn công trong khi Pezeshkian tìm kiếm đàm phán qua Pakistan.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">B.</span><span class="ans-text">Lãnh đạo mới ngay lập tức tuyên bố ngừng bắn để ổn định quyền lực.<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Bị IRGC phản đối. Lãnh đạo mới cần chứng tỏ sức mạnh trước khi đàm phán.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">C.</span><span class="ans-text">Iran tuyên bố đã hoàn thành chế tạo vũ khí hạt nhân để răn đe.<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Kịch bản này sẽ leo thang lên mức hoàn toàn mới và nhiều khả năng dẫn đến Mỹ tấn công ngay lập tức.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SAUDI ===== -->
+  <div class="country-section">
+    <div class="country-header">
+      <div class="country-flag-big">🇸🇦</div>
+      <div class="country-info">
+        <h2>Mohammed bin Salman — Thái tử Saudi Arabia</h2>
+        <p>Câu 10–11 · Vai trò: bảo vệ Vision 2030, tránh chiến tranh trực tiếp, không thừa nhận vai trò kéo Mỹ vào</p>
+        <span class="country-tag tag-sa">🇸🇦 PHẦN 4</span>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Câu 10 / 13</div>
+      <div class="q-text">Iran tấn công Saudi Arabia. MBS phản ứng thế nào?</div>
+      <div class="ans ans-real">
+        <div class="ans-header"><span class="ans-key">A.</span><span class="ans-text">Lên án Iran, tăng phòng thủ, mua tên lửa đánh chặn, nhưng không phản công trực tiếp.<span class="badge badge-r">✅ Thực tế</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> MBS cảnh báo Iran "sẽ là kẻ thua lớn nhất" nhưng không điều quân phản công. Mua tên lửa đánh chặn từ Ukraine, cùng GCC ra tuyên bố chung.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">B.</span><span class="ans-text">Saudi tuyên chiến Iran và phối hợp tấn công cùng Israel và Mỹ.<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Phá vỡ Vision 2030, làm mất ổn định trong nước (có cộng đồng Shia ở phía Đông), gây phản ứng Iran mạnh hơn.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">C.</span><span class="ans-text">Saudi làm trung gian đàm phán giữa Mỹ và Iran ngay lập tức.<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Saudi muốn làm trung gian nhưng chưa thể ngay khi đang bị tấn công. Pakistan được đề cập nhiều hơn như trung gian giai đoạn này.</div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Câu 11 / 13</div>
+      <div class="q-text">Báo cáo cho thấy MBS đã vận động Trump tấn công Iran. MBS phản hồi thế nào?</div>
+      <div class="ans ans-real">
+        <div class="ans-header"><span class="ans-key">A.</span><span class="ans-text">"Tôi không bình luận về thông tin chưa xác nhận. Saudi ủng hộ loại trừ đe dọa hạt nhân nhưng không tham chiến."<span class="badge badge-r">✅ Thực tế</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> MBS xử lý theo cách "không xác nhận, không phủ nhận." Saudi tiếp tục khẳng định không để lãnh thổ dùng tấn công Iran.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">B.</span><span class="ans-text">"Đúng, tôi đã thuyết phục Trump — đây là cơ hội lịch sử."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Thảm họa ngoại giao. Saudi trở thành mục tiêu trực tiếp của Iran và mất uy tín với các nước Hồi giáo ủng hộ Palestine.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">C.</span><span class="ans-text">"Israel đã lừa cả tôi và Trump — chúng tôi đều là nạn nhân."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Phá vỡ hoàn toàn tiến trình bình thường hóa Israel-Saudi mà MBS đã đầu tư nhiều năm.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PALESTINE ===== -->
+  <div class="country-section">
+    <div class="country-header">
+      <div class="country-flag-big">🇵🇸</div>
+      <div class="country-info">
+        <h2>Đại diện Hamas / Palestine</h2>
+        <p>Câu 12–13 · Bối cảnh: Gaza bị tàn phá 2+ năm, hơn 75.000 người thiệt mạng, Hamas suy yếu nghiêm trọng</p>
+        <span class="country-tag tag-ps">🇵🇸 PHẦN 5</span>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Câu 12 / 13</div>
+      <div class="q-text">Iran — nhà tài trợ chính của Hamas — đang bị tấn công nặng nề. Hamas phản ứng thế nào?</div>
+      <div class="ans ans-real">
+        <div class="ans-header"><span class="ans-key">A.</span><span class="ans-text">"Chúng tôi đoàn kết với Iran. Ý chí của người Palestine không thể bị đánh bại."<span class="badge badge-r">✅ Thực tế</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Hamas bày tỏ đoàn kết với Iran nhưng nhấn mạnh tính độc lập của phong trào. Thực tế Hamas đang trong tình trạng rất suy yếu.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">B.</span><span class="ans-text">"Hamas sẽ mở mặt trận thứ hai tấn công Israel để giúp Iran."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Hamas không còn khả năng quân sự. Hầu hết cơ sở hạ tầng quân sự bị phá hủy.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">C.</span><span class="ans-text">"Trong khi Mỹ và Israel bận với Iran, Hamas đàm phán vị thế tốt hơn ở Gaza."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Ngược lại: cuộc chiến Iran giảm áp lực quốc tế lên Israel ở Gaza. Hamas mất đi nhà tài trợ và đồng minh quan trọng nhất.</div>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <div class="q-label">Câu 13 / 13</div>
+      <div class="q-text">Cuộc chiến Iran–Mỹ–Israel có giúp hay hại cho người Palestine?</div>
+      <div class="ans ans-real">
+        <div class="ans-header"><span class="ans-key">A.</span><span class="ans-text">"Trong ngắn hạn gây hại — thế giới quên Gaza. Suy yếu Iran làm mất đồng minh lâu dài."<span class="badge badge-r">✅ Thực tế</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Chiến tranh Iran chuyển sự chú ý quốc tế khỏi Gaza. Mỹ đình trệ đàm phán ngừng bắn Gaza giai đoạn 2 do bận chiến tranh Iran.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">B.</span><span class="ans-text">"Tin tốt — Iran sẽ buộc Israel nhượng bộ về Palestine."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Không có cơ sở. Lịch sử cho thấy Iran dùng Palestine phục vụ lợi ích riêng hơn là thực sự giải phóng.</div>
+      </div>
+      <div class="ans ans-fake">
+        <div class="ans-header"><span class="ans-key">C.</span><span class="ans-text">"Không liên quan — vấn đề Palestine là vấn đề riêng."<span class="badge badge-f">❌ Giả định</span></span></div>
+        <div class="consequence"><strong>Hệ quả:</strong> Hoàn toàn sai về địa chính trị. Iran là nhà tài trợ lớn nhất của Hamas. Suy yếu Iran trực tiếp ảnh hưởng đến nguồn lực Hamas.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DECISION TREE -->
+  <div class="stl"><h2>⚖️ Cây quyết định chiến lược</h2><div class="ln"></div></div>
+  <p style="color:var(--txt2);font-size:14px;margin-bottom:24px">Tình huống: Israel phát hiện Iran triển khai tên lửa tầm trung và UAV tại miền Nam Syria. <strong style="color:var(--txt)">Israel có nên tấn công ngay hay chờ đợi?</strong></p>
+  <div class="branches">
+    <div class="branch br1">
+      <div class="branch-title"><span>🔴</span> Nhánh 1: Tấn công phủ đầu mạnh</div>
+      <ul>
+        <li>Không quân Israel phá hủy căn cứ Iran</li>
+        <li>IRGC thiệt hại lớn</li>
+        <li>Iran phóng UAV + tên lửa đa hướng</li>
+        <li>Hezbollah tham chiến</li>
+      </ul>
+      <div class="branch-result">⚡ Xung đột leo thang nhanh · Mặt trận Lebanon bùng nổ</div>
+    </div>
+    <div class="branch br2">
+      <div class="branch-title"><span>🟡</span> Nhánh 2: Tấn công hạn chế</div>
+      <ul>
+        <li>Chỉ phá hủy một phần cơ sở</li>
+        <li>Tránh gây thương vong lớn</li>
+        <li>Iran đáp trả "vừa đủ" (symbolic)</li>
+        <li>Duy trì "cân bằng răn đe"</li>
+      </ul>
+      <div class="branch-result" style="background:rgba(243,156,18,.1);color:#f5d06a">⚖️ Không bên nào muốn vượt ngưỡng</div>
+    </div>
+    <div class="branch br3">
+      <div class="branch-title"><span>🔵</span> Nhánh 3: Kiềm chế</div>
+      <ul>
+        <li>Không tấn công, theo dõi</li>
+        <li>Iran tăng cường hiện diện</li>
+        <li>Củng cố vị trí tại Syria</li>
+        <li>Israel rơi vào thế bị động</li>
+      </ul>
+      <div class="branch-result">📉 Nguy cơ lớn hơn trong tương lai</div>
+    </div>
+  </div>
+
+  <!-- 3 ENDINGS -->
+  <div class="stl" style="margin-top:56px"><h2>🎭 Ba kịch bản kết thúc</h2><div class="ln"></div></div>
+  <div class="endings">
+    <div class="ending ending-good">
+      <div class="ending-icon">☮️</div>
+      <div class="ending-title">GOOD ENDING — Hòa bình có điều kiện</div>
+      <ul>
+        <li>Oman/Qatar làm trung gian</li>
+        <li>Mỹ gây áp lực giảm leo thang</li>
+        <li>Iran rút một phần lực lượng khỏi Syria</li>
+        <li>Israel giảm không kích, nới lỏng trừng phạt</li>
+      </ul>
+      <div class="ending-note">💡 Thực chất: "đóng băng xung đột" chứ không phải hòa bình thật sự</div>
+    </div>
+    <div class="ending ending-bad1">
+      <div class="ending-icon">⚔️</div>
+      <div class="ending-title">BAD ENDING 1 — Chiến tranh toàn diện Iran–Israel</div>
+      <ul>
+        <li>Iran tấn công trực tiếp lãnh thổ Israel</li>
+        <li>Israel đáp trả vào cơ sở hạt nhân Iran</li>
+        <li>Hàng nghìn UAV + tên lửa đồng loạt</li>
+        <li>Hệ thống phòng thủ bị quá tải</li>
+        <li>Mỹ có thể can thiệp quân sự</li>
+      </ul>
+      <div class="ending-note">💥 Thiệt hại cực lớn cho cả hai phía</div>
+    </div>
+    <div class="ending ending-bad2">
+      <div class="ending-icon">🌍</div>
+      <div class="ending-title">BAD ENDING 2 — Chiến tranh khu vực</div>
+      <ul>
+        <li>Hezbollah mở mặt trận phía Bắc</li>
+        <li>Yemen tấn công tuyến dầu mỏ</li>
+        <li>Iraq tham chiến</li>
+        <li>Giá dầu tăng vọt toàn cầu</li>
+        <li>Mỹ + NATO + các nước Vịnh tham gia</li>
+      </ul>
+      <div class="ending-note">🌐 Khủng hoảng kinh tế toàn cầu, Trung Đông hỗn loạn</div>
+    </div>
+  </div>
+
+  <!-- QUIZ RESULT -->
+  <div id="quiz-result" style="display:none; flex-direction:column; align-items:center; text-align:center; padding:40px; background:var(--card); border:1px solid var(--gold); border-radius:18px; margin-top:56px; box-shadow:0 10px 40px rgba(212,168,67,0.15);">
+    <h2 style="font-size:32px; color:var(--gold); margin-bottom:10px; font-family:'Playfair Display',serif">Đã hoàn tất phân tích!</h2>
+    <p style="font-size:14px; color:var(--txt); margin-bottom:20px;">Bạn đã dự đoán đúng kết cục của <strong id="qr-score" style="color:var(--green);font-size:20px">0</strong> / 13 tình huống lịch sử.</p>
+    <div id="qr-rank" style="display:inline-block; padding:10px 24px; background:rgba(212,168,67,0.15); border:1px solid var(--gold); border-radius:30px; font-weight:700; font-size:16px; color:var(--gold); letter-spacing:1px; text-transform:uppercase">TẬP SỰ</div>
+  </div>
+
+</div>
+
+<script>
+let score = 0;
+let answered = 0;
+const totalQs = 13;
+
+const qBlocks = document.querySelectorAll('.q-block');
+const tracker = document.getElementById('score-tracker');
+const scoreEl = document.getElementById('st-score');
+const rankEl = document.getElementById('st-rank');
+const resultEl = document.getElementById('quiz-result');
+const qrScore = document.getElementById('qr-score');
+const qrRank = document.getElementById('qr-rank');
+
+function getRank(s) {
+  if (s <= 4) return 'Lính Mới Vùng Vịnh';
+  if (s <= 8) return 'Cố Vấn Tiềm Năng';
+  if (s <= 11) return 'Chiến Lược Gia Điêu Luyện';
+  return 'Thám Tử Tình Báo Đỉnh Cao';
+}
+
+qBlocks.forEach(block => {
+  const answers = block.querySelectorAll('.ans');
+  let isAnswered = false;
+
+  answers.forEach(ans => {
+    ans.addEventListener('click', () => {
+      // Broadcast expansion to parent iframe resizer
+      if (window.parent && window.parent.autoHeight && window.frameElement) {
+        setTimeout(() => window.parent.autoHeight(window.frameElement), 600);
+      }
+
+      if (isAnswered) return;
+      isAnswered = true;
+      ans.classList.add('selected');
+      block.classList.add('revealed');
+      
+      if (ans.classList.contains('ans-real')) {
+        score++;
+      }
+      answered++;
+      
+      scoreEl.innerText = score;
+      rankEl.innerText = getRank(score);
+      
+      if (answered === 1) {
+        tracker.style.transform = 'translateY(0)';
+      }
+      
+      if (answered === totalQs) {
+        setTimeout(() => {
+          resultEl.style.display = 'flex';
+          qrScore.innerText = score;
+          qrRank.innerText = getRank(score);
+          resultEl.scrollIntoView({behavior: 'smooth', block: 'center'});
+          if (window.parent && window.parent.autoHeight && window.frameElement) {
+            setTimeout(() => window.parent.autoHeight(window.frameElement), 100);
+          }
+        }, 1200);
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>

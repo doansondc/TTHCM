@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phần III – Diễn biến thực tế & Dự báo | Nhóm 5</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap');
+:root{--bg:#0a0e1a;--card:#111827;--gold:#d4a843;--gold-l:#f0c860;--red:#e74c3c;--blue:#3498db;--green:#2ecc71;--txt:#f0f4f8;--txt2:#a0aec0;--muted:#64748b;--border:rgba(255,255,255,0.08);--bgold:rgba(212,168,67,0.4);--ggold:linear-gradient(135deg,#d4a843,#f0c860,#c8922a)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--txt);line-height:1.7;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Playfair Display',serif}
+.wrap{max-width:1100px;margin:0 auto;padding:64px 32px}
+
+.part-header{background:linear-gradient(160deg,#0d1220,#0a0e1a);border-bottom:1px solid var(--border);padding:56px 32px;text-align:center;position:relative;overflow:hidden}
+.part-header::before{content:'III';position:absolute;right:2%;top:50%;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:160px;font-weight:900;color:rgba(52,152,219,0.04);pointer-events:none;line-height:1}
+.ptag{display:inline-block;padding:7px 20px;background:rgba(52,152,219,0.12);border:1px solid rgba(52,152,219,0.35);border-radius:30px;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:#89c6f7;margin-bottom:22px}
+.part-header h1{font-size:clamp(26px,4vw,46px);margin-bottom:14px;line-height:1.2}
+.part-header h1 span{background:var(--ggold);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tbadge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:20px;font-size:13px;color:var(--txt2);margin-top:10px}
+.rlist{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.rchip{padding:5px 14px;background:rgba(212,168,67,0.1);border:1px solid rgba(212,168,67,0.25);border-radius:20px;font-size:13px;color:var(--gold)}
+
+.stl{display:flex;align-items:center;gap:16px;margin-bottom:28px;margin-top:48px}
+.stl h2{font-size:clamp(18px,2.5vw,28px);white-space:nowrap}
+.stl .ln{flex:1;height:1px;background:var(--border)}
+
+/* REAL EVENTS */
+.event-list{display:flex;flex-direction:column;gap:16px;margin-bottom:48px}
+.event-item{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 26px;display:flex;gap:20px;align-items:flex-start;transition:all .3s}
+.event-item:hover{border-color:var(--bgold);transform:translateX(4px)}
+.event-icon{font-size:28px;flex-shrink:0;margin-top:2px}
+.event-body h4{font-family:'Be Vietnam Pro',sans-serif;font-size:15px;font-weight:700;color:var(--txt);margin-bottom:6px}
+.event-body p{font-size:13px;color:var(--txt2);line-height:1.6}
+.event-date{display:inline-block;font-size:11px;font-weight:700;padding:2px 10px;border-radius:8px;background:rgba(52,152,219,0.15);color:#89c6f7;border:1px solid rgba(52,152,219,0.3);margin-bottom:6px;letter-spacing:1px}
+
+/* SCENARIO CARDS */
+.scenarios{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:14px}
+.sc-card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:all .3s}
+.sc-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.3)}
+.sc-top{padding:20px 22px 16px}
+.sc-bar{height:4px}
+.sc1 .sc-bar{background:linear-gradient(90deg,#e74c3c,#c0392b)}
+.sc2 .sc-bar{background:linear-gradient(90deg,#f39c12,#e67e22)}
+.sc3 .sc-bar{background:linear-gradient(90deg,#2ecc71,#27ae60)}
+.sc-icon{font-size:30px;margin-bottom:10px}
+.sc-title{font-family:'Be Vietnam Pro',sans-serif;font-size:14px;font-weight:700;margin-bottom:8px;line-height:1.3}
+.sc1 .sc-title{color:#f1948a}
+.sc2 .sc-title{color:#f5d06a}
+.sc3 .sc-title{color:#6dcc94}
+.sc-desc{font-size:12px;color:var(--txt2);line-height:1.5;margin-bottom:14px}
+.sc-bottom{padding:14px 22px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sc-who{font-size:11px;line-height:1.4}
+.sc-who-label{font-weight:700;letter-spacing:1px;text-transform:uppercase;font-size:10px;margin-bottom:3px}
+.win-label{color:var(--green)}
+.lose-label{color:var(--red)}
+
+/* PROBABILITY — animated on scroll */
+.prob-section{background:linear-gradient(135deg,rgba(52,152,219,0.08),rgba(41,128,185,0.04));border:1px solid rgba(52,152,219,0.2);border-radius:18px;padding:28px;margin-top:32px}
+.prob-title{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#89c6f7;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.prob-item{display:flex;align-items:center;gap:14px;margin-bottom:16px;cursor:pointer}
+.prob-item:hover .prob-bar-wrap{box-shadow:0 0 0 2px rgba(255,255,255,0.1)}
+.prob-name{font-size:13px;font-weight:600;min-width:200px;color:var(--txt)}
+.prob-bar-wrap{flex:1;background:rgba(255,255,255,0.06);border-radius:8px;height:12px;overflow:visible;position:relative;border-radius:8px}
+.prob-bar{height:100%;border-radius:8px;width:0%;transition:width 1.4s cubic-bezier(.25,.46,.45,.94);position:relative}
+.pb1{background:linear-gradient(90deg,#e74c3c,#c0392b)}
+.pb2{background:linear-gradient(90deg,#f39c12,#e67e22)}
+.pb3{background:linear-gradient(90deg,#2ecc71,#27ae60)}
+.prob-val{font-size:14px;font-weight:800;min-width:46px;text-align:right;transition:opacity 1s}
+.pv1{color:#f1948a}.pv2{color:#f5d06a}.pv3{color:#6dcc94}
+
+/* PROB TOOLTIP */
+.prob-tooltip{display:none;font-size:12px;color:var(--txt2);padding:10px 14px;background:rgba(17,24,39,.95);border:1px solid var(--border);border-radius:8px;margin-top:8px;margin-left:214px;line-height:1.5}
+.prob-item.open .prob-tooltip{display:block;animation:slideUp .3s forwards}
+@keyframes slideUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* EXPANDABLE SCENARIO */
+.sc-card{cursor:pointer}
+.sc-detail{display:none;padding:0 22px 18px;border-top:1px solid var(--border);margin-top:0}
+.sc-card.open .sc-detail{display:block;animation:slideUp .35s forwards}
+.sc-expand-hint{font-size:11px;color:var(--muted);text-align:right;padding:8px 22px;letter-spacing:1px}
+
+/* POLL */
+.poll-section{background:linear-gradient(135deg,rgba(212,168,67,.06),rgba(212,168,67,.02));border:1px solid rgba(212,168,67,.2);border-radius:18px;padding:28px;margin-top:32px}
+.poll-title{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.poll-q{font-size:15px;font-weight:700;color:var(--txt);margin-bottom:20px}
+.poll-opts{display:flex;flex-direction:column;gap:10px}
+.poll-opt{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:12px 16px;cursor:pointer;transition:all .2s}
+.poll-opt:hover{background:rgba(255,255,255,.08);border-color:rgba(212,168,67,.4)}
+.poll-opt.voted{pointer-events:none}
+.poll-opt-label{font-size:13px;font-weight:600;color:var(--txt);flex:1}
+.poll-bar-bg{flex:2;background:rgba(255,255,255,.06);border-radius:6px;height:8px;overflow:hidden}
+.poll-bar-fill{height:100%;border-radius:6px;width:0%;transition:width 1s ease}
+.poll-pct{font-size:12px;font-weight:700;min-width:36px;text-align:right;color:var(--muted)}
+.poll-note{font-size:12px;color:var(--muted);margin-top:14px;font-style:italic}
+
+@media(max-width:768px){.scenarios{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="part-header">
+  <div class="ptag">📡 Phần III · 30:00 – 40:00</div>
+  <h1>Diễn biến thực tế &<br><span>Dự báo tương lai</span></h1>
+  <div class="tbadge">⏱ Thời lượng: ~10 phút · Cập nhật đến 04/2026</div>
+  <div class="rlist">
+    <div class="rchip">Cao Xuân Nam</div>
+    <div class="rchip">Hoàng Thị Bé Nhi</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- REAL EVENTS -->
+  <div class="stl"><h2>📡 1. Diễn biến thực tế (Cập nhật 04/2026)</h2><div class="ln"></div></div>
+  <p style="color:var(--txt2);font-size:14px;margin-bottom:28px">Ở Phần II đã mô phỏng các tình huống — đây là những gì <strong style="color:var(--txt)">thực sự đang xảy ra</strong> khi tất cả các kịch bản leo thang:</p>
+
+  <div class="event-list">
+    <div class="event-item">
+      <div class="event-icon">💥</div>
+      <div class="event-body">
+        <div class="event-date">Đầu tháng 4/2026</div>
+        <h4>Đụng độ trực tiếp Israel – Iran: Không còn chiến tranh ủy nhiệm</h4>
+        <p>Israel và Mỹ liên tục không kích các căn cứ quân sự và cơ sở hạt nhân tại <strong>Tehran và Tabriz</strong>. Iran đáp trả bằng hàng loạt tên lửa đạn đạo vào các căn cứ Mỹ tại Ả Rập Xê Út, làm nhiều binh sĩ bị thương.</p>
+      </div>
+    </div>
+    <div class="event-item">
+      <div class="event-icon">🚀</div>
+      <div class="event-body">
+        <div class="event-date">Cuối tháng 3/2026</div>
+        <h4>Mặt trận đa hướng: Houthi chính thức tham chiến</h4>
+        <p>Lực lượng Houthi (Yemen) phóng tên lửa trực tiếp vào lãnh thổ Israel. Mặt trận mở rộng từ Iran – Israel sang toàn khu vực, đúng như kịch bản <strong>Bad Ending 2</strong> đã mô phỏng.</p>
+      </div>
+    </div>
+    <div class="event-item">
+      <div class="event-icon">🛢️</div>
+      <div class="event-body">
+        <div class="event-date">Liên tục — tháng 3–4/2026</div>
+        <h4>Vũ khí kinh tế: Eo biển Hormuz bị siết chặt</h4>
+        <p>Iran kiểm soát chặt "tử huyệt" năng lượng toàn cầu — nhiều tàu chở dầu phải quay đầu. Phí bảo hiểm tàu biển tăng vọt <strong>từ 1% lên 10% giá trị tàu</strong>. Giá xăng dầu toàn cầu lên mức báo động. Tác động trực tiếp đến sinh hoạt người dân Việt Nam.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORECAST -->
+  <div class="stl"><h2>🔮 2. Ba kịch bản dự báo tương lai</h2><div class="ln"></div></div>
+
+  <div class="scenarios">
+    <div class="sc-card sc1" onclick="toggleScenario(this)">
+      <div class="sc-bar"></div>
+      <div class="sc-top">
+        <div class="sc-icon">☢️</div>
+        <div class="sc-title">Kịch bản 1: Chiến tranh tổng lực (Leo thang cực độ)</div>
+        <div class="sc-desc">Mỹ–Israel tấn công tổng lực hạ tầng hạt nhân Iran. Iran phong tỏa hoàn toàn eo biển Hormuz. Giá dầu có thể đạt kỷ lục <strong style="color:#f0c860">174 USD/thùng</strong>.</div>
+      </div>
+      <div class="sc-expand-hint">👆 Bấm để xem chi tiết</div>
+      <div class="sc-detail">
+        <div class="sc-bottom" style="padding:14px 0 0">
+          <div class="sc-who">
+            <div class="sc-who-label win-label">✅ Ai có lợi</div>
+            <div style="font-size:11px;color:var(--txt2)">Nga, Mỹ Latinh (xuất khẩu dầu ngoài vùng chiến sự). Tập đoàn vũ khí.</div>
+          </div>
+          <div class="sc-who">
+            <div class="sc-who-label lose-label">❌ Ai chịu thiệt</div>
+            <div style="font-size:11px;color:var(--txt2)">Toàn bộ nền kinh tế thế giới. Người dân Trung Đông (thảm họa nhân đạo).</div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--txt2);margin-top:12px;line-height:1.6">📌 <strong style="color:#f1948a">Dấu hiệu leo thang:</strong> Iran kích hoạt toàn bộ lực lượng ủy nhiệm (Hezbollah, Houthi, dân quân Iraq) cùng lúc. Israel bị tấn công đa hướng — áp lực đưa Mỹ vào cuộc toàn diện.</p>
+      </div>
+    </div>
+
+    <div class="sc-card sc2" onclick="toggleScenario(this)">
+      <div class="sc-bar"></div>
+      <div class="sc-top">
+        <div class="sc-icon">⚔️</div>
+        <div class="sc-title">Kịch bản 2: Xung đột giới hạn (Thực tế nhất)</div>
+        <div class="sc-desc">Các bên "đánh để dằn mặt" — tập trung mục tiêu quân sự và công nghệ (chiến tranh mạng, ám sát). Tránh sa lầy vào chiến tranh trên bộ toàn diện.</div>
+      </div>
+      <div class="sc-expand-hint">👆 Bấm để xem chi tiết</div>
+      <div class="sc-detail">
+        <div class="sc-bottom" style="padding:14px 0 0">
+          <div class="sc-who">
+            <div class="sc-who-label win-label">✅ Ai có lợi</div>
+            <div style="font-size:11px;color:var(--txt2)">Phe cực đoan dùng chiến tranh củng cố quyền lực nội bộ.</div>
+          </div>
+          <div class="sc-who">
+            <div class="sc-who-label lose-label">❌ Ai chịu thiệt</div>
+            <div style="font-size:11px;color:var(--txt2)">Doanh nghiệp vận tải, logistics. Người tiêu dùng toàn cầu (giá hàng tăng).</div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--txt2);margin-top:12px;line-height:1.6">📌 <strong style="color:#f5d06a">Tín hiệu nhận biết:</strong> Cuộc chiến kéo dài 2–4 tuần rồi các bên chủ động "hạ nhiệt". Không có tiến quân bộ binh lớn. Kinh tế toàn cầu chịu áp lực nhưng không sụp đổ.</p>
+      </div>
+    </div>
+
+    <div class="sc-card sc3" onclick="toggleScenario(this)">
+      <div class="sc-bar"></div>
+      <div class="sc-top">
+        <div class="sc-icon">🕊️</div>
+        <div class="sc-title">Kịch bản 3: Hạ nhiệt ngoại giao (Mong đợi nhất)</div>
+        <div class="sc-desc">Pakistan, Thổ Nhĩ Kỳ làm trung gian. Các bên chấp nhận ngừng bắn tạm thời để cứu vãn nền kinh tế. Đàm phán hạt nhân được nối lại.</div>
+      </div>
+      <div class="sc-expand-hint">👆 Bấm để xem chi tiết</div>
+      <div class="sc-detail">
+        <div class="sc-bottom" style="padding:14px 0 0">
+          <div class="sc-who">
+            <div class="sc-who-label win-label">✅ Ai có lợi</div>
+            <div style="font-size:11px;color:var(--txt2)">Nhân dân thế giới. Các nước đang phát triển (giảm áp lực lạm phát).</div>
+          </div>
+          <div class="sc-who">
+            <div class="sc-who-label lose-label">❌ Ai chịu thiệt</div>
+            <div style="font-size:11px;color:var(--txt2)">Nhóm lợi ích buôn bán vũ khí và đầu cơ năng lượng.</div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--txt2);margin-top:12px;line-height:1.6">📌 <strong style="color:#6dcc94">Điều kiện cần:</strong> Áp lực kinh tế đủ lớn để cả hai bên đều cần "lối thoát có thể chấp nhận." Iran cần được tháo áp lực trong nước. Mỹ cần bảo vệ giá dầu trước bầu cử giữa nhiệm kỳ 2026.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROBABILITY -->
+  <div class="prob-section" id="prob-section">
+    <div class="prob-title">📊 Đánh giá xác suất các kịch bản <span style="font-size:10px;color:var(--muted);font-weight:400;letter-spacing:0;text-transform:none">(bấm vào thanh để xem lý do)</span></div>
+    <div class="prob-item" onclick="toggleTooltip(this)">
+      <span class="prob-name">☢️ Chiến tranh tổng lực</span>
+      <div class="prob-bar-wrap"><div class="prob-bar pb1" data-w="20"></div></div>
+      <span class="prob-val pv1">~20%</span>
+      <div class="prob-tooltip">Chi phí kinh tế quá lớn với cả Mỹ và Israel. Bài học Iraq 2003 khiến cả hai e ngại lún sâu. Tuy nhiên rủi ro leo thang vẫn tồn tại nếu Iran sử dụng vũ khí hóa học hoặc tấn công trực tiếp vào dân thường Israel.</div>
+    </div>
+    <div class="prob-item" onclick="toggleTooltip(this)">
+      <span class="prob-name">⚔️ Xung đột giới hạn</span>
+      <div class="prob-bar-wrap"><div class="prob-bar pb2" data-w="55"></div></div>
+      <span class="prob-val pv2">~55%</span>
+      <div class="prob-tooltip">Kịch bản thực tế nhất vì phù hợp lợi ích của cả hai bên: Israel muốn tiêu diệt cơ sở hạt nhân Iran nhưng không muốn chiến tranh bộ binh dài hạn. Iran muốn "phản công đủ mạnh để giữ thể diện" mà không kéo Mỹ vào toàn diện.</div>
+    </div>
+    <div class="prob-item" onclick="toggleTooltip(this)">
+      <span class="prob-name">🕊️ Hạ nhiệt ngoại giao</span>
+      <div class="prob-bar-wrap"><div class="prob-bar pb3" data-w="25"></div></div>
+      <span class="prob-val pv3">~25%</span>
+      <div class="prob-tooltip">Các bên đều chịu áp lực kinh tế lớn. Pakistan đang tích cực làm trung gian. Tuy nhiên đòi hỏi cả Trump và giới lãnh đạo Iran đều phải "nhượng bộ" — điều khó chấp nhận về mặt chính trị trong nước của cả hai bên.</div>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:16px;font-style:italic">* Dự báo phân tích nhóm dựa trên diễn biến tính đến 04/2026. Tình hình có thể thay đổi nhanh chóng.</p>
+  </div>
+
+  <!-- POLL -->
+  <div class="poll-section">
+    <div class="poll-title">🗳️ Khảo sát tức thì</div>
+    <div class="poll-q">Theo bạn, xung đột sẽ kết thúc theo hướng nào trong 6 tháng tới?</div>
+    <div class="poll-opts" id="poll">
+      <div class="poll-opt" onclick="vote(this,0)">
+        <span class="poll-opt-label">☢️ Chiến tranh toàn diện</span>
+        <div class="poll-bar-bg"><div class="poll-bar-fill" style="background:#e74c3c"></div></div>
+        <span class="poll-pct">0%</span>
+      </div>
+      <div class="poll-opt" onclick="vote(this,1)">
+        <span class="poll-opt-label">⚔️ Xung đột giới hạn, dai dẳng</span>
+        <div class="poll-bar-bg"><div class="poll-bar-fill" style="background:#f39c12"></div></div>
+        <span class="poll-pct">0%</span>
+      </div>
+      <div class="poll-opt" onclick="vote(this,2)">
+        <span class="poll-opt-label">🕊️ Hạ nhiệt trong 3 tháng</span>
+        <div class="poll-bar-bg"><div class="poll-bar-fill" style="background:#2ecc71"></div></div>
+        <span class="poll-pct">0%</span>
+      </div>
+      <div class="poll-opt" onclick="vote(this,3)">
+        <span class="poll-opt-label">🤷 Không ai biết — quá hỗn loạn</span>
+        <div class="poll-bar-bg"><div class="poll-bar-fill" style="background:#9b59b6"></div></div>
+        <span class="poll-pct">0%</span>
+      </div>
+    </div>
+    <p class="poll-note" id="poll-note">Chưa có ai bình chọn</p>
+  </div>
+
+</div>
+
+<script>
+// Animated probability bars on scroll
+const probSection = document.getElementById('prob-section');
+const observer = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) {
+    document.querySelectorAll('.prob-bar').forEach(bar => {
+      const target = bar.dataset.w + '%';
+      requestAnimationFrame(() => { bar.style.width = target; });
+    });
+    observer.disconnect();
+  }
+}, { threshold: 0.3 });
+if (probSection) observer.observe(probSection);
+
+// Toggle probability tooltip
+function toggleTooltip(item) {
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.prob-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+// Toggle scenario expand
+function toggleScenario(card) {
+  const wasOpen = card.classList.contains('open');
+  document.querySelectorAll('.sc-card').forEach(c => c.classList.remove('open'));
+  if (!wasOpen) {
+    card.classList.add('open');
+    const hint = card.querySelector('.sc-expand-hint');
+    if (hint) hint.style.display = 'none';
+  }
+  if (window.parent && window.parent.autoHeight && window.frameElement) {
+    setTimeout(() => window.parent.autoHeight(window.frameElement), 400);
+  }
+}
+
+// Poll
+const votes = [0,0,0,0];
+function vote(opt, idx) {
+  if (opt.classList.contains('voted')) return;
+  votes[idx]++;
+  const total = votes.reduce((a,b) => a+b, 0);
+  document.querySelectorAll('.poll-opt').forEach((o, i) => {
+    o.classList.add('voted');
+    const pct = total ? Math.round(votes[i]/total*100) : 0;
+    o.querySelector('.poll-bar-fill').style.width = pct + '%';
+    o.querySelector('.poll-pct').textContent = pct + '%';
+  });
+  document.getElementById('poll-note').textContent = total + ' người đã bình chọn';
+  if (window.parent && window.parent.autoHeight && window.frameElement) {
+    setTimeout(() => window.parent.autoHeight(window.frameElement), 200);
+  }
+}
+</script>
+</body>
+</html>

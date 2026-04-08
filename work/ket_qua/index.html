@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô Phỏng Căng Thẳng Trung Đông | Nhóm 5</title>
+    <meta name="description" content="Trang chủ dự án mô phỏng căng thẳng Trung Đông - Tư Tưởng Hồ Chí Minh">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap');
+
+        :root {
+            --bg-color: #050811;
+            --card-bg: rgba(16, 22, 38, 0.65);
+            --card-border: rgba(212, 168, 67, 0.2);
+            --gold: #d4a843;
+            --gold-light: #f0c860;
+            --gold-gradient: linear-gradient(135deg, #d4a843, #f0c860, #b5880a);
+            --text-main: #ffffff;
+            --text-muted: #cbd5e1;
+            --hover-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+        }
+
+        /* Background & Glow */
+        .bg-image {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('assets/images/bg-13.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.18;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .ambient-glow {
+            position: absolute;
+            width: 90vw;
+            height: 90vh;
+            background: radial-gradient(circle, rgba(212, 168, 67, 0.15) 0%, rgba(5, 8, 17, 0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 1400px;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        /* Typography */
+        .subtitle {
+            font-size: clamp(1.4rem, 2.2vw, 2.2rem);
+            color: var(--gold-light);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(212, 168, 67, 0.2);
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3.5rem, 7vw, 6.5rem);
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 35px;
+            color: var(--text-main);
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .title .highlight {
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline-block;
+        }
+
+        .description {
+            font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+            color: var(--text-muted);
+            max-width: 900px;
+            margin: 0 auto 60px auto;
+            line-height: 1.7;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        /* Cards Layout */
+        .cardsWrap {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 45px;
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        /* Individual Card */
+        .nav-card {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 28px;
+            padding: 60px 40px;
+            text-decoration: none;
+            color: var(--text-main);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            border-color: var(--gold-light);
+            background: rgba(25, 33, 50, 0.8);
+            box-shadow: 0 30px 60px rgba(212, 168, 67, 0.25), inset 0 0 30px rgba(212, 168, 67, 0.05);
+        }
+
+        .card-icon {
+            font-size: 6.5rem;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 2;
+            transition: transform 0.4s ease;
+        }
+
+        .nav-card:hover .card-icon {
+            transform: scale(1.1) translateY(-5px);
+        }
+
+        .card-title {
+            font-size: clamp(2.2rem, 3vw, 2.6rem);
+            font-weight: 800;
+            margin-bottom: 18px;
+            position: relative;
+            z-index: 2;
+            letter-spacing: 1px;
+            color: var(--text-main);
+            transition: color 0.3s ease;
+        }
+
+        .nav-card:hover .card-title {
+            color: var(--gold-light);
+        }
+
+        .card-desc {
+            font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+            color: var(--text-muted);
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 100px;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            animation: fadeInUp 0.8s ease-out 0.8s both;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer .highlight {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive adjustments for projector/screens */
+        @media (max-width: 900px) {
+            .cardsWrap {
+                grid-template-columns: 1fr;
+            }
+            .nav-card {
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-image"></div>
+    <div class="ambient-glow"></div>
+    
+    <div class="container">
+        <div class="subtitle">Báo Cáo Học Phần • Nhóm 5</div>
+        <h1 class="title">Tư Tưởng Hồ Chí Minh<br><span class="highlight">Mô Phỏng Trung Đông</span></h1>
+        <p class="description">
+            Nền tảng trình bày kỹ thuật số tĩnh và động. Hãy lựa chọn phương thức trình diễn phù hợp cho thiết bị và mục đích theo dõi của bạn.
+        </p>
+
+        <div class="cardsWrap">
+            <!-- Slides Card -->
+            <a href="SLIDES_presentation.html" class="nav-card">
+                <div class="card-icon">📽️</div>
+                <h2 class="card-title">Slides Thuyết Trình</h2>
+                <p class="card-desc">Chế độ trình chiếu toàn màn hình. Tối ưu cho việc diễn thuyết, hiển thị trực quan và hiệu ứng tương tác (Dùng phím mũi tên để chuyển).</p>
+            </a>
+
+            <!-- Report Card -->
+            <a href="BAO_CAO_TONG_HOP.html" class="nav-card">
+                <div class="card-icon">📑</div>
+                <h2 class="card-title">Báo Cáo Chi Tiết</h2>
+                <p class="card-desc">Chế độ xem tài liệu theo dạng cuộn (Scroll). Tối ưu cho người theo dõi từ xa, đọc kỹ lưỡng các luận điểm và văn bản mở rộng.</p>
+            </a>
+        </div>
+
+        <div class="footer">
+            Thực hiện bởi <span class="highlight">Nhóm 5</span> · Lớp 170265 · D5-101
+        </div>
+    </div>
+</body>
+</html>

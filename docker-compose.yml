@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "6969:80"
+    volumes:
+      - ./work/ket_qua:/usr/share/nginx/html
+    restart: unless-stopped
+    container_name: tthcm_offline
