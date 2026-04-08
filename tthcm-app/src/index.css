@@ -1,0 +1,70 @@
+
+
+:root {
+  --bg-color: #050811;
+  --card-bg: rgba(16, 22, 38, 0.7);
+  --card-border: rgba(212, 168, 67, 0.2);
+  --gold: #d4a843;
+  --gold-light: #f0c860;
+  --gold-gradient: linear-gradient(135deg, #d4a843, #f0c860, #b5880a);
+  --text-main: #ffffff;
+  --text-muted: #cbd5e1;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: var(--bg-color);
+  color: var(--text-main);
+  overflow: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', serif;
+}
+
+.highlight {
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Base Utility Classes */
+.slide-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.slide-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 40px 8vw;
+  max-width: 1400px;
+}
+
+/* Glass Card */
+.glass-card {
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 20px;
+  padding: 30px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+  transition: transform 0.3s;
+  overflow: hidden;
+}
