@@ -1,571 +1,476 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Slides – Mô phỏng căng thẳng Trung Đông | Nhóm 5</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slides Thuyết Trình | Nhóm 5</title>
+    <link href="assets/fonts/fonts.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050811;
+            --card-bg: rgba(16, 22, 38, 0.7);
+            --card-border: rgba(212, 168, 67, 0.2);
+            --gold: #d4a843;
+            --gold-light: #f0c860;
+            --gold-gradient: linear-gradient(135deg, #d4a843, #f0c860, #b5880a);
+            --text-main: #ffffff;
+            --text-muted: #cbd5e1;
+            --slide-gap: 40px;
+        }
 
-:root{
-  --gold:#b5880a;--gold-l:#d4a120;--gold-bg:rgba(181,136,10,0.12);--gold-border:rgba(181,136,10,0.35);
-  --red:#c0392b;--blue:#1a5276;--green:#1a6b3a;--purple:#6c3483;
-  --txt:#0d1117;--txt2:#374151;--muted:#6b7280;--light:#f9fafb;
-  --card:rgba(255,255,255,0.82);--card-border:rgba(0,0,0,0.1);
-  --ggold:linear-gradient(135deg,#b5880a,#d4a120 50%,#9a7008);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden;background:#e8e0d0;font-family:'Be Vietnam Pro',sans-serif;color:var(--txt);-webkit-font-smoothing:antialiased}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-main);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
 
-/* ====== SLIDE SYSTEM ====== */
-#slider{width:100vw;height:100vh;position:relative}
-.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;opacity:0;pointer-events:none;transition:opacity .5s ease,transform .5s ease;transform:translateX(50px)}
-.slide.active{opacity:1;pointer-events:all;transform:translateX(0)}
-.slide.exit-left{opacity:0;transform:translateX(-50px)}
+        /* Ambient Backgrounds */
+        .ambient-glow {
+            position: fixed; top: 50%; left: 50%; width: 90vw; height: 90vh;
+            background: radial-gradient(circle, rgba(212,168,67,0.15) 0%, rgba(5,8,17,0) 70%);
+            transform: translate(-50%, -50%); z-index: 0; pointer-events: none;
+        }
 
-.slide-bg{position:absolute;inset:0;background-size:cover;background-position:center;z-index:0}
-.slide-overlay{position:absolute;inset:0;z-index:1}
+        .slide-bg {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background-size: cover; background-position: center;
+            opacity: 0; transition: opacity 0.8s ease-in-out; z-index: 0;
+        }
+        .slide-bg.active { opacity: 0.15; }
 
-/* CONTENT */
-.slide-content{position:relative;z-index:2;max-width:1160px;width:100%;padding:0 56px;text-align:center;transition:all 0.3s ease}
-.slide-content.left{text-align:left}
-.slide-content.split{display:grid;grid-template-columns:1fr 1fr;gap:52px;align-items:center}
+        /* Slider Wrapper */
+        .slider-container {
+            width: 100vw; height: 100vh; position: relative; z-index: 10;
+            display: flex; align-items: center; justify-content: flex-start;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
 
-/* NAV */
-#nav{position:fixed;bottom:36px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:16px}
-.nav-btn{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.85);border:1px solid rgba(0,0,0,0.15);color:var(--txt);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;backdrop-filter:blur(8px);box-shadow:0 2px 12px rgba(0,0,0,0.12)}
-.nav-btn:hover{background:#fff;border-color:var(--gold);color:var(--gold);box-shadow:0 4px 20px rgba(181,136,10,0.2)}
-.slide-dots{display:flex;gap:7px;align-items:center}
-.dot{width:7px;height:7px;border-radius:4px;background:rgba(0,0,0,0.2);cursor:pointer;transition:all .3s}
-.dot.active{width:22px;background:var(--gold)}
+        .slide {
+            min-width: 100vw; padding: 40px 8vw; height: 100vh; display: flex;
+            flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; transform: scale(0.9); transition: all 0.6s ease;
+        }
+        .slide.active { opacity: 1; transform: scale(1); }
 
-.top-controls{position:fixed;top:28px;right:36px;z-index:100;display:flex;align-items:center;gap:10px}
-.ctrl-btn{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.75);border:1px solid rgba(0,0,0,0.08);backdrop-filter:blur(8px);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;color:var(--txt2)}
-.ctrl-btn:hover{background:#fff;border-color:var(--gold);color:var(--gold);box-shadow:0 4px 12px rgba(181,136,10,0.15)}
-#counter{font-size:13px;color:var(--muted);font-weight:700;letter-spacing:1px;background:rgba(255,255,255,0.75);padding:0 16px;border-radius:20px;border:1px solid rgba(0,0,0,0.08);backdrop-filter:blur(8px);display:flex;align-items:center;height:36px}
-#hint{position:fixed;bottom:36px;right:36px;z-index:100;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px}
-.key{padding:2px 8px;background:rgba(255,255,255,.8);border:1px solid rgba(0,0,0,.15);border-radius:4px;font-size:11px;font-weight:600;color:var(--txt2)}
-#progress{position:fixed;top:0;left:0;height:3px;background:var(--ggold);z-index:200;transition:width .4s ease}
+        /* Typography */
+        h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+        .slide-title { font-size: clamp(3rem, 5vw, 4.5rem); margin-bottom: 20px; line-height: 1.2; text-align: center; }
+        .slide-title .highlight { background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .slide-subtitle { font-size: 1.5rem; color: var(--gold-light); text-transform: uppercase; letter-spacing: 3px; font-weight: 800; text-align: center; margin-bottom: 20px; }
+        .slide-desc { font-size: clamp(1.2rem, 1.8vw, 1.5rem); color: var(--text-muted); text-align: center; max-width: 900px; line-height: 1.6; }
 
-/* TAGS */
-.slide-tag{display:inline-block;padding:6px 18px;border-radius:24px;font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:22px;backdrop-filter:blur(8px)}
-.tag-gold{background:rgba(181,136,10,.14);border:1px solid var(--gold-border);color:var(--gold)}
-.tag-red{background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.35);color:var(--red)}
-.tag-blue{background:rgba(26,82,118,.1);border:1px solid rgba(26,82,118,.35);color:var(--blue)}
-.tag-green{background:rgba(26,107,58,.1);border:1px solid rgba(26,107,58,.35);color:var(--green)}
-.tag-dark{background:rgba(0,0,0,.08);border:1px solid rgba(0,0,0,.14);color:var(--txt2)}
+        /* Flex Layouts */
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; width: 100%; max-width: 1200px; margin-top: 40px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; max-width: 1200px; margin-top: 40px; }
 
-/* TYPOGRAPHY */
-.big-title{font-family:'Playfair Display',serif;font-size:clamp(34px,5.5vw,70px);font-weight:900;line-height:1.15;margin-bottom:20px;color:var(--txt)}
-.big-title .gold{background:var(--ggold);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.sub-title{font-size:clamp(14px,1.8vw,19px);color:var(--txt2);line-height:1.65;margin-bottom:28px;max-width:800px;margin-left:auto;margin-right:auto}
+        /* Card Elements */
+        .glass-card {
+            background: var(--card-bg); border: 2px solid var(--card-border);
+            border-radius: 20px; padding: 30px; backdrop-filter: blur(20px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5); transition: transform 0.3s;
+            position: relative; overflow: hidden;
+        }
+        .glass-card:hover { transform: translateY(-10px); border-color: var(--gold-light); }
+        .card-icon { font-size: 3rem; margin-bottom: 15px; }
+        .card-title { font-size: 1.6rem; color: var(--gold-light); margin-bottom: 10px; }
+        .card-text { font-size: 1.1rem; color: var(--text-muted); line-height: 1.6; }
 
-/* PILLS */
-.pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:28px}
-.pill{display:flex;align-items:center;gap:7px;padding:9px 18px;background:rgba(255,255,255,0.8);border:1px solid rgba(0,0,0,0.1);border-radius:24px;font-size:13px;color:var(--txt2);backdrop-filter:blur(6px);box-shadow:0 1px 6px rgba(0,0,0,0.07)}
-.pill .dot-p{width:8px;height:8px;border-radius:50%}
+        /* Poll Interaction */
+        .poll-box { text-align: center; margin-top: 40px; }
+        .poll-opts { display: flex; gap: 20px; justify-content: center; margin-bottom: 30px; }
+        .poll-btn { background: rgba(212,168,67,0.1); border: 2px solid var(--gold); padding: 15px 30px; border-radius: 30px; color: var(--gold); font-size: 1.3rem; font-weight: bold; cursor: pointer; transition: 0.3s; font-family: 'Be Vietnam Pro', sans-serif;}
+        .poll-btn:hover { background: var(--gold); color: #050811; }
+        .poll-results { width: 100%; max-width: 800px; margin: 0 auto; display: none; }
+        .poll-bar-wrap { background: rgba(255,255,255,0.1); border-radius: 20px; height: 30px; margin: 10px 0; overflow: hidden; position: relative; }
+        .poll-bar { background: var(--gold-gradient); height: 100%; width: 0%; transition: width 1s ease-out; }
+        .poll-label { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-weight: bold; font-size: 1rem; color: #fff; }
+        
+        /* 3D Flip Card */
+        .flip-container { perspective: 1000px; width: 100%; max-width: 500px; height: 500px; margin: 20px auto; cursor: pointer; }
+        .flip-inner { width: 100%; height: 100%; transition: transform 0.8s; transform-style: preserve-3d; }
+        .flip-container.flipped .flip-inner { transform: rotateY(180deg); }
+        .flip-front, .flip-back { width: 100%; height: 100%; position: absolute; backface-visibility: hidden; border-radius: 24px; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; border: 2px solid var(--card-border); background: var(--card-bg); backdrop-filter: blur(20px); text-align: center;}
+        .flip-back { transform: rotateY(180deg); align-items: flex-start; text-align: left; }
+        .flip-country-flag { font-size: 6rem; margin-bottom: 20px; }
+        .flip-country-name { font-size: 2.5rem; font-family: 'Playfair Display', serif; color: var(--gold); }
+        .flip-back h3 { color: var(--gold-light); margin-bottom: 15px; font-size: 1.5rem; }
+        .flip-back ul { list-style: none; padding-left: 0; }
+        .flip-back li { margin-bottom: 10px; font-size: 1.1rem; padding-left: 20px; position: relative; color: var(--text-muted); }
+        .flip-back li::before { content: '›'; color: var(--gold); position: absolute; left: 0; font-weight: bold; }
 
-/* SLIDE CARDS */
-.slide-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;width:100%}
-.slide-card{background:rgba(255,255,255,0.85);border:1px solid rgba(0,0,0,0.08);border-radius:16px;padding:24px;backdrop-filter:blur(12px);text-align:left;transition:all .25s;box-shadow:0 2px 16px rgba(0,0,0,0.07)}
-.slide-card:hover{transform:translateY(-4px);box-shadow:0 8px 28px rgba(0,0,0,0.13);border-color:var(--gold-border)}
-.card-icon{font-size:28px;margin-bottom:10px}
-.card-title{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:8px}
-.card-desc{font-size:13px;color:var(--txt2);line-height:1.6}
+        /* Accordion Timeline (Timeline + Glass Boxes) */
+        .timeline { width: 100%; max-width: 1000px; position: relative; padding: 40px 0; }
+        .timeline::before { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; background: var(--card-border); transform: translateX(-50%); }
+        .tl-item { margin-bottom: 50px; position: relative; width: 50%; padding-right: 40px; z-index: 2; transition: 0.3s; }
+        .tl-item:nth-child(even) { margin-left: 50%; padding-left: 40px; padding-right: 0; }
+        .tl-dot { position: absolute; right: -12px; top: 20px; width: 24px; height: 24px; border-radius: 50%; background: var(--gold); border: 4px solid var(--bg-color); z-index: 3;}
+        .tl-item:nth-child(even) .tl-dot { left: -12px; }
+        .tl-content { padding: 25px; background: rgba(16,22,38,0.8); border: 2px solid var(--card-border); border-radius: 16px; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .tl-content:hover { transform: scale(1.05); border-color: var(--gold); background: rgba(30, 38, 60, 0.9); box-shadow: 0 10px 30px rgba(212,168,67,0.2); }
+        .tl-date { font-weight: bold; color: var(--gold-light); margin-bottom: 10px; font-size: 1.2rem; }
+        .tl-text { color: var(--text-muted); font-size: 1rem; line-height: 1.5;}
 
-/* INFO ROWS (SPLIT) */
-.col-left .big-title{font-size:clamp(28px,4vw,50px)}
-.col-right{display:flex;flex-direction:column;gap:12px}
-.info-row-slide{background:rgba(255,255,255,0.8);border:1px solid rgba(0,0,0,0.08);border-radius:12px;padding:14px 18px;backdrop-filter:blur(8px);box-shadow:0 1px 8px rgba(0,0,0,0.06)}
-.info-row-slide .label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:3px}
-.info-row-slide .value{font-size:13px;color:var(--txt);font-weight:600}
+        /* Controls */
+        .controls { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 20px; z-index: 100; }
+        .ctrl-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; transition: 0.3s; backdrop-filter: blur(10px); }
+        .ctrl-btn:hover { background: var(--gold); color: #000; border-color: var(--gold); transform: scale(1.1); }
+        .page-indicator { position: fixed; bottom: 45px; right: 30px; color: var(--text-muted); font-size: 1.2rem; font-weight: bold; z-index: 100; letter-spacing: 2px;}
 
-/* TIMELINE ITEMS */
-.timeline-slide{display:flex;flex-direction:column;gap:14px;width:100%;text-align:left}
-.tl-item{display:flex;gap:16px;align-items:flex-start;background:rgba(255,255,255,0.82);border:1px solid rgba(0,0,0,0.08);border-radius:14px;padding:18px 22px;backdrop-filter:blur(10px);box-shadow:0 2px 12px rgba(0,0,0,0.07);transition:all .25s}
-.tl-item:hover{transform:translateX(4px);border-color:var(--gold-border)}
-.tl-num{width:36px;height:36px;border-radius:50%;background:var(--ggold);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;flex-shrink:0;box-shadow:0 2px 10px rgba(181,136,10,0.3)}
-.tl-body{font-size:13px;color:var(--txt2);line-height:1.55}
-.tl-body strong{color:var(--txt);display:block;margin-bottom:3px;font-size:14px;font-weight:700}
-
-/* ROLEPLAY */
-.rp-grid{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;max-width:1000px}
-.rp-card{background:rgba(255,255,255,0.84);border:1px solid rgba(0,0,0,0.09);border-radius:16px;padding:22px 24px;backdrop-filter:blur(10px);text-align:center;width:180px;transition:all .25s;box-shadow:0 2px 12px rgba(0,0,0,0.07);cursor:pointer;}
-.rp-card:hover{border-color:var(--gold-border);transform:translateY(-5px);box-shadow:0 10px 28px rgba(0,0,0,0.12)}
-.rp-flag{font-size:40px;margin-bottom:8px}
-.rp-country{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
-.rp-name{font-size:12px;color:var(--txt);font-weight:600}
-
-/* QUESTION POPUP */
-#q-popup{display:none;position:fixed;inset:0;z-index:9000;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);backdrop-filter:blur(4px)}
-#q-popup.open{display:flex}
-#q-popup-inner{background:#fff;border-radius:20px;padding:36px 40px;max-width:560px;width:90%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.25);animation:popupIn .3s forwards}
-@keyframes popupIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
-#q-popup-close{position:absolute;top:14px;right:16px;font-size:20px;cursor:pointer;color:#9ca3af;border:none;background:none;line-height:1}
-#q-popup-flag{font-size:44px;margin-bottom:10px;text-align:center}
-#q-popup-country{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);text-align:center;margin-bottom:6px}
-#q-popup-role{font-size:12px;color:#6b7280;text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #f3f4f6}
-#q-popup-q{font-size:15px;font-weight:700;color:#0d1117;margin-bottom:16px;line-height:1.5}
-#q-popup-hint{font-size:12px;color:#6b7280;font-style:italic}
-
-/* SCENARIO CARDS */
-.sc-slide-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;width:100%}
-.sc-slide{background:rgba(255,255,255,0.84);border:1px solid rgba(0,0,0,0.09);border-radius:16px;overflow:hidden;backdrop-filter:blur(12px);text-align:left;box-shadow:0 2px 14px rgba(0,0,0,0.07);transition:all .25s}
-.sc-slide:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,0.12)}
-.sc-slide-bar{height:4px}
-.sc-slide-body{padding:20px 22px}
-.sc-slide-icon{font-size:26px;margin-bottom:10px}
-.sc-slide-title{font-size:14px;font-weight:700;margin-bottom:8px;line-height:1.3}
-.sc-slide-desc{font-size:12px;color:var(--txt2);line-height:1.55}
-
-/* PILLAR SLIDES */
-.pillar-slide-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;width:100%}
-.pillar-slide{background:rgba(255,255,255,0.84);border:1px solid rgba(0,0,0,0.09);border-radius:16px;padding:26px;backdrop-filter:blur(12px);text-align:center;position:relative;overflow:hidden;box-shadow:0 2px 14px rgba(0,0,0,0.07);transition:all .25s}
-.pillar-slide:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,0.12)}
-.pillar-slide::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
-.ps1::before{background:linear-gradient(90deg,#1a6b3a,#27ae60)}
-.ps2::before{background:linear-gradient(90deg,#1a5276,#2980b9)}
-.ps3::before{background:linear-gradient(90deg,#b5880a,#d4a120)}
-.pillar-slide-icon{font-size:34px;margin-bottom:10px}
-.pillar-slide-kw{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
-.pillar-slide-desc{font-size:12px;color:var(--txt2);line-height:1.55}
-
-/* QUOTE */
-.quote-box{background:rgba(255,255,255,0.88);border:1px solid var(--gold-border);border-radius:22px;padding:44px 52px;max-width:860px;backdrop-filter:blur(14px);text-align:center;box-shadow:0 8px 40px rgba(181,136,10,0.12)}
-.quote-icon{font-size:48px;margin-bottom:14px;opacity:.6}
-.quote-text{font-family:'Playfair Display',serif;font-size:clamp(20px,2.8vw,34px);font-style:italic;color:var(--txt);line-height:1.45;margin-bottom:20px}
-.quote-text .gold{color:var(--gold)}
-.quote-author{font-size:14px;color:var(--muted);letter-spacing:1px}
-
-/* SECTION NUM WATERMARK */
-.section-num{position:absolute;right:5%;bottom:60px;font-family:'Playfair Display',serif;font-size:clamp(80px,12vw,160px);font-weight:900;line-height:1;opacity:.06;color:#000;pointer-events:none}
-
-/* 2-col cards */
-.slide-cards-2{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;width:100%}
-
-/* CONFETTI */
-.confetti-piece{position:fixed;width:10px;height:18px;border-radius:3px;top:-20px;pointer-events:none;opacity:0;animation:confettiFall linear forwards}
-@keyframes confettiFall{0%{opacity:1;transform:translateY(0) rotate(0deg) translateX(0)}100%{opacity:0;transform:translateY(110vh) rotate(720deg) translateX(var(--drift,0px))}}
-</style>
+        @media (max-width: 900px) {
+            .grid-3 { grid-template-columns: 1fr; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .timeline::before { left: 30px; }
+            .tl-item, .tl-item:nth-child(even) { width: 100%; padding-left: 80px; padding-right: 0; margin-left: 0; }
+            .tl-dot, .tl-item:nth-child(even) .tl-dot { left: 18px; right: auto; }
+        }
+    </style>
 </head>
 <body>
 
-<div id="progress"></div>
-<div class="top-controls">
-  <button id="zoomOutBtn" class="ctrl-btn" title="Thu nhỏ">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-  </button>
-  <button id="zoomInBtn" class="ctrl-btn" title="Phóng to">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-  </button>
-  <button id="fullscreenBtn" class="ctrl-btn" title="Toàn màn hình">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
-  </button>
-  <div id="counter">1 / 12</div>
-</div>
-<div id="hint"><span class="key">←</span><span class="key">→</span> phím mũi tên</div>
+    <!-- Backgrounds mapped to slides -->
+    <div class="slide-bg active" style="background-image: url('assets/images/bg-13.jpg')"></div>
+    <div class="slide-bg" style="background-image: url('assets/images/bg-1.jpg')"></div>
+    <div class="slide-bg" style="background-image: url('assets/images/bg-2.jpg')"></div>
+    <div class="slide-bg" style="background-image: url('assets/images/bg-3.jpg')"></div>
+    <div class="slide-bg" style="background-image: url('assets/images/bg-4.jpg')"></div>
+    <div class="slide-bg" style="background-image: url('assets/images/bg-5.jpg')"></div>
+    <div class="slide-bg" style="background-image: url('assets/images/bg-6.jpg')"></div>
+    <div class="slide-bg" style="background-image: url('assets/images/bg-7.jpg')"></div>
+    <div class="slide-bg" style="background-image: url('assets/images/bg-8.jpg')"></div>
+    <div class="slide-bg" style="background-image: url('assets/images/bg-9.jpg')"></div>
+    <div class="slide-bg" style="background-image: url('assets/images/bg-10.jpg')"></div>
+    <div class="slide-bg" style="background-image: url('assets/images/bg-11.jpg')"></div>
+    <div class="slide-bg" style="background-image: url('assets/images/bg-12.jpg')"></div>
+    <div class="ambient-glow"></div>
 
-<div id="slider">
+    <div class="slider-container" id="slider">
+        
+        <!-- SLIDE 1: Title -->
+        <div class="slide active">
+            <div class="slide-subtitle">Nhóm 5 • Tư Tưởng Hồ Chí Minh</div>
+            <h1 class="slide-title">Mô Phỏng Căng Thẳng <br><span class="highlight">Trung Đông</span></h1>
+            <p class="slide-desc">Bài báo cáo ứng dụng phương pháp Trình diễn Tương tác & Nhập vai thực tế. <br>Học phần: SSH1151 — GVHD: Phạm Thị Mai Duyên.</p>
+        </div>
 
-  <!-- ===== SLIDE 1: COVER ===== -->
-  <div class="slide active" data-index="0">
-    <div class="slide-bg" style="background-image:url('assets/images/bg-1.jpg')"></div>
-    <div class="slide-overlay" style="background:linear-gradient(160deg,rgba(255,252,245,.9) 0%,rgba(245,238,220,.82) 100%)"></div>
-    <div class="slide-content">
-      <div class="slide-tag tag-gold">🎓 SSH1151 · Tư tưởng Hồ Chí Minh · Nhóm 5</div>
-      <div class="big-title">Mô phỏng<br><span class="gold">Căng thẳng Trung Đông</span></div>
-      <div class="sub-title">Phân tích địa-chính trị · Nhập vai lãnh đạo quốc gia · Dự báo tương lai · Bài học cho Việt Nam</div>
-      <div class="pills">
-        <div class="pill"><div class="dot-p" style="background:#b5880a"></div>9 thành viên</div>
-        <div class="pill"><div class="dot-p" style="background:#c0392b"></div>4 phần trình bày</div>
-        <div class="pill"><div class="dot-p" style="background:#1a5276"></div>5 quốc gia nhập vai</div>
-        <div class="pill"><div class="dot-p" style="background:#1a6b3a"></div>~40 phút</div>
-      </div>
+        <!-- SLIDE 2: Polling -->
+        <div class="slide">
+            <div class="slide-subtitle">Khởi động Thảo luận</div>
+            <h1 class="slide-title">Câu Hỏi Khởi Động</h1>
+            <p class="slide-desc">"Theo bạn, nguyên nhân chính của các cuộc xung đột tại Trung Đông bắt nguồn từ Tôn giáo hay Địa chính trị?"</p>
+            <div class="poll-box">
+                <div class="poll-opts" id="poll-opts">
+                    <button class="poll-btn" onclick="runPoll(0)">🗺️ Địa Chính Trị</button>
+                    <button class="poll-btn" onclick="runPoll(1)">☪️ Tôn Giáo</button>
+                    <button class="poll-btn" onclick="runPoll(2)">🤝 Cả Hai Yếu Tố</button>
+                </div>
+                <div class="poll-results" id="poll-results">
+                    <div class="poll-bar-wrap"><div class="poll-bar" id="bar-geo"></div><span class="poll-label">🗺️ Địa Chính Trị: Khối dầu mỏ & Lãnh thổ</span></div>
+                    <div class="poll-bar-wrap"><div class="poll-bar" id="bar-rel"></div><span class="poll-label">☪️ Tôn Giáo: Sunni vs Shia & Đất Thánh</span></div>
+                    <div class="poll-bar-wrap"><div class="poll-bar" id="bar-both"></div><span class="poll-label">🤝 Cả hai: Tôn giáo là xúc tác, Địa chính trị là động cơ</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3: 3 Causes -->
+        <div class="slide">
+            <div class="slide-subtitle">Bối cảnh cốt lõi</div>
+            <h1 class="slide-title">3 Nguyên nhân <span class="highlight">Gốc rễ</span></h1>
+            <div class="grid-3">
+                <div class="glass-card">
+                    <div class="card-icon">🛢️</div>
+                    <h3 class="card-title">Địa chính trị & Tài nguyên</h3>
+                    <p class="card-text">Nơi sở hữu trữ lượng dầu mỏ, khí đốt khổng lồ. Tuyến hàng hải huyết mạch (Suez, Hormuz) khiến các cường quốc liên tục tranh giành ảnh hưởng.</p>
+                </div>
+                <div class="glass-card">
+                    <div class="card-icon">☪️</div>
+                    <h3 class="card-title">Tôn giáo & Sắc tộc</h3>
+                    <p class="card-text">Sự chia rẽ sâu sắc hơn 1.300 năm giữa Sunni (Saudi Arabia) và Shia (Iran), cùng mâu thuẫn Do Thái - Ả Rập khiến niềm tin không thể thỏa hiệp.</p>
+                </div>
+                <div class="glass-card">
+                    <div class="card-icon">🗺️</div>
+                    <h3 class="card-title">Di sản lịch sử</h3>
+                    <p class="card-text">Đường biên giới bị chia cắt một cách cơ học bởi Phương Tây sau Thế chiến I (Sykes-Picot), phớt lờ ranh giới tự nhiên của các sắc tộc bản địa.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4: Conflicts Israel-Palestine -->
+        <div class="slide">
+            <div class="slide-subtitle">Các trục xung đột chính</div>
+            <h1 class="slide-title">🇮🇱 Israel vs 🇵🇸 Palestine</h1>
+            <p class="slide-desc" style="margin-bottom:20px">Nút thắt lịch sử dài hơn 75 năm, khởi nguồn của mọi bất ổn. Tranh chấp chủ quyền trên vùng "Đất Thánh".</p>
+            <div class="grid-2">
+                <div class="glass-card">
+                    <h3 class="card-title">🇮🇱 Động cơ Israel</h3>
+                    <ul class="card-text" style="list-style-type:square; padding-left:20px;">
+                        <li>Bảo vệ sự tồn vong của Nhà nước Do Thái duy nhất.</li>
+                        <li>Trấn áp các mối đe dọa vũ trang từ Hamas, Hezbollah.</li>
+                        <li>Khẳng định quyền lịch sử với vùng lõi Jerusalem.</li>
+                    </ul>
+                </div>
+                <div class="glass-card">
+                    <h3 class="card-title">🇵🇸 Động cơ Palestine</h3>
+                    <ul class="card-text" style="list-style-type:square; padding-left:20px;">
+                        <li>Thiết lập quốc gia độc lập với Đông Jerusalem là thủ đô.</li>
+                        <li>Đòi lại lãnh thổ trước ranh giới 1967 (Gaza, Bờ Tây).</li>
+                        <li>Bảo vệ quyền hồi hương cho hàng triệu người nhập cư.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: Conflicts Iran-Israel-US -->
+        <div class="slide">
+            <div class="slide-subtitle">Các trục xung đột chính</div>
+            <h1 class="slide-title">🇮🇷 Iran – 🇮🇱 Israel – 🇺🇸 Mỹ</h1>
+            <p class="slide-desc" style="margin-bottom:20px">Trục đối đầu mang tính chiến lược quyết định cục diện. Sự đối nghịch giữa "Trục kháng chiến" và Liên minh Mỹ-Israel.</p>
+            <div class="grid-2">
+                <div class="glass-card">
+                    <h3 class="card-title">Ý Đồ Của Iran</h3>
+                    <ul class="card-text" style="list-style-type:square; padding-left:20px;">
+                        <li>Lọc Mỹ khỏi bản đồ quyền lực bằng chiến tranh ủy nhiệm (Proxy War).</li>
+                        <li>Kích hoạt học thuyết "Phòng thủ chủ động" với UAV/Tên lửa tầm xa.</li>
+                        <li>Xây dựng mạng lưới "Trăng lưỡi liềm Shia" làm khiên chắn.</li>
+                    </ul>
+                </div>
+                <div class="glass-card">
+                    <h3 class="card-title">Ý Đồ Của Israel & Mỹ</h3>
+                    <ul class="card-text" style="list-style-type:square; padding-left:20px;">
+                        <li>Tuyệt đối ngăn chặn Iran sở hữu vũ khí Hạt nhân (Tấn công phòng ngừa).</li>
+                        <li>Bảo vệ các dòng chảy năng lượng và an ninh đồng minh.</li>
+                        <li>Dập rủi ro thiết lập cơ sở quân sự Iran tại Lebanon, Syria.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 6: Roleplay Intro -->
+        <div class="slide">
+            <div class="slide-subtitle">Mô Phỏng Lãnh Đạo Nhập Vai</div>
+            <h1 class="slide-title">Bối Cảnh Tình Huống</h1>
+            <p class="slide-desc">Thời gian: <strong>Tháng 4 / 2026</strong>. Israel bất ngờ kích hoạt cuộc tấn công hạt nhân phủ đầu vào nhà máy Bushehr của Iran. <br>Bạo loạn bùng nổ, eo biển Hormuz bị khóa, Israel tuyên bố tình trạng khẩn cấp. <br><br>👉 <strong>Câu Hỏi Quyết Định:</strong> Hãy lật các lá bài quốc gia và quyết định bước đi tiếp theo của bạn.</p>
+        </div>
+
+        <!-- SLIDE 7: US Card -->
+        <div class="slide">
+            <div class="flip-container" onclick="this.classList.toggle('flipped')">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <div class="flip-country-flag">🇺🇸</div>
+                        <div class="flip-country-name">Hợp Chủng Quốc <br>Hoa Kỳ</div>
+                        <p class="card-text" style="margin-top:15px; color:#d4a843;">(Nhấp để Lật Thẻ)</p>
+                    </div>
+                    <div class="flip-back">
+                        <h3>D. Trump: Lựa chọn của Mỹ?</h3>
+                        <p class="card-text" style="margin-bottom:15px">Iran đang tấn công vùng Vịnh. Mỹ sẽ bảo vệ Saudi như thế nào?</p>
+                        <ul>
+                            <li>Gửi quân bộ binh đánh Iran ngay lập tức.</li>
+                            <li><strong>(Lịch sử):</strong> Chỉ cung cấp lá chắn tên lửa, yêu cầu Saudi tự vệ.</li>
+                            <li>Bỏ rơi vùng Vịnh để rút chi phí.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 8: Israel Card -->
+        <div class="slide">
+            <div class="flip-container" onclick="this.classList.toggle('flipped')">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <div class="flip-country-flag">🇮🇱</div>
+                        <div class="flip-country-name">Nhà Nước <br>Israel</div>
+                        <p class="card-text" style="margin-top:15px; color:#d4a843;">(Nhấp để Lật Thẻ)</p>
+                    </div>
+                    <div class="flip-back">
+                        <h3>B. Netanyahu: Nước đi của Israel?</h3>
+                        <p class="card-text" style="margin-bottom:15px">Tại sao Israel phá ngang đàm phán hạt nhân mà đánh phủ đầu?</p>
+                        <ul>
+                            <li><strong>(Lịch sử):</strong> Đánh phòng thủ trước đòn sinh tồn. "Chúng tôi có tin tình báo họ làm bom trong vành tháng".</li>
+                            <li>Lấy uy tín cá nhân của TT.</li>
+                            <li>Kéo Mỹ vào cuộc chiến.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 9: Iran Card -->
+        <div class="slide">
+            <div class="flip-container" onclick="this.classList.toggle('flipped')">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <div class="flip-country-flag">🇮🇷</div>
+                        <div class="flip-country-name">Cộng Hòa Hồi Giáo <br>Iran</div>
+                        <p class="card-text" style="margin-top:15px; color:#d4a843;">(Nhấp để Lật Thẻ)</p>
+                    </div>
+                    <div class="flip-back">
+                        <h3>Tổng thống Iran: Nước Cờ Răn Đe?</h3>
+                        <p class="card-text" style="margin-bottom:15px">Sau khi không kích vùng Vịnh. Iran sẵn sàng ngừng bắn với điều kiện gì?</p>
+                        <ul>
+                            <li><strong>(Lịch sử):</strong> Mỹ ngừng tấn công, bồi thường, và thừa nhận quyền lực của nhà nước hồi giáo.</li>
+                            <li>Tấn công tổng lực không thể thương lượng.</li>
+                            <li>Hủy chương trình hạt nhân (Không thể).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 10: Saudi Card -->
+        <div class="slide">
+            <div class="flip-container" onclick="this.classList.toggle('flipped')">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <div class="flip-country-flag">🇸🇦</div>
+                        <div class="flip-country-name">Vương Quốc <br>Ả rập Xê-út</div>
+                        <p class="card-text" style="margin-top:15px; color:#d4a843;">(Nhấp để Lật Thẻ)</p>
+                    </div>
+                    <div class="flip-back">
+                        <h3>Thái tử MBS: Ứng Phó Thế Nào?</h3>
+                        <p class="card-text" style="margin-bottom:15px">Tên lửa Iran rơi vào lãnh thổ, Saudi sẽ làm gì để cứu Vision 2030?</p>
+                        <ul>
+                            <li>Tuyên chiến Iran.</li>
+                            <li><strong>(Lịch sử):</strong> Tăng cực mạnh phòng thủ thép, Lên án chung, tuyệt đối không tham chiến trực tiếp để giữ hòa bình.</li>
+                            <li>Nhờ Trung Quốc điều đình.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- SLIDE 11: Timeline Diễn Biến -->
+        <div class="slide" style="overflow-y:auto; padding: 100px 40px; align-items: stretch; justify-content:flex-start">
+            <div class="slide-subtitle" style="margin-top:80px">Chuỗi Sự Kiện Thực Tế</div>
+            <h1 class="slide-title">Diễn Biến Căng Thẳng</h1>
+            <div class="timeline">
+                <div class="tl-item">
+                    <div class="tl-dot"></div>
+                    <div class="tl-content">
+                        <div class="tl-date">Tháng 10 / 2023</div>
+                        <p class="tl-text">Hamas tấn công quy mô lớn vào Israel. Khởi đầu chiến dịch trả đũa khốc liệt tại dải Gaza. Hình thành trạng thái thiết lập trật tự phòng thủ mới của Israel.</p>
+                    </div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-dot"></div>
+                    <div class="tl-content">
+                        <div class="tl-date">Tháng 04 / 2024</div>
+                        <p class="tl-text">Đại sứ quán Iran tại Syria bị tấn công. Iran lần đầu tiên đáp trả Israel trực tiếp bằng đường không quy mô nhất lịch sử. Định hình lại “Giới hạn đỏ”.</p>
+                    </div>
+                </div>
+                <div class="tl-item">
+                    <div class="tl-dot"></div>
+                    <div class="tl-content">
+                        <div class="tl-date">Tương Lại Kế Thừa</div>
+                        <p class="tl-text">Cấu trúc an ninh cũ đổ vỡ (Không còn sự dàn xếp tuyệt đối). Hướng tới các liên minh đối nghịch kiểu mới. Ngoại giao rơi vào khoảng không khe cửa hẹp.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 12: Vietnam -->
+        <div class="slide">
+            <div class="slide-subtitle">Góc Nhìn Tư Tưởng HCM</div>
+            <h1 class="slide-title">Bài Học Cho <span class="highlight">Việt Nam</span></h1>
+            <div class="grid-2">
+                <div class="glass-card">
+                    <h3 class="card-title">🎋 Ngoại Giao Cây Tre</h3>
+                    <p class="card-text">"Gốc vững, thân chắc, cành uyển chuyển". Đứng trước sóng gió địa chính trị, Việt Nam kiên định nguyên tắc đa phương hóa, làm bạn với tất cả, không đẩy các bất đồng thành đối đầu chiến lược.</p>
+                </div>
+                <div class="glass-card">
+                    <h3 class="card-title">🛡️ Nguyên Tắc "Bốn Không"</h3>
+                    <p class="card-text">Không tham gia liên minh quân sự; Không liên kết nước này chống nước kia; Không cho nước ngoài đặt căn cứ; Không sử dụng vũ lực trong quan hệ quốc tế. Bảo vệ ranh giới an toàn tuyệt đối tự chủ.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 13: Summary -->
+        <div class="slide">
+            <h1 class="slide-title" style="font-size: 5rem;">Xin Chân Thành <br><span class="highlight">Cảm Ơn</span></h1>
+            <p class="slide-desc" style="margin-top:20px; font-size:1.5rem">Bài thảo luận Nhóm 5 – Kết thúc trình chiếu.</p>
+        </div>
+
     </div>
-  </div>
 
-  <!-- ===== SLIDE 2: COURSE INFO ===== -->
-  <div class="slide" data-index="1">
-    <div class="slide-bg" style="background-image:url('assets/images/bg-2.jpg')"></div>
-    <div class="slide-overlay" style="background:linear-gradient(135deg,rgba(255,252,245,.88),rgba(240,233,215,.85))"></div>
-    <div class="slide-content split">
-      <div class="col-left">
-        <div class="slide-tag tag-dark">📋 Thông tin học phần</div>
-        <div class="big-title">Kế hoạch<br><span class="gold">Báo cáo</span></div>
-        <p style="font-size:15px;color:var(--txt2);line-height:1.7">Nhóm 5 chủ trì · Lớp 170265<br>Địa điểm: <strong style="color:var(--txt)">D5-101</strong> · Tuần 32/35<br>Hình thức: Trình bày · Nhập vai · Tranh luận</p>
-      </div>
-      <div class="col-right">
-        <div class="info-row-slide"><div class="label">Học phần</div><div class="value">Tư tưởng Hồ Chí Minh (SSH1151)</div></div>
-        <div class="info-row-slide"><div class="label">GVHD</div><div class="value">Phạm Thị Mai Duyên</div></div>
-        <div class="info-row-slide"><div class="label">Nhóm trưởng</div><div class="value">Nguyễn Duy Thái (20232543)</div></div>
-        <div class="info-row-slide"><div class="label">Chủ đề</div><div class="value">Mô phỏng căng thẳng Trung Đông</div></div>
-        <div class="info-row-slide"><div class="label">Thời lượng</div><div class="value">~40 phút · 4 phần chính</div></div>
-      </div>
+    <!-- Controls & Indicators -->
+    <div class="controls">
+        <button class="ctrl-btn" onclick="prevSlide()">❮</button>
+        <button class="ctrl-btn" onclick="nextSlide()">❯</button>
     </div>
-  </div>
+    <div class="page-indicator" id="page-text">1 / 13</div>
 
-  <!-- ===== SLIDE 3: OPENING QUESTION ===== -->
-  <div class="slide" data-index="2">
-    <div class="slide-bg" style="background-image:url('assets/images/bg-3.jpg')"></div>
-    <div class="slide-overlay" style="background:radial-gradient(ellipse at center,rgba(255,252,240,.85) 0%,rgba(240,230,205,.92) 100%)"></div>
-    <div class="slide-content">
-      <div class="slide-tag tag-gold">❓ Câu hỏi khởi động — Phần I</div>
-      <div class="big-title" style="font-size:clamp(22px,4vw,54px);font-style:italic">"Nguyên nhân chính của xung đột<br>Trung Đông là<br><span class="gold">Tôn giáo hay Địa chính trị?</span>"</div>
-      <div class="sub-title">Hãy suy nghĩ và ghi nhớ câu trả lời của bạn ngay bây giờ — sau 40 phút thảo luận, chúng ta sẽ cùng kiểm chứng.</div>
-    </div>
-  </div>
+    <script>
+        const slider = document.getElementById('slider');
+        const slides = document.querySelectorAll('.slide');
+        const bgs = document.querySelectorAll('.slide-bg');
+        const totalSlides = slides.length;
+        let currentSlide = 0;
 
-  <!-- ===== SLIDE 4: 3 CAUSES ===== -->
-  <div class="slide" data-index="3">
-    <div class="slide-bg" style="background-image:url('assets/images/bg-4.jpg')"></div>
-    <div class="slide-overlay" style="background:linear-gradient(180deg,rgba(255,252,242,.9) 0%,rgba(242,233,210,.88) 100%)"></div>
-    <div class="slide-content">
-      <div class="slide-tag tag-red">🌍 Phần I — Bối cảnh</div>
-      <div class="big-title" style="font-size:clamp(26px,4vw,52px);margin-bottom:36px">Ba nguyên nhân <span class="gold">cốt lõi</span></div>
-      <div class="slide-cards">
-        <div class="slide-card">
-          <div class="card-icon">🛢️</div>
-          <div class="card-title">Địa chính trị & Tài nguyên</div>
-          <div class="card-desc">Trữ lượng dầu mỏ khổng lồ + tuyến hàng hải huyết mạch (Suez, Hormuz) → các siêu cường tranh giành kiểm soát từ thế kỷ XX đến nay.</div>
-        </div>
-        <div class="slide-card">
-          <div class="card-icon">☪️</div>
-          <div class="card-title">Tôn giáo & Sắc tộc</div>
-          <div class="card-desc">Mâu thuẫn Sunni (Saudi Arabia) vs Shia (Iran) kéo dài hơn 1.300 năm. Xung đột Arab – Do Thái – Ba Tư – Kurd chưa có hồi kết.</div>
-        </div>
-        <div class="slide-card">
-          <div class="card-icon">🗺️</div>
-          <div class="card-title">Di sản lịch sử thực dân</div>
-          <div class="card-desc">Hiệp định Sykes-Picot (1916): Anh – Pháp vẽ biên giới cơ học, bỏ qua sắc tộc và tôn giáo bản địa → mâu thuẫn lãnh thổ không giải quyết được.</div>
-        </div>
-      </div>
-      <div class="section-num">I</div>
-    </div>
-  </div>
+        // Xử lý mũi tên điều hướng
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
 
-  <!-- ===== SLIDE 5: CONFLICT AXES ===== -->
-  <div class="slide" data-index="4">
-    <div class="slide-bg" style="background-image:url('assets/images/bg-5.jpg')"></div>
-    <div class="slide-overlay" style="background:linear-gradient(160deg,rgba(255,250,240,.9),rgba(245,235,210,.88))"></div>
-    <div class="slide-content">
-      <div class="slide-tag tag-red">⚔️ Phần I — Các trục xung đột</div>
-      <div class="big-title" style="font-size:clamp(24px,3.5vw,46px);margin-bottom:32px">Mạng lưới <span class="gold">xung đột đa tầng</span></div>
-      <div class="timeline-slide">
-        <div class="tl-item">
-          <div class="tl-num">1</div>
-          <div class="tl-body"><strong>🇮🇱🇵🇸 Israel – Palestine: Nút thắt 75 năm</strong>Tranh chấp chủ quyền lãnh thổ, Jerusalem, quyền hồi hương. Luật tử hình mới nhắm vào người Palestine (4/2026) → leo thang cực độ.</div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-num">2</div>
-          <div class="tl-body"><strong>🇮🇷🇮🇱🇺🇸 Trục Iran – Israel – Mỹ: Chiến lược tầng cao</strong>02/04/2026: Israel không kích cơ sở hạt nhân Iran. Iran phản công bằng tên lửa vào căn cứ Mỹ và Saudi Arabia. Học thuyết "Phòng thủ chủ động."</div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-num">3</div>
-          <div class="tl-body"><strong>🇮🇷🇸🇦 Iran – Saudi Arabia: Chiến tranh lạnh khu vực</strong>Shia vs Sunni không đối đầu trực tiếp mà tài trợ bên đối lập ở Yemen, Syria, Lebanon. 12 nước Ả Rập lên án Iran (3/2026).</div>
-        </div>
-      </div>
-    </div>
-  </div>
+        // Xử lý lướt chuột/trackpad mượt mà
+        let isThrottled = false;
+        document.addEventListener('wheel', (e) => {
+            if (isThrottled) return;
+            // Chỉ bắt scroll ngang chủ đích hoặc scroll dọc trên thiết bị nhỏ
+            if (Math.abs(e.deltaX) > 20 || Math.abs(e.deltaY) > 40) {
+                if (e.deltaX > 0 || e.deltaY > 0) nextSlide();
+                else prevSlide();
+                
+                isThrottled = true;
+                setTimeout(() => isThrottled = false, 800);
+            }
+        }, {passive: true});
 
-  <!-- ===== SLIDE 6: ROLEPLAY ===== -->
-  <div class="slide" data-index="5">
-    <div class="slide-bg" style="background-image:url('assets/images/bg-6.jpg')"></div>
-    <div class="slide-overlay" style="background:linear-gradient(135deg,rgba(255,252,245,.9),rgba(238,228,205,.87))"></div>
-    <div class="slide-content">
-      <div class="slide-tag tag-red">🎭 Phần II — Nhập vai</div>
-      <div class="big-title" style="font-size:clamp(26px,4vw,52px);margin-bottom:14px">Mô phỏng <span class="gold">lãnh đạo quốc gia</span></div>
-      <div class="sub-title" style="margin-bottom:32px;font-size:14px;color:var(--muted)">⚡ Bối cảnh: 28/2/2026 — Mỹ & Israel bất ngờ tấn công Iran · Eo Hormuz đóng cửa · Dầu vượt <strong style="color:var(--red)">120$/thùng</strong></div>
-      <div class="rp-grid">
-        <div class="rp-card" onclick="showRPPopup('us')"><div class="rp-flag">🇺🇸</div><div class="rp-country">Mỹ</div><div class="rp-name">Donald Trump</div></div>
-        <div class="rp-card" onclick="showRPPopup('il')"><div class="rp-flag">🇮🇱</div><div class="rp-country">Israel</div><div class="rp-name">Netanyahu</div></div>
-        <div class="rp-card" onclick="showRPPopup('ir')"><div class="rp-flag">🇮🇷</div><div class="rp-country">Iran</div><div class="rp-name">Pezeshkian</div></div>
-        <div class="rp-card" onclick="showRPPopup('sa')"><div class="rp-flag">🇸🇦</div><div class="rp-country">Saudi Arabia</div><div class="rp-name">MBS</div></div>
-        <div class="rp-card" onclick="showRPPopup('ps')"><div class="rp-flag">🇵🇸</div><div class="rp-country">Palestine</div><div class="rp-name">Hamas</div></div>
-      </div>
-      <p style="margin-top:24px;font-size:13px;color:var(--muted)">👆 Bấm vào quốc gia để xem câu hỏi mẫu · 13 câu hỏi tình huống</p>
-    </div>
-  </div>
+        function updateSlider() {
+            slider.style.transform = `translateX(-${currentSlide * 100}vw)`;
+            
+            slides.forEach((sld, idx) => {
+                sld.classList.toggle('active', idx === currentSlide);
+            });
+            
+            bgs.forEach((bg, idx) => {
+                if(bg) bg.classList.toggle('active', idx === currentSlide % bgs.length);
+            });
 
-  <!-- ===== SLIDE 7: 3 ENDINGS ===== -->
-  <div class="slide" data-index="6">
-    <div class="slide-bg" style="background-image:url('assets/images/bg-7.jpg')"></div>
-    <div class="slide-overlay" style="background:linear-gradient(160deg,rgba(255,252,240,.9),rgba(240,232,208,.88))"></div>
-    <div class="slide-content">
-      <div class="slide-tag tag-red">🎬 Phần II — Kịch bản kết thúc</div>
-      <div class="big-title" style="font-size:clamp(24px,3.5vw,48px);margin-bottom:32px">Ba con đường <span class="gold">kết thúc</span></div>
-      <div class="sc-slide-grid">
-        <div class="sc-slide">
-          <div class="sc-slide-bar" style="background:linear-gradient(90deg,#1a6b3a,#2ecc71)"></div>
-          <div class="sc-slide-body">
-            <div class="sc-slide-icon">☮️</div>
-            <div class="sc-slide-title" style="color:#1a6b3a">GOOD ENDING: Hòa bình có điều kiện</div>
-            <div class="sc-slide-desc">Oman/Qatar trung gian. Iran rút khỏi Syria đổi lại Israel giảm không kích. → Thực chất là "đóng băng xung đột", không phải hòa bình thật sự.</div>
-          </div>
-        </div>
-        <div class="sc-slide">
-          <div class="sc-slide-bar" style="background:linear-gradient(90deg,#c0392b,#e74c3c)"></div>
-          <div class="sc-slide-body">
-            <div class="sc-slide-icon">⚔️</div>
-            <div class="sc-slide-title" style="color:#c0392b">BAD ENDING 1: Chiến tranh Iran–Israel</div>
-            <div class="sc-slide-desc">Iran tấn công trực tiếp lãnh thổ Israel. Israel đáp trả vào cơ sở hạt nhân. Hàng nghìn UAV + tên lửa đồng loạt, Mỹ có thể tham chiến.</div>
-          </div>
-        </div>
-        <div class="sc-slide">
-          <div class="sc-slide-bar" style="background:linear-gradient(90deg,#6c3483,#9b59b6)"></div>
-          <div class="sc-slide-body">
-            <div class="sc-slide-icon">🌍</div>
-            <div class="sc-slide-title" style="color:#6c3483">BAD ENDING 2: Chiến tranh khu vực</div>
-            <div class="sc-slide-desc">Hezbollah + Houthi + Iraq tham chiến. Giá dầu tăng vọt. Mỹ, NATO, vùng Vịnh vào cuộc. Khủng hoảng kinh tế toàn cầu.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+            document.getElementById('page-text').innerText = `${currentSlide + 1} / ${totalSlides}`;
+        }
 
-  <!-- ===== SLIDE 8: REAL EVENTS ===== -->
-  <div class="slide" data-index="7">
-    <div class="slide-bg" style="background-image:url('assets/images/bg-8.jpg')"></div>
-    <div class="slide-overlay" style="background:linear-gradient(160deg,rgba(240,248,255,.9),rgba(220,235,248,.88))"></div>
-    <div class="slide-content">
-      <div class="slide-tag tag-blue">📡 Phần III — Diễn biến thực tế</div>
-      <div class="big-title" style="font-size:clamp(24px,3.5vw,48px);margin-bottom:32px">Thực tế <span class="gold">04/2026</span></div>
-      <div class="timeline-slide">
-        <div class="tl-item">
-          <div class="tl-num">💥</div>
-          <div class="tl-body"><strong>Israel + Mỹ không kích Tehran & Tabriz</strong>Đụng độ trực tiếp, không còn qua ủy nhiệm. Iran đáp trả bằng tên lửa đạn đạo vào căn cứ Mỹ tại Ả Rập Xê Út, gây nhiều thương vong.</div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-num">🚀</div>
-          <div class="tl-body"><strong>Houthi (Yemen) phóng tên lửa vào Israel (cuối 3/2026)</strong>Mặt trận mở rộng — đúng theo kịch bản Bad Ending 2 đã mô phỏng ở Phần II.</div>
-        </div>
-        <div class="tl-item">
-          <div class="tl-num">🛢️</div>
-          <div class="tl-body"><strong>Eo biển Hormuz bị siết — phí bảo hiểm tàu tăng từ 1% lên 10%</strong>Giá xăng dầu toàn cầu ở mức báo động. Sinh viên chúng ta cảm nhận trực tiếp qua giá hàng hóa tăng.</div>
-        </div>
-      </div>
-    </div>
-  </div>
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateSlider();
+            }
+        }
 
-  <!-- ===== SLIDE 9: 3 FORECASTS ===== -->
-  <div class="slide" data-index="8">
-    <div class="slide-bg" style="background-image:url('assets/images/bg-9.jpg')"></div>
-    <div class="slide-overlay" style="background:linear-gradient(160deg,rgba(240,248,255,.9),rgba(220,235,248,.88))"></div>
-    <div class="slide-content">
-      <div class="slide-tag tag-blue">🔮 Phần III — Dự báo tương lai</div>
-      <div class="big-title" style="font-size:clamp(24px,3.5vw,48px);margin-bottom:32px">Ba kịch bản <span class="gold">tương lai</span></div>
-      <div class="sc-slide-grid">
-        <div class="sc-slide">
-          <div class="sc-slide-bar" style="background:linear-gradient(90deg,#c0392b,#e74c3c)"></div>
-          <div class="sc-slide-body">
-            <div class="sc-slide-icon">☢️</div>
-            <div class="sc-slide-title" style="color:#c0392b">Chiến tranh tổng lực (~20%)</div>
-            <div class="sc-slide-desc">Dầu đạt 174$/thùng. Kinh tế thế giới suy thoái. Ai lợi: Nga và các nước xuất khẩu dầu ngoài vùng chiến sự. Ai thiệt: toàn nhân loại.</div>
-          </div>
-        </div>
-        <div class="sc-slide">
-          <div class="sc-slide-bar" style="background:linear-gradient(90deg,#b5880a,#d4a120)"></div>
-          <div class="sc-slide-body">
-            <div class="sc-slide-icon">⚔️</div>
-            <div class="sc-slide-title" style="color:#b5880a">Xung đột giới hạn (~55%)</div>
-            <div class="sc-slide-desc">Thực tế nhất. Các bên "đánh để dằn mặt", tập trung vào mục tiêu quân sự và chiến tranh mạng, tránh sa lầy chiến tranh trên bộ.</div>
-          </div>
-        </div>
-        <div class="sc-slide">
-          <div class="sc-slide-bar" style="background:linear-gradient(90deg,#1a6b3a,#27ae60)"></div>
-          <div class="sc-slide-body">
-            <div class="sc-slide-icon">🕊️</div>
-            <div class="sc-slide-title" style="color:#1a6b3a">Hạ nhiệt ngoại giao (~25%)</div>
-            <div class="sc-slide-desc">Pakistan, Thổ Nhĩ Kỳ làm trung gian. Ngừng bắn để cứu vãn kinh tế. Mong đợi nhất — nhưng cũng khó đạt nhất.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlider();
+            }
+        }
 
-  <!-- ===== SLIDE 10: VIETNAM ===== -->
-  <div class="slide" data-index="9">
-    <div class="slide-bg" style="background-image:url('assets/images/bg-10.jpg')"></div>
-    <div class="slide-overlay" style="background:linear-gradient(160deg,rgba(240,252,244,.9),rgba(215,240,225,.88))"></div>
-    <div class="slide-content">
-      <div class="slide-tag tag-green">🇻🇳 Phần IV — Liên hệ Việt Nam</div>
-      <div class="big-title" style="font-size:clamp(24px,3.5vw,48px);margin-bottom:32px">Ba trụ cột <span class="gold">chính sách</span></div>
-      <div class="pillar-slide-grid">
-        <div class="pillar-slide ps1">
-          <div class="pillar-slide-icon">🎋</div>
-          <div class="pillar-slide-kw">Ngoại giao Cây Tre</div>
-          <div class="pillar-slide-desc">Gốc vững — kiên định độc lập tự chủ và lợi ích quốc gia. Cành uyển chuyển — làm bạn với tất cả, không chọn phe, <strong>chọn chính nghĩa</strong>.</div>
-        </div>
-        <div class="pillar-slide ps2">
-          <div class="pillar-slide-icon">🛡️</div>
-          <div class="pillar-slide-kw">Bốn Không</div>
-          <div class="pillar-slide-desc">Không liên minh quân sự · Không liên kết chống nước khác · Không cho đặt căn cứ · Không dùng vũ lực → Tránh trở thành <strong>chiến trường ủy nhiệm</strong>.</div>
-        </div>
-        <div class="pillar-slide ps3">
-          <div class="pillar-slide-icon">🌐</div>
-          <div class="pillar-slide-kw">Độc lập & Hội nhập</div>
-          <div class="pillar-slide-desc">CPTPP, EVFTA, RCEP. Đa dạng hóa chuỗi cung ứng. Phát triển kinh tế biển, logistics. <strong>Sức chống chịu</strong> trước biến động địa chính trị.</div>
-        </div>
-      </div>
-      <div class="section-num" style="color:rgba(26,107,58,.08)">IV</div>
-    </div>
-  </div>
-
-  <!-- ===== SLIDE 11: LESSONS ===== -->
-  <div class="slide" data-index="10">
-    <div class="slide-bg" style="background-image:url('assets/images/bg-11.jpg')"></div>
-    <div class="slide-overlay" style="background:linear-gradient(160deg,rgba(240,252,244,.9),rgba(215,240,225,.88))"></div>
-    <div class="slide-content">
-      <div class="slide-tag tag-green">📚 Phần IV — Bài học</div>
-      <div class="big-title" style="font-size:clamp(24px,3.5vw,48px);margin-bottom:32px">Bài học cho <span class="gold">Việt Nam</span></div>
-      <div class="slide-cards-2">
-        <div class="slide-card"><div class="card-icon">🏴</div><div class="card-title">Không để bị lệ thuộc cường quốc</div><div class="card-desc">"Đem sức ta mà tự giải phóng cho ta." Phụ thuộc → thành bàn cờ địa chính trị như nhiều nước Trung Đông. Đường lối độc lập là bất biến.</div></div>
-        <div class="slide-card"><div class="card-icon">⚖️</div><div class="card-title">Ưu tiên hòa bình & UNCLOS 1982</div><div class="card-desc">Bạo lực không giải quyết căn nguyên vấn đề. Tranh chấp Biển Đông cần đối thoại, dựa trên luật pháp quốc tế, xây dựng lòng tin.</div></div>
-        <div class="slide-card"><div class="card-icon">🤝</div><div class="card-title">Củng cố đại đoàn kết dân tộc</div><div class="card-desc">Mâu thuẫn nội bộ ở Trung Đông bị thế lực bên ngoài lợi dụng. Ổn định chính trị–xã hội là nền tảng quốc phòng vững chắc nhất.</div></div>
-        <div class="slide-card"><div class="card-icon">📈</div><div class="card-title">Đa dạng hóa kinh tế</div><div class="card-desc">Trung Đông bất ổn vì phụ thuộc dầu mỏ đơn chiều. Việt Nam cần đa dạng chuỗi cung ứng, tham gia nhiều FTA, chuyển đổi sang kinh tế xanh.</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== SLIDE 12: CLOSING ===== -->
-  <div class="slide" data-index="11">
-    <div class="slide-bg" style="background-image:url('assets/images/bg-12.jpg')"></div>
-    <div class="slide-overlay" style="background:radial-gradient(ellipse at center,rgba(255,252,242,.88) 0%,rgba(243,235,210,.94) 100%)"></div>
-    <div class="slide-content">
-      <div class="slide-tag tag-gold">🌿 Kết luận</div>
-      <div class="big-title" style="margin-bottom:36px">"Không có gì quý hơn<br><span class="gold">độc lập, tự do."</span></div>
-      <div class="quote-box">
-        <div class="quote-icon">🕊️</div>
-        <div class="quote-text">Vị trí địa lý tạo ra bối cảnh, nhưng <span class="gold">chính sách và đường lối</span> mới là yếu tố quyết định vận mệnh quốc gia.</div>
-        <div class="quote-author">— Bài học từ Trung Đông · Vận dụng cho Việt Nam</div>
-      </div>
-      <div style="margin-top:28px;font-size:13px;color:var(--muted)">Nhóm 5 · Lớp 170265 · SSH1151 · GVHD: Phạm Thị Mai Duyên</div>
-    </div>
-  </div>
-
-</div><!-- /slider -->
-
-<!-- ROLEPLAY POPUP -->
-<div id="q-popup" onclick="if(event.target===this)closePopup()">
-  <div id="q-popup-inner">
-    <button id="q-popup-close" onclick="closePopup()">✕</button>
-    <div id="q-popup-flag"></div>
-    <div id="q-popup-country"></div>
-    <div id="q-popup-role"></div>
-    <div id="q-popup-q"></div>
-    <div id="q-popup-hint">💡 Câu hỏi mẫu — xem toàn bộ 13 câu trong Phần II Nhập vai</div>
-  </div>
-</div>
-
-<div id="nav">
-  <button class="nav-btn" id="prevBtn">←</button>
-  <div class="slide-dots" id="dots"></div>
-  <button class="nav-btn" id="nextBtn">→</button>
-</div>
-
-<script>
-const slides = document.querySelectorAll('.slide');
-const total = slides.length;
-let cur = 0;
-
-function updateUI(){
-  document.getElementById('progress').style.width = ((cur+1)/total*100)+'%';
-  document.getElementById('counter').textContent = (cur+1)+' / '+total;
-  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
-}
-
-const dotsWrap = document.getElementById('dots');
-slides.forEach((_,i)=>{
-  const d = document.createElement('div');
-  d.className = 'dot'+(i===0?' active':'');
-  d.addEventListener('click',()=>goTo(i));
-  dotsWrap.appendChild(d);
-});
-
-function goTo(n){
-  if(n<0||n>=total) return;
-  slides[cur].classList.remove('active');
-  slides[cur].classList.add('exit-left');
-  setTimeout(()=>slides[cur].classList.remove('exit-left'),500);
-  cur=n;
-  slides[cur].classList.add('active');
-  updateUI();
-  // Confetti on last slide
-  if(n===total-1 && !confettiFired){
-    confettiFired=true;
-    setTimeout(launchConfetti,400);
-  }
-}
-
-document.getElementById('prevBtn').addEventListener('click',()=>goTo(cur-1));
-document.getElementById('nextBtn').addEventListener('click',()=>goTo(cur+1));
-document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight'||e.key==='ArrowDown') goTo(cur+1);
-  if(e.key==='ArrowLeft'||e.key==='ArrowUp') goTo(cur-1);
-  if(e.key==='Escape') closePopup();
-});
-updateUI();
-
-// ===== CONFETTI =====
-let confettiFired=false;
-function launchConfetti(){
-  const colors=['#d4a843','#f0c860','#27ae60','#3498db','#e74c3c','#9b59b6','#fff','#f97316'];
-  for(let i=0;i<90;i++){
-    const p=document.createElement('div');
-    p.className='confetti-piece';
-    p.style.cssText=`left:${Math.random()*100}vw;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${2.5+Math.random()*2}s;animation-delay:${Math.random()*1.5}s;--drift:${Math.random()*260-130}px;width:${6+Math.random()*8}px;height:${12+Math.random()*10}px;border-radius:${Math.random()>0.5?'50%':'3px'}`;
-    document.body.appendChild(p);
-    setTimeout(()=>p.remove(),5500);
-  }
-}
-
-// ===== ROLEPLAY POPUP =====
-const rpData={
-  us:{flag:'🇺🇸',country:'Mỹ',role:'Donald Trump — Tổng thống Mỹ',q:'Tại sao Mỹ tấn công Iran trong lúc đang đàm phán hạt nhân?<br><br><span style="font-size:13px;color:#374151">A. "Iran đang câu giờ — tôi có bằng chứng tình báo họ sắp tấn công trước." ✅<br>B. "5 vòng đàm phán thất bại, đã đến lúc dùng sức mạnh." ❌<br>C. "Netanyahu thuyết phục tôi — ông ấy có thông tin tình báo." ❌</span>'},
-  il:{flag:'🇮🇱',country:'Israel',role:'Benjamin Netanyahu — Thủ tướng Israel',q:'Israel và Mỹ tấn công Iran trong lúc đàm phán. Netanyahu giải thích thế nào?<br><br><span style="font-size:13px;color:#374151">A. "Đây là tự vệ phòng ngừa — Iran sắp có đủ uranium làm bom." ✅<br>B. "Iran chuẩn bị tấn công Israel trước trong vòng 48 giờ." ❌<br>C. "Tôi đã thuyết phục Trump — đây là quyết định chung." ❌</span>'},
-  ir:{flag:'🇮🇷',country:'Iran',role:'Masoud Pezeshkian — Tổng thống Iran',q:'Iran tấn công Saudi Arabia dù vừa bình thường hóa quan hệ. Tehran giải thích thế nào?<br><br><span style="font-size:13px;color:#374151">A. "Chúng tôi chỉ nhắm vào căn cứ Mỹ — thiệt hại dân sự Saudi là ngoài ý muốn." ✅<br>B. "Saudi là kẻ thù — họ để Mỹ dùng lãnh thổ tấn công chúng tôi." ❌<br>C. "Chúng tôi không tấn công Saudi — đây là tin giả." ❌</span>'},
-  sa:{flag:'🇸🇦',country:'Saudi Arabia',role:'MBS — Thái tử Saudi Arabia',q:'Iran tấn công Saudi Arabia. MBS phản ứng thế nào?<br><br><span style="font-size:13px;color:#374151">A. Lên án Iran, tăng phòng thủ, mua tên lửa đánh chặn, không phản công. ✅<br>B. Saudi tuyên chiến Iran và phối hợp tấn công cùng Israel và Mỹ. ❌<br>C. Saudi làm trung gian đàm phán giữa Mỹ và Iran ngay lập tức. ❌</span>'},
-  ps:{flag:'🇵🇸',country:'Palestine',role:'Đại diện Hamas — Gaza',q:'Iran — nhà tài trợ chính của Hamas — đang bị tấn công nặng nề. Hamas phản ứng thế nào?<br><br><span style="font-size:13px;color:#374151">A. "Chúng tôi đoàn kết với Iran. Ý chí của người Palestine không thể bị đánh bại." ✅<br>B. "Hamas sẽ mở mặt trận thứ hai tấn công Israel để giúp Iran." ❌<br>C. "Trong khi Mỹ và Israel bận với Iran, Hamas đàm phán vị thế tốt hơn ở Gaza." ❌</span>'}
-};
-
-function showRPPopup(key){
-  const d=rpData[key];
-  if(!d) return;
-  document.getElementById('q-popup-flag').textContent=d.flag;
-  document.getElementById('q-popup-country').textContent=d.country;
-  document.getElementById('q-popup-role').textContent=d.role;
-  document.getElementById('q-popup-q').innerHTML=d.q;
-  document.getElementById('q-popup').classList.add('open');
-}
-function closePopup(){
-  document.getElementById('q-popup').classList.remove('open');
-}
-
-// ===== ZOOM + FULLSCREEN =====
-let currentZoom=1;
-document.getElementById('zoomInBtn').addEventListener('click',()=>{
-  currentZoom=Math.min(currentZoom+0.1,1.8);
-  document.querySelectorAll('.slide-content').forEach(el=>el.style.zoom=currentZoom);
-});
-document.getElementById('zoomOutBtn').addEventListener('click',()=>{
-  currentZoom=Math.max(currentZoom-0.1,0.7);
-  document.querySelectorAll('.slide-content').forEach(el=>el.style.zoom=currentZoom);
-});
-document.getElementById('fullscreenBtn').addEventListener('click',()=>{
-  if(!document.fullscreenElement){
-    document.documentElement.requestFullscreen().catch(err=>console.log(err.message));
-  } else {
-    document.exitFullscreen();
-  }
-});
-document.addEventListener('fullscreenchange',()=>{
-  const btn=document.getElementById('fullscreenBtn');
-  if(document.fullscreenElement){
-    btn.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3h-3M21 8h-3v-3M3 16h3v3M16 21v-3h3"></path></svg>`;
-    btn.title='Thoát toàn màn hình';
-  } else {
-    btn.innerHTML=`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>`;
-    btn.title='Toàn màn hình';
-  }
-});
-</script>
+        // Logic Interactive Poll
+        function runPoll(choice) {
+            document.getElementById('poll-opts').style.display = 'none';
+            document.getElementById('poll-results').style.display = 'block';
+            
+            setTimeout(() => {
+                document.getElementById('bar-geo').style.width = choice === 0 ? '75%' : (choice === 2 ? '40%' : '15%');
+                document.getElementById('bar-rel').style.width = choice === 1 ? '70%' : (choice === 2 ? '40%' : '20%');
+                document.getElementById('bar-both').style.width = choice === 2 ? '90%' : '30%';
+            }, 100);
+        }
+    </script>
 </body>
 </html>
