@@ -9,7 +9,7 @@ const socket  = io(ENV_URL, { transports: ['websocket', 'polling'] });
 // Admin code loaded dynamically from server (default fallback)
 let ADMIN_CODE_FALLBACK = '654321';
 
-const LOG_ICONS  = { join:'👋', vote:'✅', comment:'💬', question:'❓', answer:'💡', block:'🚫', change_admin_code:'🔐', change_slide_password:'🔑' };
+const LOG_ICONS  = { join:'👋', vote:'✅', comment:'💬', question:'❓', answer:'💡', block:'🚫', change_admin_code:'🔐', change_slide_password:'🔑', lucky_wheel:'🎁', random_picker:'🎲' };
 
 // ── Shared glass card style ──────────────────────────
 const G = (extra = {}) => ({
@@ -1225,7 +1225,7 @@ export default function AdminDashboard() {
           {tab==='logs' && (
             <div>
               <div style={{ display:'flex', gap:'0.4rem', marginBottom:'0.9rem', flexWrap:'wrap', alignItems:'center' }}>
-                {['all','join','vote','comment','question','answer'].map(f => (
+                {['all','join','vote','comment','question','answer','lucky_wheel','random_picker'].map(f => (
                   <button key={f} onClick={() => setLogFilter(f)}
                     style={{ padding:'0.3rem 0.85rem', borderRadius:'20px', border:'1px solid rgba(0,0,0,0.1)', background:logFilter===f?'rgba(181,134,13,0.1)':'rgba(255,255,255,0.7)', color:logFilter===f?'#b5860d':'#78726a', cursor:'pointer', fontSize:'0.78rem', fontFamily:'Inter,sans-serif', fontWeight:logFilter===f?700:400 }}>
                     {f==='all'?'Tất cả':`${LOG_ICONS[f]||''} ${f}`}

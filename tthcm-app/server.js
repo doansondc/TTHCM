@@ -327,13 +327,18 @@ io.on('connection', (socket) => {
     const qaSet = new Map();
     questions.forEach(q => { if (!qaSet.has(q.mssv)) qaSet.set(q.mssv, { name: q.name, mssv: q.mssv }); });
     const pool = qaSet.size > 0 ? [...qaSet.values()] : Object.values(users);
-    if (pool.length > 0) io.emit('wheel_winner', pool[Math.floor(Math.random() * pool.length)]);
+    if (pool.length > 0) {
+      const winner = pool[Math.floor(Math.random() * pool.length)];
+      logAction('lucky_wheel', { name: winner.name, mssv: winner.mssv });
+      io.emit('wheel_winner', winner);
+    }
   });
 
   socket.on('spin_global_picker', () => {
     const pool = Object.values(users);
     if (pool.length > 0) {
       const winner = pool[Math.floor(Math.random() * pool.length)];
+      logAction('random_picker', { name: winner.name, mssv: winner.mssv });
       io.emit('global_picker_winner', { winner, pool });
     }
   });
