@@ -91,7 +91,7 @@ let adminCode    = State.adminCode    || '654321';
 let slidePassword = State.slidePassword || 'SSH1151';
 let commentHistory = State.commentHistory || [];
 let pinnedItem     = State.pinnedItem || null;
-let geminiApiKey   = State.geminiApiKey || '';
+let geminiApiKey   = State.geminiApiKey || 'AIzaSyBK4eGLsAC1x5dzrKHsZtCbMF3XYC-OCCk';
 
 const lastAction = {};
 const RATE_MS    = { reaction:200, message:2500 };
@@ -577,7 +577,11 @@ io.on('connection', (socket) => {
     }
     try {
       const others = data.options.filter(o => o.label !== data.resultTitle).map(o => o.label).join(', ');
-      const prompt = `Bạn là chuyên gia phân tích địa chính trị. Phân tích kết quả từ ${data.totalVotes} biểu quyết của hội trường về chủ đề "${data.title}". Khán giả đã chọn kịch bản chiến thắng: "${data.resultTitle}", thay vì: "${others}". Viết ĐÚNG một đoạn văn (khoảng 150 chữ) nhận định lý do cực kỳ sắc nét, mạch lạc tại sao đám đông lại chọn phương án này, ý nghĩa chiến lược đằng sau nó. Ngôn từ hùng biện.`;
+      const prompt = `Bạn là một chuyên gia về Tư tưởng Hồ Chí Minh, Kinh tế, Chính trị và Địa chính trị (Đặc biệt là chiến sự Trung Đông).
+Hội trường vừa tiến hành biểu quyết với ${data.totalVotes} phiếu.
+Chủ đề mổ xẻ: "${data.title}".
+Đám đông đã chọn kịch bản chiến thắng: "${data.resultTitle}" (đã bị lu mờ đi các phương án: "${others}").
+YÊU CẦU: Viết một đoạn nhận định thật NGẮN GỌN (tuyệt đối DƯỚI 250 KÝ TỰ chữ cái). Hệ thống hóa lựa chọn trên theo lăng kính ngoại giao, đường lối chính trị học và cục diện Trung Đông đan xen. Từ ngữ hùng hồn, dứt khoát.`;
 
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`, {
         method: 'POST',
@@ -587,7 +591,7 @@ io.on('connection', (socket) => {
       const json = await res.json();
       const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
       if (text) {
-        callback?.({ ok: true, text });
+        callback?.({ ok: true, text: text.trim() });
       } else {
         callback?.({ ok: false, text: "API trả về kết quả rỗng." });
       }
