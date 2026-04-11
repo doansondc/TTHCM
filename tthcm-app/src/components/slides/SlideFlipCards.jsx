@@ -44,13 +44,16 @@ function FlipCard({ card, idx, delay }) {
         <div className={`flip-card-inner${flipped ? ' flipped' : ''}`} style={{ height: '100%' }}>
 
           {/* ══ FRONT ══ */}
-          <div className="flip-card-face" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <div className="flip-card-face" style={{ height: '100%', display: 'flex', flexDirection: 'column', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}>
             {/* Image */}
             {card.front.image && (
               <div style={{
                 height: '195px', flexShrink: 0, overflow: 'hidden',
                 borderRadius: '10px', position: 'relative',
                 background: `linear-gradient(135deg, ${card.accentColor}18 0%, ${card.accentColor}35 100%)`,
+                backfaceVisibility: 'hidden', 
+                WebkitBackfaceVisibility: 'hidden',
+                transform: 'translateZ(0)' // Hardware acceleration to enforce backface clipping
               }}>
                 {/* Fallback icon */}
                 <div style={{
@@ -62,13 +65,14 @@ function FlipCard({ card, idx, delay }) {
                 </div>
                 <img
                   src={card.front.image} alt=""
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.80, position: 'relative', zIndex: 1 }}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.80, position: 'relative', zIndex: 1, backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
                   onError={e => { e.currentTarget.style.display = 'none'; }}
                 />
                 {/* Bottom gradient overlay */}
                 <div style={{
                   position: 'absolute', inset: 0, zIndex: 2,
                   background: `linear-gradient(180deg, transparent 35%, ${card.accentColor}50 100%)`,
+                  backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden'
                 }} />
                 {/* Status badge */}
                 <div style={{
