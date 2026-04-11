@@ -113,6 +113,10 @@ export default function AdminDashboard() {
   // Fetch config (admin code + slide password) from server on mount
   useEffect(() => {
     fetch('/api/config').then(r => r.json()).then(d => {
+      let adminCode    = d.adminCode    || '654321';
+      let slidePassword = d.slidePassword || 'SSH1151';
+      let commentHistory = d.commentHistory || [];
+      
       if (d.adminCode)      setAdminCodeState(d.adminCode);
       if (d.slidePassword)  setSlidePassState(d.slidePassword);
     }).catch(() => {});
@@ -143,6 +147,7 @@ export default function AdminDashboard() {
     socket.emit('get_config');
     socket.emit('get_qr_config');
     socket.emit('get_rate_ms');
+    socket.emit('get_comment_history');
     socket.on('admin_logs',          setLogs);
     socket.on('update_users',        setUsers);
     socket.on('update_votes',        setVotes);
@@ -161,11 +166,11 @@ export default function AdminDashboard() {
     socket.on('comments_status',     setCommentsOn);
     socket.on('questions_status',    setQuestionsOn);
     socket.on('reactions_status',    setReactionsOn);
-    socket.on('comment_mode_status', setCommentModeOn);
     socket.on('rate_ms_updated',     setRateMs);
+    socket.on('comment_history',     setCHist);
     socket.on('config_update',       d => { if (d.adminCode) setAdminCodeState(d.adminCode); if (d.slidePassword) setSlidePassState(d.slidePassword); });
     socket.on('slide_password_updated', d => { if (d.slidePassword) setSlidePassState(d.slidePassword); });
-    return () => ['admin_logs','update_users','update_votes','update_polls','quiz_bank_update','update_questions','new_question','question_answered','poll_status','blocked_ips','quiz_state','blocked_mssv_update','muted_mssv_update','comment_queue_update','comments_status','questions_status','reactions_status','comment_mode_status','rate_ms_updated','config_update','slide_password_updated','qr_config_update'].forEach(e => socket.off(e));
+    return () => ['admin_logs','update_users','update_votes','update_polls','quiz_bank_update','update_questions','new_question','question_answered','poll_status','blocked_ips','quiz_state','blocked_mssv_update','muted_mssv_update','comment_queue_update','comments_status','questions_status','reactions_status','comment_mode_status','rate_ms_updated','comment_history','config_update','slide_password_updated','qr_config_update'].forEach(e => socket.off(e));
   }, [authed]);
 
   useEffect(() => {
@@ -283,6 +288,7 @@ export default function AdminDashboard() {
             ['quiz','📝','Đặt câu hỏi', quizBank.length > 0 ? quizBank.length : null],
             ['qa','❓','Hỏi & Đáp', pendingQs > 0 ? pendingQs : null],
             ['queue','📬','Duyệt Bình Luận', commentQueue.length > 0 ? commentQueue.length : null],
+            ['chist','💿','Nhật Ký Comment', cHist.length > 0 ? cHist.length : null],
             ['students','🎓','Danh Sách SV', studentList.length > 0 ? studentList.length : null],
             ['users','👥','Đang Trực Tuyến', users.length > 0 ? users.length : null],
             ['moderation','🛡️','Kiểm Duyệt', moderationCount > 0 ? moderationCount : null],
@@ -982,16 +988,16 @@ export default function AdminDashboard() {
           {tab==='users' && (
             <div>
               <h3 style={{ fontSize:'0.73rem', color:'#78726a', marginBottom:'1rem', letterSpacing:'0.1em', textTransform:'uppercase', fontWeight:700 }}>{users.length} Người Dùng Trực Tuyến</h3>
-              <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(240px,1fr))', gap:'0.7rem' }}>
+              <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(310px,1fr))', gap:'0.7rem' }}>
                 {users.map((u,i) => (
                   <div key={i} style={G({ padding:'0.9rem', display:'flex', justifyContent:'space-between', alignItems:'flex-start' })}>
-                    <div style={{ display:'flex', gap:'0.7rem', alignItems:'center', minWidth:0 }}>
-                      <div style={{ width:'36px', height:'36px', borderRadius:'50%', background:`hsl(${(i * 47) % 360}, 55%, 88%)`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'0.85rem', fontWeight:700, color:`hsl(${(i * 47) % 360}, 50%, 35%)`, flexShrink:0 }}>
+                    <div style={{ display:'flex', gap:'0.7rem', alignItems:'center', minWidth:0, marginRight:'0.5rem' }}>
+                      <div style={{ width:'42px', height:'42px', borderRadius:'50%', background:`hsl(${(i * 47) % 360}, 55%, 88%)`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1rem', fontWeight:700, color:`hsl(${(i * 47) % 360}, 50%, 35%)`, flexShrink:0 }}>
                         {(u.name||u).charAt(0).toUpperCase()}
                       </div>
                       <div style={{ minWidth:0 }}>
-                        <div style={{ fontWeight:700, fontSize:'0.88rem', color:'#1a1714', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.name||u}</div>
-                        {u.mssv && <div style={{ fontSize:'0.72rem', color:'#78726a' }}>{u.mssv}</div>}
+                        <div style={{ fontWeight:700, fontSize:'0.92rem', color:'#1a1714', lineHeight:1.3 }}>{u.name||u}</div>
+                        {u.mssv && <div style={{ fontSize:'0.72rem', color:'#78726a', marginTop:'2px' }}>{u.mssv}</div>}
                         {u.ip && <div style={{ fontSize:'0.68rem', color:'#a89e94', marginTop:'1px' }}>{u.ip}</div>}
                       </div>
                     </div>
@@ -1031,6 +1037,33 @@ export default function AdminDashboard() {
                     <div style={{ display:'flex', gap:'0.5rem', flexShrink:0 }}>
                       <button onClick={() => approveComment(item.id)} style={{ padding:'0.35rem 0.8rem', borderRadius:'6px', border:'1px solid rgba(22,163,74,0.3)', background:'rgba(22,163,74,0.08)', color:'#16a34a', cursor:'pointer', fontSize:'0.78rem', fontWeight:600 }}>✓ Duyệt</button>
                       <button onClick={() => rejectComment(item.id)} style={{ padding:'0.35rem 0.8rem', borderRadius:'6px', border:'1px solid rgba(220,38,38,0.25)', background:'rgba(220,38,38,0.06)', color:'#dc2626', cursor:'pointer', fontSize:'0.78rem', fontWeight:600 }}>✕ Từ chối</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* COMMENT HISTORY */}
+          {tab==='chist' && (
+            <div style={{ display:'flex', flexDirection:'column', gap:'1.2rem' }}>
+              <div style={{ display:'flex', alignItems:'center', gap:'1rem' }}>
+                <h3 style={{ fontSize:'0.73rem', color:'#78726a', letterSpacing:'0.1em', textTransform:'uppercase', fontWeight:700, margin:0 }}>Nhật Ký Toàn Bộ Comment ({cHist.length})</h3>
+              </div>
+              <p style={{ color:'#a89e94', fontSize:'0.85rem', margin:0 }}>Lưu trữ toàn bộ bình luận được gửi lên (bao gồm cả bị chặn/ẩn).</p>
+              {cHist.length === 0 && <p style={{ color:'#a89e94', fontSize:'0.9rem' }}>Chưa có bình luận nào được ghi nhận.</p>}
+              <div style={{ display:'flex', flexDirection:'column', gap:'0.6rem' }}>
+                {cHist.map((item) => (
+                  <div key={item.id} style={G({ padding:'1.1rem 1.3rem', display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:'1rem' })}>
+                    <div style={{ flex:1, minWidth:0 }}>
+                      <div style={{ fontWeight:700, fontSize:'0.85rem', color:'#2563eb', marginBottom:'0.3rem' }}>
+                        {item.name} <span style={{ color:'#a89e94', fontWeight:400 }}>· {item.mssv} · {new Date(item.ts).toLocaleTimeString('vi-VN')}</span>
+                      </div>
+                      <div style={{ fontSize:'0.9rem', color:'#3a3530', lineHeight:1.5 }}>{item.text}</div>
+                    </div>
+                    <div style={{ display:'flex', gap:'0.5rem', flexShrink:0 }}>
+                      <button onClick={() => { if(window.confirm('Xoá vĩnh viễn bình luận này khỏi lịch sử?')) socket.emit('delete_comment_history', item.id); }}
+                        style={{ padding:'0.35rem 0.8rem', borderRadius:'6px', border:'1px solid rgba(220,38,38,0.25)', background:'rgba(220,38,38,0.06)', color:'#dc2626', cursor:'pointer', fontSize:'0.78rem', fontWeight:600 }}>✕ Xoá</button>
                     </div>
                   </div>
                 ))}

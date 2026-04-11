@@ -89,6 +89,7 @@ let questions    = State.questions;
 let voterProfiles = State.voterProfiles;
 let adminCode    = State.adminCode    || '654321';
 let slidePassword = State.slidePassword || 'SSH1151';
+let commentHistory = State.commentHistory || [];
 
 const lastAction = {};
 const RATE_MS    = { reaction:200, message:2500 };
@@ -250,6 +251,15 @@ io.on('connection', (socket) => {
     if (mutedMSSV.has(user.mssv)) return; // silently drop
     const text = filterText(rawText.trim().slice(0, 200));
     logAction('comment', { name: user.name, mssv: user.mssv, text, ip });
+    
+    // Save to comment history
+    const cItem = { id: Date.now() + Math.random(), name: user.name, mssv: user.mssv, text, ip, ts: new Date().toISOString() };
+    commentHistory.unshift(cItem);
+    if (commentHistory.length > 1000) commentHistory.pop();
+    State.commentHistory = commentHistory;
+    commitDB();
+    io.emit('comment_history', commentHistory);
+
     if (commentModeOn) {
       const qItem = { id: Date.now() + Math.random(), name: user.name, mssv: user.mssv, text };
       commentQueue.unshift(qItem);
@@ -480,13 +490,27 @@ io.on('connection', (socket) => {
   socket.on('update_rate_ms',      (newRates) => { Object.assign(RATE_MS, newRates); io.emit('rate_ms_updated', RATE_MS); });
   socket.on('get_rate_ms',         () => socket.emit('rate_ms_updated', RATE_MS));
 
-  // ── Comment Moderation ──────────────────────────────
+  // ── Comment Moderation & History ────────────────────
   socket.on('get_comment_queue',  ()   => socket.emit('comment_queue_update', commentQueue));
   socket.on('approve_comment',    (id) => {
-    const item = commentQueue.find(c => c.id === id);
-    if (item) { commentQueue = commentQueue.filter(c => c.id !== id); io.emit('new_message', { name: item.name, text: item.text, id: Math.random() }); io.emit('comment_queue_update', commentQueue); }
+    const idx = commentQueue.findIndex(c => c.id === id);
+    if (idx !== -1) {
+      const c = commentQueue.splice(idx, 1)[0];
+      io.emit('comment_queue_update', commentQueue);
+      io.emit('new_message', { name: c.name, text: c.text, id: Math.random() });
+    }
   });
-  socket.on('reject_comment',     (id) => { commentQueue = commentQueue.filter(c => c.id !== id); io.emit('comment_queue_update', commentQueue); });
+  socket.on('reject_comment',     (id) => {
+    commentQueue = commentQueue.filter(c => c.id !== id);
+    io.emit('comment_queue_update', commentQueue);
+  });
+  socket.on('get_comment_history', () => socket.emit('comment_history', commentHistory));
+  socket.on('delete_comment_history', (id) => {
+    commentHistory = commentHistory.filter(c => c.id !== id);
+    State.commentHistory = commentHistory;
+    commitDB();
+    io.emit('comment_history', commentHistory);
+  });
 
   // ── Password Management ─────────────────────────────
   socket.on('change_admin_code', ({ oldCode, newCode }, callback) => {
