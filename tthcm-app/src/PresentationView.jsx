@@ -439,14 +439,7 @@ export default function PresentationView() {
   const [pinnedItem, setPinnedItem] = useState(null);
 
   const frameRef = useRef(null);
-  const videoRef = useRef(null);
   const scale    = useSlideScale(frameRef);
-
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.playbackRate = 0.4;
-    }
-  }, []);
 
   const total  = slideData.length;
   const qrUrl  = `${window.location.protocol}//${window.location.host}/vote`;
@@ -523,17 +516,21 @@ export default function PresentationView() {
     <>
       <SplashScreen onStart={() => setStarted(true)} />
 
-      {/* Ambient Video Background */}
-      <div style={{ position:'fixed', inset:0, zIndex:0, overflow:'hidden', background:'#000' }}>
-        <video 
-          ref={videoRef}
-          autoPlay loop muted playsInline 
-          style={{ width: '100vw', height: '100vh', objectFit: 'cover', filter: 'blur(4px) brightness(0.45)', transform: 'scale(1.02)' }}
-        >
-          <source src="/video/alb_ocen0110_1080p.mp4" type="video/mp4" />
-        </video>
-        {/* Subtle Vignette Overlay for Depth */}
-        <div style={{ position:'absolute', inset:0, background:'radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(13,17,23,0.85) 100%)', pointerEvents:'none' }} />
+      {/* Ambient Dark Theme Background */}
+      <div style={{ position:'fixed', inset:0, zIndex:0, overflow:'hidden', background:'linear-gradient(160deg, #0b0f14 0%, #111824 100%)' }}>
+        <AnimatePresence mode="wait">
+          {slide?.bg && slide.bg !== 'none' && (
+            <motion.div key={slide.bg}
+              initial={{ opacity:0 }} animate={{ opacity:0.09 }} exit={{ opacity:0 }}
+              transition={{ duration:1.8 }}
+              style={{ position:'absolute', inset:0, backgroundImage:`url(${slide.bg})`, backgroundSize:'cover', backgroundPosition:'center' }}
+            />
+          )}
+        </AnimatePresence>
+        {/* Subtle radial glow from the golden palette */}
+        <div style={{ position:'absolute', top:'-20%', left:'-10%', width:'70vw', height:'70vw', background:'radial-gradient(circle, rgba(232,184,75,0.035) 0%, transparent 60%)', filter:'blur(40px)', pointerEvents:'none' }} />
+        {/* Subtle blue depth */}
+        <div style={{ position:'absolute', bottom:'-30%', right:'-20%', width:'80vw', height:'80vw', background:'radial-gradient(circle, rgba(96,165,250,0.02) 0%, transparent 60%)', filter:'blur(40px)', pointerEvents:'none' }} />
       </div>
 
       <FlyingReactions />
