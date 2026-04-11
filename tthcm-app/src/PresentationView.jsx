@@ -579,10 +579,10 @@ export default function PresentationView() {
             style={{
               position:'absolute', bottom:'5%', left:'50%', transform:'translateX(-50%)',
               zIndex:500, width:'85%', maxWidth:'52rem',
-              background:'linear-gradient(145deg, rgba(255,255,255,0.85), rgba(255,255,255,0.95))',
-              backdropFilter:'blur(40px)', border:'1.5px solid rgba(232,184,75,0.5)',
+              background:'rgba(13,17,23,0.92)',
+              backdropFilter:'blur(40px)', border:'1.5px solid rgba(232,184,75,0.4)',
               borderRadius:'24px', padding:'2.5rem 3rem',
-              boxShadow:'0 30px 60px rgba(0,0,0,0.15), 0 0 30px rgba(232,184,75,0.2)'
+              boxShadow:'0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(232,184,75,0.15)'
             }}
           >
             <div style={{ display:'flex', gap:'1rem', alignItems:'center', marginBottom:'1.2rem' }}>
@@ -590,22 +590,22 @@ export default function PresentationView() {
                 {pinnedItem.type === 'question' ? '❓' : '💬'}
               </span>
               <div style={{ display:'flex', flexDirection:'column' }}>
-                <span style={{ fontSize:'1rem', color:'#b5860d', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.1em' }}>
+                <span style={{ fontSize:'1rem', color:'var(--gold)', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.1em' }}>
                   {pinnedItem.type === 'question' ? 'Câu Hỏi' : 'Bình Luận'} Tương Tác
                 </span>
-                <span style={{ fontSize:'1.4rem', color:'#1a1714', fontWeight:800, fontFamily:'var(--font-display)' }}>
-                  {pinnedItem.name} <span style={{ fontSize:'1rem', color:'#78726a', fontWeight:600 }}>({pinnedItem.mssv})</span>
+                <span style={{ fontSize:'1.4rem', color:'var(--text-primary)', fontWeight:800, fontFamily:'var(--font-display)' }}>
+                  {pinnedItem.name} <span style={{ fontSize:'1rem', color:'var(--text-tertiary)', fontWeight:600 }}>({pinnedItem.mssv})</span>
                 </span>
               </div>
             </div>
             
-            <div style={{ fontSize:'1.75rem', color:'#3a3530', lineHeight:1.5, fontWeight:600 }}>
+            <div style={{ fontSize:'1.75rem', color:'var(--text-secondary)', lineHeight:1.5, fontWeight:600, fontFamily:'var(--font-sans)' }}>
               "{pinnedItem.text}"
             </div>
 
             {pinnedItem.type === 'question' && pinnedItem.answer && (
-              <motion.div initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} style={{ marginTop:'1.5rem', background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.2)', padding:'1rem 1.5rem', borderRadius:'12px', color:'#1d4ed8', fontSize:'1.2rem', lineHeight:1.5 }}>
-                <strong style={{ color:'#2563eb' }}>👨‍💼 Phản hồi:</strong> {pinnedItem.answer}
+              <motion.div initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} style={{ marginTop:'1.5rem', background:'rgba(61,214,140,0.1)', border:'1px solid rgba(61,214,140,0.3)', padding:'1rem 1.5rem', borderRadius:'12px', color:'#3dd68c', fontSize:'1.2rem', lineHeight:1.5 }}>
+                <strong style={{ color:'#fff', fontWeight:700 }}>👨‍💼 Phản hồi:</strong> {pinnedItem.answer}
               </motion.div>
             )}
           </motion.div>
