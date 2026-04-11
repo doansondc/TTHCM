@@ -400,7 +400,7 @@ export default function DynamicEnding() {
               ) : (
                 <motion.div
                   initial={{ opacity:0, height:0 }} animate={{ opacity:1, height:'auto' }}
-                  style={{ background:'rgba(0,0,0,0.3)', border:'1px solid rgba(255,255,255,0.15)', padding:'1.5rem', borderRadius:'16px', position:'relative', zIndex:1, marginTop:'1rem', textAlign:'left' }}>
+                  style={{ background:'rgba(0,0,0,0.3)', border:'1px solid rgba(255,255,255,0.15)', padding:'1.5rem', borderRadius:'16px', position:'relative', zIndex:1, marginTop:'1rem', textAlign:'left', maxHeight:'30vh', overflowY:'auto' }}>
                   <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', marginBottom:'0.6rem' }}>
                     <span style={{ fontSize:'1.2rem', filter:'drop-shadow(0 0 6px #60a5fa)' }}>🤖</span>
                     <span style={{ fontSize:'0.85rem', color:'#60a5fa', fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase' }}>AI Analysis</span>
