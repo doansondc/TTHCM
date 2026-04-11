@@ -66,7 +66,7 @@ export default function DynamicEnding() {
     return () => socket.off('update_polls');
   }, []);
 
-  const activePoll = polls.find(p => p.active) || null;
+  const activePoll = polls.find(p => p.active) || polls[polls.length - 1] || null;
   const totalVotes = activePoll
     ? activePoll.options.reduce((s, o) => s + (activePoll.votes?.[o.id]?.length || 0), 0)
     : 0;
