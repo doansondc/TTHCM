@@ -101,6 +101,8 @@ export default function MobileVote() {
   const [password,      setPassword]   = useState('');
   const [loginError,    setLoginError] = useState('');
   const [loginLoading,  setLoginLoading] = useState(false);
+  const [aiAnswer,      setAiAnswer]     = useState(null);
+  const [isAskingAI,    setIsAskingAI]   = useState(false);
   // Change password
   const [showChangePw,  setShowChangePw]  = useState(false);
   const [cpOldPw,       setCpOld]         = useState('');
@@ -254,6 +256,21 @@ export default function MobileVote() {
     setQuestion(''); setVerify(''); 
     setCaptcha(Math.floor(100 + Math.random() * 900).toString());
     flashMsg('❓ Câu hỏi đã gửi!');
+  };
+
+  const askAI = (e) => {
+    e.preventDefault();
+    if (!question.trim()) return;
+    setIsAskingAI(true);
+    setAiAnswer(null);
+    socket.emit('ask_ai_direct', { question, name, mssv }, (res) => {
+      setIsAskingAI(false);
+      if (res && res.text) {
+        setAiAnswer(res.text);
+      } else {
+        setAiAnswer("Lỗi kết nối vệ tinh AI. Có vẻ đường truyền tới Google Deepmind gặp sự cố, vui lòng gửi lời nhắn cho ban quản trị!");
+      }
+    });
   };
   const react = emoji => { 
     if (!reactionsOn || isMuted) return;
@@ -690,12 +707,29 @@ export default function MobileVote() {
                     <p style={{ fontSize:'0.72rem', color:'#dc2626', marginTop:'0.3rem' }}>❌ Mã không khớp</p>
                   )}
                 </div>
-                <motion.button type="submit" disabled={!question.trim()}
-                  whileHover={{ scale: question.trim() ? 1.02 : 1 }}
-                  whileTap={{ scale: 0.98 }}
-                  style={{ ...S.primaryBtn, opacity:!question.trim()?0.5:1, cursor:!question.trim()?'not-allowed':'pointer' }}>
-                  Gửi Câu Hỏi →
-                </motion.button>
+                <div style={{ display:'flex', gap:'0.6rem', marginTop:'0.5rem' }}>
+                  <motion.button type="button" onClick={askAI} disabled={!question.trim() || isAskingAI}
+                    whileHover={{ scale: (!question.trim() || isAskingAI) ? 1 : 1.02 }}
+                    whileTap={{ scale: (!question.trim() || isAskingAI) ? 1 : 0.98 }}
+                    style={{ flex:1, padding:'0.95rem', borderRadius:'14px', background:'linear-gradient(135deg, #10b981, #059669)', color:'#fff', border:'none', fontWeight:700, fontSize:'0.85rem', cursor:(!question.trim() || isAskingAI)?'not-allowed':'pointer', opacity:(!question.trim() || isAskingAI)?0.6:1, display:'flex', alignItems:'center', justifyContent:'center', gap:'0.3rem', boxShadow:'0 4px 12px rgba(16,185,129,0.3)' }}>
+                    🤖 {isAskingAI ? 'Tư duy...' : 'Hỏi nhanh AI'}
+                  </motion.button>
+
+                  <motion.button type="submit" disabled={!question.trim()}
+                    whileHover={{ scale: question.trim() ? 1.02 : 1 }}
+                    whileTap={{ scale: 0.98 }}
+                    style={{ flex:1, padding:'0.95rem', borderRadius:'14px', background:'linear-gradient(135deg,#f0ca6a 0%,#e8b84b 50%,#c89828 100%)', color:'#0d1117', border:'none', fontWeight:700, fontSize:'0.85rem', cursor:!question.trim()?'not-allowed':'pointer', opacity:!question.trim()?0.6:1, display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 4px 12px rgba(232,184,75,0.3)' }}>
+                    Gửi Diễn Giả →
+                  </motion.button>
+                </div>
+
+                {aiAnswer && (
+                  <motion.div initial={{ opacity:0, y:-10 }} animate={{ opacity:1, y:0 }} style={{ marginTop:'0.5rem', background:'rgba(16,185,129,0.1)', border:'1.5px solid rgba(16,185,129,0.3)', borderRadius:'14px', padding:'1rem', position:'relative' }}>
+                    <div style={{ fontSize:'0.75rem', color:'#059669', fontWeight:800, marginBottom:'0.5rem', textTransform:'uppercase', letterSpacing:'0.05em', display:'flex', alignItems:'center', gap:'5px' }}>✨ Phân tích từ Gemini</div>
+                    <div style={{ fontSize:'0.9rem', color:'#1a1714', lineHeight:1.55 }}>{aiAnswer}</div>
+                    <button type="button" onClick={() => setAiAnswer(null)} style={{ position:'absolute', top:'0.8rem', right:'0.8rem', background:'transparent', border:'none', color:'#a89e94', cursor:'pointer' }}>✕</button>
+                  </motion.div>
+                )}
               </form>
             )}
           </motion.div>

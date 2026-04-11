@@ -92,7 +92,7 @@ export default function DynamicEnding() {
 
   const analyzeWithAI = () => {
     setIsAnalyzingAI(true);
-    setAiText('Đang thiết lập kết nối mã hóa tới vệ tinh của Google Deepmind...\nXin vui lòng chờ giây lát...');
+    setAiText('Đang thiết lập kết nối tới Google Deepmind...\nXin vui lòng chờ giây lát...');
     
     const resultTitle = result?.title || 'Không rõ';
     const payload = {
