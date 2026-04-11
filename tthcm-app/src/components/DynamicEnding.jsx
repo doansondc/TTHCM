@@ -303,125 +303,141 @@ export default function DynamicEnding() {
                 border: `1.5px solid ${result.color}44`,
                 borderRadius: 22,
                 boxShadow: `0 0 60px ${result.glow}, 0 0 120px ${result.glow}55, 0 20px 50px rgba(0,0,0,0.7)`,
-                padding: '1.8rem 2.4rem',
+                padding: '1.4rem 2.4rem',
                 textAlign: 'center',
                 maxWidth: '900px',
                 width: '100%',
-                maxHeight: '94%', // Khóa chặt không bao giờ vượt 94% khung 4/3
+                maxHeight: '92vh', // MUST NOT EXCEED SLIDE FRAME
+                display: 'flex',
+                flexDirection: 'column',
                 position: 'relative',
                 zIndex: 5,
-                overflowY: 'auto',
-                overflowX: 'hidden',
+                overflow: 'hidden',
               }}
             >
               <Particles color={result.color} emoji={result.particles} />
 
-              {/* Icon */}
-              <motion.div
-                initial={{ scale: 0 }} animate={{ scale: [0, 1.3, 1] }}
-                transition={{ delay: 0.4, duration: 0.7, type: 'spring' }}
-                style={{ fontSize: '3.5rem', marginBottom: '0.7rem', display: 'block', position: 'relative', zIndex: 1 }}>
-                {result.icon}
-              </motion.div>
-
-              {/* Title */}
-              <motion.h2
-                initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.65 }}
-                style={{
-                  fontSize: 'clamp(1.4rem, 2.8vw, 2.2rem)',
-                  fontFamily: 'var(--font-display)',
-                  background: `linear-gradient(135deg, ${result.color}, #fff)`,
-                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                  marginBottom: '0.9rem', lineHeight: 1.2, position: 'relative', zIndex: 1,
-                }}>
-                {result.title}
-              </motion.h2>
-
-              {/* Desc */}
-              <motion.p
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                transition={{ delay: 0.9 }}
-                style={{
-                  fontSize: 'var(--fs-md)', color: 'var(--text-secondary)',
-                  lineHeight: 1.8, marginBottom: '1.2rem',
-                  position: 'relative', zIndex: 1,
-                }}>
-                {result.desc}
-              </motion.p>
-
-              {/* Vote tally */}
-              <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                transition={{ delay: 1.1 }}
-                style={{
-                  display: 'flex', justifyContent: 'center', gap: '1.5rem', flexWrap: 'wrap',
-                  marginBottom: '1.2rem', position: 'relative', zIndex: 1,
-                }}>
-                {activePoll?.options.map(opt => {
-                  const cnt = getCount(opt.id);
-                  const pct = totalVotes ? Math.round(cnt / totalVotes * 100) : 0;
-                  const od  = getOutcomeData(opt.id);
-                  const iw  = opt.id === outcome;
-                  return (
-                    <div key={opt.id} style={{
-                      textAlign: 'center', padding: '0.5rem 1rem',
-                      background: iw ? `${od.color}18` : 'rgba(255,255,255,0.03)',
-                      border: `1px solid ${iw ? od.color + '44' : 'rgba(255,255,255,0.07)'}`,
-                      borderRadius: 10,
-                    }}>
-                      <div style={{ fontSize: 'var(--fs-xs)', color: od.color, fontWeight: 700, fontFamily: 'var(--font-mono)', letterSpacing: '0.08em', marginBottom: '0.15rem' }}>
-                        {opt.label || opt.id}
-                      </div>
-                      <div style={{ fontSize: 'var(--fs-xl)', fontWeight: 800, color: iw ? od.color : 'var(--text-tertiary)', fontFamily: 'var(--font-display)' }}>
-                        {cnt}
-                      </div>
-                      <div style={{ fontSize: 'var(--fs-xs)', color: 'var(--text-quaternary)', fontFamily: 'var(--font-mono)' }}>{pct}%</div>
-                    </div>
-                  );
-                })}
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                transition={{ delay: 1.3 }}
-                style={{ fontSize: '0.72rem', color: 'var(--text-quaternary)', fontFamily: 'var(--font-mono)', letterSpacing: '0.08em', marginBottom: '1rem', position: 'relative', zIndex: 1, display:'flex', gap:'1rem', justifyContent:'center' }}>
-                <span>KẾT CỤC TỪ <span style={{ color: result.color, fontWeight: 700 }}>{totalVotes}</span> PHIẾU BẦU</span>
-              </motion.div>
-
-              {!isAnalyzingAI ? (
-                <div style={{ display:'flex', gap:'0.8rem', justifyContent:'center', position:'relative', zIndex:1, marginTop:'0.5rem' }}>
-                  <motion.button
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
-                    whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-                    onClick={() => { setPhase('waiting'); setOutcome(null); }}
-                    style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 100, padding: '0.6rem 1.4rem', color: 'var(--text-tertiary)', cursor: 'pointer', fontSize: '0.82rem', fontFamily: 'var(--font-sans)', transition: 'all 0.2s' }}>
-                    ↩ Trở lại
-                  </motion.button>
-                  <motion.button
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }}
-                    whileHover={{ scale: 1.04, boxShadow: `0 0 20px ${result.color}66` }} whileTap={{ scale: 0.97 }}
-                    onClick={analyzeWithAI}
-                    style={{ background: `linear-gradient(135deg, ${result.color}, ${result.color}aa)`, border: 'none', borderRadius: 100, padding: '0.6rem 1.6rem', color: '#fff', cursor: 'pointer', fontSize: '0.82rem', fontFamily: 'var(--font-sans)', fontWeight:700, transition: 'all 0.2s' }}>
-                    ✨ Phân tích với AI
-                  </motion.button>
-                </div>
-              ) : (
+              <div style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {/* Icon */}
                 <motion.div
-                  initial={{ opacity:0, height:0 }} animate={{ opacity:1, height:'auto' }}
-                  ref={scrollRef}
-                  style={{ background:'rgba(0,0,0,0.3)', border:'1px solid rgba(255,255,255,0.15)', padding:'1.2rem', borderRadius:'16px', position:'relative', zIndex:1, marginTop:'0.5rem', textAlign:'left', maxHeight:'40vh', minHeight:'180px', overflowY:'auto', resize: 'vertical' }}>
-                  <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', marginBottom:'0.8rem' }}>
-                    <span style={{ fontSize:'1.2rem', filter:'drop-shadow(0 0 6px #60a5fa)' }}>🤖</span>
-                    <span style={{ fontSize:'0.9rem', color:'#60a5fa', fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase' }}>AI Analysis</span>
-                  </div>
-                  <div style={{ fontSize:'1.05rem', color:'#e8eaf0', lineHeight:1.6, whiteSpace:'pre-wrap', fontFamily:'var(--font-sans)', paddingRight: '0.4rem' }}>
-                    {aiText}
-                    {aiText.length > 0 && <motion.span animate={{ opacity:[1,0] }} transition={{ repeat:Infinity, duration:0.8 }} style={{ display:'inline-block', width:'6px', height:'1.05rem', background:'#60a5fa', marginLeft:'4px', verticalAlign:'text-bottom' }}/>}
-                  </div>
+                  initial={{ scale: 0 }} animate={{ scale: [0, 1.3, 1] }}
+                  transition={{ delay: 0.4, duration: 0.7, type: 'spring' }}
+                  style={{ fontSize: '3.5rem', marginBottom: '0.4rem', position: 'relative', zIndex: 1 }}>
+                  {result.icon}
                 </motion.div>
-              )}
+
+                {/* Title */}
+                <motion.h2
+                  initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.65 }}
+                  style={{
+                    fontSize: 'clamp(1.4rem, 2.8vw, 2.2rem)',
+                    fontFamily: 'var(--font-display)',
+                    background: `linear-gradient(135deg, ${result.color}, #fff)`,
+                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                    marginBottom: '0.6rem', lineHeight: 1.2, position: 'relative', zIndex: 1,
+                  }}>
+                  {result.title}
+                </motion.h2>
+
+                {/* Desc */}
+                <motion.p
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  transition={{ delay: 0.9 }}
+                  style={{
+                    fontSize: 'var(--fs-md)', color: 'var(--text-secondary)',
+                    lineHeight: 1.6, marginBottom: '0.8rem',
+                    position: 'relative', zIndex: 1,
+                  }}>
+                  {result.desc}
+                </motion.p>
+
+                {/* Vote tally */}
+                <motion.div
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  transition={{ delay: 1.1 }}
+                  style={{
+                    display: 'flex', justifyContent: 'center', gap: '1.5rem', flexWrap: 'wrap',
+                    marginBottom: '0.8rem', position: 'relative', zIndex: 1,
+                  }}>
+                  {activePoll?.options.map(opt => {
+                    const cnt = getCount(opt.id);
+                    const pct = totalVotes ? Math.round(cnt / totalVotes * 100) : 0;
+                    const od  = getOutcomeData(opt.id);
+                    const iw  = opt.id === outcome;
+                    return (
+                      <div key={opt.id} style={{
+                        textAlign: 'center', padding: '0.4rem 0.8rem',
+                        background: iw ? `${od.color}18` : 'rgba(255,255,255,0.03)',
+                        border: `1px solid ${iw ? od.color + '44' : 'rgba(255,255,255,0.07)'}`,
+                        borderRadius: 10,
+                      }}>
+                        <div style={{ fontSize: 'var(--fs-xs)', color: od.color, fontWeight: 700, fontFamily: 'var(--font-mono)', letterSpacing: '0.08em', marginBottom: '0.1rem' }}>
+                          {opt.label || opt.id}
+                        </div>
+                        <div style={{ fontSize: 'var(--fs-xl)', fontWeight: 800, color: iw ? od.color : 'var(--text-tertiary)', fontFamily: 'var(--font-display)' }}>
+                          {cnt}
+                        </div>
+                        <div style={{ fontSize: 'var(--fs-xs)', color: 'var(--text-quaternary)', fontFamily: 'var(--font-mono)' }}>{pct}%</div>
+                      </div>
+                    );
+                  })}
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                  transition={{ delay: 1.3 }}
+                  style={{ fontSize: '0.72rem', color: 'var(--text-quaternary)', fontFamily: 'var(--font-mono)', letterSpacing: '0.08em', marginBottom: '0.8rem', position: 'relative', zIndex: 1, display:'flex', gap:'1rem', justifyContent:'center' }}>
+                  <span>KẾT CỤC TỪ <span style={{ color: result.color, fontWeight: 700 }}>{totalVotes}</span> PHIẾU BẦU</span>
+                </motion.div>
+              </div>
+
+              {/* ACTION / AI ANALYSIS AREA (FLEXIBLE) */}
+              <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', position: 'relative', zIndex: 1 }}>
+                {!isAnalyzingAI ? (
+                  <div style={{ display:'flex', gap:'0.8rem', justifyContent:'center', margin: 'auto 0' }}>
+                    <motion.button
+                      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
+                      whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+                      onClick={() => { setPhase('waiting'); setOutcome(null); }}
+                      style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 100, padding: '0.6rem 1.4rem', color: 'var(--text-tertiary)', cursor: 'pointer', fontSize: '0.82rem', fontFamily: 'var(--font-sans)', transition: 'all 0.2s' }}>
+                      ↩ Trở lại
+                    </motion.button>
+                    <motion.button
+                      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }}
+                      whileHover={{ scale: 1.04, boxShadow: `0 0 20px ${result.color}66` }} whileTap={{ scale: 0.97 }}
+                      onClick={analyzeWithAI}
+                      style={{ background: `linear-gradient(135deg, ${result.color}, ${result.color}aa)`, border: 'none', borderRadius: 100, padding: '0.6rem 1.6rem', color: '#fff', cursor: 'pointer', fontSize: '0.82rem', fontFamily: 'var(--font-sans)', fontWeight:700, transition: 'all 0.2s' }}>
+                      ✨ Phân tích với AI
+                    </motion.button>
+                  </div>
+                ) : (
+                  <motion.div
+                    initial={{ opacity:0, flex: 0 }} animate={{ opacity:1, flex: 1 }}
+                    style={{ 
+                      background:'rgba(0,0,0,0.3)', border:'1px solid rgba(255,255,255,0.15)', 
+                      padding:'1.2rem', borderRadius:'16px', marginTop:'0.2rem', 
+                      textAlign:'left', display: 'flex', flexDirection: 'column',
+                      minHeight: '180px' // Guaranteed minimum reading height
+                    }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', marginBottom:'0.8rem', flexShrink: 0 }}>
+                      <span style={{ fontSize:'1.2rem', filter:'drop-shadow(0 0 6px #60a5fa)' }}>🤖</span>
+                      <span style={{ fontSize:'0.9rem', color:'#60a5fa', fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase' }}>AI Analysis</span>
+                    </div>
+                    <div 
+                      ref={scrollRef}
+                      style={{ 
+                        flex: 1, minHeight: 0, overflowY: 'auto', 
+                        fontSize:'1.05rem', color:'#e8eaf0', lineHeight:1.6, 
+                        whiteSpace:'pre-wrap', fontFamily:'var(--font-sans)', paddingRight: '0.4rem' 
+                      }}>
+                      {aiText}
+                      {aiText.length > 0 && <motion.span animate={{ opacity:[1,0] }} transition={{ repeat:Infinity, duration:0.8 }} style={{ display:'inline-block', width:'6px', height:'1.05rem', background:'#60a5fa', marginLeft:'4px', verticalAlign:'text-bottom' }}/>}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
             </motion.div>
           </>
         )}
