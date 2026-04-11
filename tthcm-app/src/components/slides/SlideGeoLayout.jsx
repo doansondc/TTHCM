@@ -133,7 +133,7 @@ export default function SlideGeoLayout({ data }) {
             position: 'relative'
           }}>
             <img 
-              src="/images/vietnam_map.svg" 
+              src="/images/vietnam_map.svg?v=2" 
               alt="Bản đồ Việt Nam"
               style={{
                 width: '100%',
