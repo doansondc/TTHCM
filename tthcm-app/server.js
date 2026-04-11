@@ -592,7 +592,7 @@ io.on('connection', (socket) => {
 Hội trường vừa tiến hành biểu quyết với ${data.totalVotes} phiếu.
 Chủ đề mổ xẻ: "${data.title}".
 Đám đông đã chọn kịch bản chiến thắng: "${data.resultTitle}" (đã bị lu mờ đi các phương án: "${others}").
-YÊU CẦU: Viết một đoạn nhận định thật CHUYÊN MÔN nhưng SỬ DỤNG NGÔN TỪ DỄ HIỂU ĐỂ CÁC BẠN SINH VIÊN ĐẠI TRÀ VÀ NGƯỜI KHÔNG CÓ CHUYÊN MÔN CHÍNH TRỊ CŨNG CÓ THỂ HIỂU ĐƯỢC. Trình bày tách bạch các ý rõ ràng. Tuyệt đối GIỚI HẠN DƯỚI 700 KÝ TỰ chữ cái. Hệ thống hóa lựa chọn trên theo lăng kính ngoại giao, đường lối chính trị học và cục diện thay đổi qua lời giải thích hùng biện.`;
+YÊU CẦU: Viết một đoạn nhận định thật CHUYÊN MÔN nhưng SỬ DỤNG NGÔN TỪ DỄ HIỂU ĐỂ CÁC BẠN SINH VIÊN ĐẠI TRÀ VÀ NGƯỜI KHÔNG CÓ CHUYÊN MÔN CHÍNH TRỊ CŨNG CÓ THỂ HIỂU ĐƯỢC. Trình bày tách bạch các ý rõ ràng. Tuyệt đối GIỚI HẠN DƯỚI 550 KÝ TỰ chữ cái. Hệ thống hóa lựa chọn trên theo lăng kính ngoại giao, đường lối chính trị học và cục diện thay đổi qua lời giải thích hùng biện.`;
 
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`, {
         method: 'POST',
@@ -651,7 +651,7 @@ const aiCooldowns = new Map();
       recentHistory.push({ role: 'user', parts: [{ text: data.question }] });
 
       const systemPrompt = `BỐI CẢNH: Đây là Chương trình Hội Thảo thuộc môn học Tư tưởng Hồ Chí Minh tại Đại học Bách Khoa Hà Nội, Nhóm 11 trình bày. Báo cáo phân tích đường lối ngoại giao linh hoạt của Trung Đông và ngoại giao cây tre của Việt Nam. Khán giả đang hỏi tên là: ${data.name}.
-YÊU CẦU: Nhập vai là chuyên gia để trò chuyện, hỏi đáp. Trình bày lịch sự, chuyên nghiệp, NHƯNG LỜI VĂN PHẢI DỄ HIỂU ĐỂ SINH VIÊN ĐẠI TRÀ KHÔNG CÓ CHUYÊN MÔN CHÍNH TRỊ CŨNG HIỂU ĐƯỢC. Tách bạch các ý (gạch đầu dòng) rõ ràng nếu cần. Bám sát chủ đề sự kiện. TUYỆT ĐỐI GIỚI HẠN DƯỚI 700 KÝ TỰ.`;
+YÊU CẦU: Nhập vai là chuyên gia để trò chuyện, hỏi đáp. Trình bày lịch sự, chuyên nghiệp, NHƯNG LỜI VĂN PHẢI DỄ HIỂU ĐỂ SINH VIÊN ĐẠI TRÀ KHÔNG CÓ CHUYÊN MÔN CHÍNH TRỊ CŨNG HIỂU ĐƯỢC. Tách bạch các ý (gạch đầu dòng) rõ ràng nếu cần. Bám sát chủ đề sự kiện. TUYỆT ĐỐI GIỚI HẠN DƯỚI 550 KÝ TỰ.`;
 
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`, {
         method: 'POST',
