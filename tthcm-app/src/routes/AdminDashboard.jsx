@@ -112,6 +112,8 @@ export default function AdminDashboard() {
   const [unlockSlidePassCode, setUnlockSlidePassCode] = useState('');
   const [isSlidePassUnlocked, setIsSlidePassUnlocked] = useState(false);
   const [showAILogs, setShowAILogs] = useState(false);
+  const [viewingHistoryUser, setViewingHistoryUser] = useState(null);
+  const [userHistoryData, setUserHistoryData] = useState(null);
 
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 1000);
@@ -992,6 +994,7 @@ export default function AdminDashboard() {
                             </span>
                           )}
                           <div style={{ display:'flex', gap:'0.25rem' }}>
+                            <button onClick={() => loadUserHistory(s)} style={{ padding:'0.2rem 0.45rem', fontSize:'0.65rem', borderRadius:'5px', border:'1px solid rgba(37,99,235,0.3)', background:'rgba(37,99,235,0.05)', color:'#2563eb', cursor:'pointer' }} title="Lịch sử tương tác">📜</button>
                             {isMuted
                               ? <button onClick={() => unmuteMssv(s.mssv)} style={{ padding:'0.2rem 0.45rem', fontSize:'0.65rem', borderRadius:'5px', border:'1px solid rgba(181,134,13,0.3)', background:'rgba(181,134,13,0.1)', color:'#b5860d', cursor:'pointer' }}>🔈</button>
                               : <button onClick={() => muteMssv(s.mssv)} style={{ padding:'0.2rem 0.45rem', fontSize:'0.65rem', borderRadius:'5px', border:'1px solid rgba(0,0,0,0.1)', background:'transparent', color:'#78726a', cursor:'pointer' }} title="Mute">🔇</button>}
@@ -1428,6 +1431,103 @@ export default function AdminDashboard() {
 
         </div>
       </div>
+      {/* User History Modal */}
+      <AnimatePresence>
+        {viewingHistoryUser && (
+          <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
+            style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.6)', backdropFilter:'blur(4px)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:9999 }}>
+            <motion.div initial={{ scale:0.95, y:20 }} animate={{ scale:1, y:0 }} exit={{ scale:0.95, y:20 }}
+              style={{ width:'90%', maxWidth:'800px', background:'#fff', borderRadius:'20px', overflow:'hidden', boxShadow:'0 20px 40px rgba(0,0,0,0.2)', display:'flex', flexDirection:'column', maxHeight:'85vh' }}>
+              <div style={{ padding:'1.5rem', borderBottom:'1px solid rgba(0,0,0,0.08)', display:'flex', justifyContent:'space-between', alignItems:'center', background:'#f8f9fa' }}>
+                <div>
+                  <h2 style={{ margin:0, fontSize:'1.2rem', color:'#1a1714', fontWeight:800 }}>Lịch Sử Khán Giả: {viewingHistoryUser.name}</h2>
+                  <div style={{ fontSize:'0.85rem', color:'#78726a', marginTop:'0.2rem', fontFamily:'monospace' }}>MSSV: {viewingHistoryUser.mssv}</div>
+                </div>
+                <button onClick={() => setViewingHistoryUser(null)} style={{ background:'transparent', border:'none', fontSize:'1.5rem', cursor:'pointer', color:'#78726a' }}>✕</button>
+              </div>
+              <div style={{ padding:'1.5rem', overflowY:'auto', flex:1 }}>
+                {!userHistoryData ? (
+                  <div style={{ textAlign:'center', color:'#a89e94', fontStyle:'italic' }}>Đang tải dữ liệu...</div>
+                ) : (
+                  <div style={{ display:'flex', flexDirection:'column', gap:'2rem' }}>
+                    {/* Votes */}
+                    <div>
+                      <h3 style={{ fontSize:'0.9rem', color:'#2563eb', fontWeight:700, marginBottom:'0.8rem', borderBottom:'1px solid rgba(37,99,235,0.2)', paddingBottom:'0.4rem', display:'flex', alignItems:'center', gap:'0.4rem' }}><span>📊</span> BIỂU QUYẾT ({userHistoryData.votes.length})</h3>
+                      {userHistoryData.votes.length === 0 ? <div style={{ fontSize:'0.8rem', color:'#a89e94' }}>Chưa tham gia biểu quyết nào.</div> : (
+                        <div style={{ display:'flex', flexDirection:'column', gap:'0.5rem' }}>
+                          {userHistoryData.votes.map((v, i) => (
+                            <div key={i} style={{ padding:'0.8rem', background:'rgba(37,99,235,0.04)', borderRadius:'10px', fontSize:'0.85rem' }}>
+                              <div style={{ fontWeight:600, color:'#1a1714', marginBottom:'0.3rem' }}>{v.pollTitle}</div>
+                              <div style={{ color:'#2563eb', fontWeight:700 }}>→ Chọn: {v.option}</div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Questions */}
+                    <div>
+                      <h3 style={{ fontSize:'0.9rem', color:'#b5860d', fontWeight:700, marginBottom:'0.8rem', borderBottom:'1px solid rgba(181,134,13,0.2)', paddingBottom:'0.4rem', display:'flex', alignItems:'center', gap:'0.4rem' }}><span>❓</span> CÂU HỎI DIỄN GIẢ ({userHistoryData.qs.length})</h3>
+                      {userHistoryData.qs.length === 0 ? <div style={{ fontSize:'0.8rem', color:'#a89e94' }}>Chưa đặt câu hỏi nào.</div> : (
+                        <div style={{ display:'flex', flexDirection:'column', gap:'0.5rem' }}>
+                          {userHistoryData.qs.map(q => (
+                            <div key={q.id} style={{ padding:'0.8rem', background:'rgba(181,134,13,0.04)', borderRadius:'10px', fontSize:'0.85rem' }}>
+                              <div style={{ color:'#1a1714', fontStyle:'italic' }}>"{q.text}"</div>
+                              <div style={{ fontSize:'0.7rem', color:'#78726a', marginTop:'0.4rem', display:'flex', justifyContent:'space-between' }}>
+                                <span>Lúc: {new Date(q.timestamp).toLocaleTimeString('vi-VN')}</span>
+                                {q.answered && <span style={{ color:'#16a34a', fontWeight:700 }}>✓ Đã giải đáp</span>}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Comments */}
+                    <div>
+                      <h3 style={{ fontSize:'0.9rem', color:'#dc2626', fontWeight:700, marginBottom:'0.8rem', borderBottom:'1px solid rgba(220,38,38,0.2)', paddingBottom:'0.4rem', display:'flex', alignItems:'center', gap:'0.4rem' }}><span>💬</span> BÌNH LUẬN TRỰC TIẾP ({userHistoryData.cmts.length})</h3>
+                      {userHistoryData.cmts.length === 0 ? <div style={{ fontSize:'0.8rem', color:'#a89e94' }}>Chưa bình luận.</div> : (
+                        <div style={{ display:'flex', flexDirection:'column', gap:'0.5rem' }}>
+                          {userHistoryData.cmts.map((c, i) => (
+                            <div key={i} style={{ padding:'0.6rem 0.8rem', background:'rgba(220,38,38,0.04)', borderRadius:'10px', fontSize:'0.85rem' }}>
+                              <span style={{ color:'#1a1714' }}>{c.text}</span>
+                              <span style={{ fontSize:'0.7rem', color:'#78726a', marginLeft:'0.8rem' }}>{new Date(c.ts).toLocaleTimeString('vi-VN')}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* AI Chatbot History */}
+                    <div>
+                      <h3 style={{ fontSize:'0.9rem', color:'#10b981', fontWeight:700, marginBottom:'0.8rem', borderBottom:'1px solid rgba(16,185,129,0.2)', paddingBottom:'0.4rem', display:'flex', alignItems:'center', gap:'0.4rem' }}><span>🤖</span> TRỢ LÝ AI CHATBOT ({userHistoryData.chats.length})</h3>
+                      {userHistoryData.chats.length === 0 ? <div style={{ fontSize:'0.8rem', color:'#a89e94' }}>Chưa nhắn tin với AI.</div> : (
+                        <div style={{ display:'flex', flexDirection:'column', gap:'0.8rem', background:'#1a1d24', padding:'1rem', borderRadius:'14px' }}>
+                          {userHistoryData.chats.map((msg, idx) => (
+                            <div key={idx} style={{ alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start', maxWidth:'85%' }}>
+                              <div style={{ fontSize:'0.7rem', color:'#7a8494', marginBottom:'0.2rem', padding:'0 4px', textAlign: msg.role === 'user' ? 'right' : 'left' }}>
+                                {msg.role === 'user' ? 'Khán giả' : 'AI Gemini'}
+                              </div>
+                              <div style={{ 
+                                padding:'0.7rem 0.9rem', borderRadius:'12px', fontSize:'0.85rem', lineHeight:1.5, whiteSpace:'pre-line',
+                                background: msg.role === 'user' ? '#10b981' : 'rgba(255,255,255,0.08)',
+                                color: msg.role === 'user' ? '#fff' : '#e8eaf0'
+                              }}>
+                                {msg.text.replace(/\*\*/g, '')}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }

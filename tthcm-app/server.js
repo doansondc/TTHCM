@@ -461,6 +461,21 @@ io.on('connection', (socket) => {
     callback?.({ ok: true, history });
   });
 
+  socket.on('get_student_history', (mssv, callback) => {
+    const chats = aiChats[mssv] || [];
+    const qs = questions.filter(q => q.mssv === mssv);
+    const cmts = commentHistory.filter(c => c.mssv === mssv);
+    const votes = [];
+    for (const p of polls) {
+      for (const opt of p.options) {
+        const vList = p.votes?.[opt.id] || [];
+        const v = vList.find(x => x.mssv === mssv);
+        if (v) votes.push({ pollTitle: p.title, option: opt.label || opt.id, date: v.date });
+      }
+    }
+    callback?.({ chats, qs, cmts, votes });
+  });
+
   // Admin controls
   socket.on('get_logs',    ()          => socket.emit('admin_logs', logs));
   socket.on('get_polls',   ()          => socket.emit('update_polls', polls));
