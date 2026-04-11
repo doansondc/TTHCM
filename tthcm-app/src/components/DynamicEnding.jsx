@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { io } from 'socket.io-client';
 
@@ -59,6 +59,14 @@ export default function DynamicEnding() {
   const [phase, setPhase] = useState('waiting');
   const [isAnalyzingAI, setIsAnalyzingAI] = useState(false);
   const [aiText, setAiText] = useState('');
+  const scrollRef = useRef(null);
+
+  // Auto-scroll AI analysis text stream
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [aiText]);
 
   useEffect(() => {
     socket.on('update_polls', setPolls);
@@ -400,14 +408,15 @@ export default function DynamicEnding() {
               ) : (
                 <motion.div
                   initial={{ opacity:0, height:0 }} animate={{ opacity:1, height:'auto' }}
-                  style={{ background:'rgba(0,0,0,0.3)', border:'1px solid rgba(255,255,255,0.15)', padding:'1.2rem', borderRadius:'16px', position:'relative', zIndex:1, marginTop:'0.5rem', textAlign:'left', maxHeight:'22vh', overflowY:'auto' }}>
-                  <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', marginBottom:'0.6rem' }}>
+                  ref={scrollRef}
+                  style={{ background:'rgba(0,0,0,0.3)', border:'1px solid rgba(255,255,255,0.15)', padding:'1.2rem', borderRadius:'16px', position:'relative', zIndex:1, marginTop:'0.5rem', textAlign:'left', maxHeight:'40vh', minHeight:'180px', overflowY:'auto', resize: 'vertical' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', marginBottom:'0.8rem' }}>
                     <span style={{ fontSize:'1.2rem', filter:'drop-shadow(0 0 6px #60a5fa)' }}>🤖</span>
-                    <span style={{ fontSize:'0.85rem', color:'#60a5fa', fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase' }}>AI Analysis</span>
+                    <span style={{ fontSize:'0.9rem', color:'#60a5fa', fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase' }}>AI Analysis</span>
                   </div>
-                  <div style={{ fontSize:'0.85rem', color:'#e8eaf0', lineHeight:1.6, whiteSpace:'pre-wrap', fontFamily:'var(--font-sans)' }}>
+                  <div style={{ fontSize:'1.05rem', color:'#e8eaf0', lineHeight:1.6, whiteSpace:'pre-wrap', fontFamily:'var(--font-sans)', paddingRight: '0.4rem' }}>
                     {aiText}
-                    {aiText.length > 0 && <motion.span animate={{ opacity:[1,0] }} transition={{ repeat:Infinity, duration:0.8 }} style={{ display:'inline-block', width:'6px', height:'14px', background:'#60a5fa', marginLeft:'4px', verticalAlign:'middle' }}/>}
+                    {aiText.length > 0 && <motion.span animate={{ opacity:[1,0] }} transition={{ repeat:Infinity, duration:0.8 }} style={{ display:'inline-block', width:'6px', height:'1.05rem', background:'#60a5fa', marginLeft:'4px', verticalAlign:'text-bottom' }}/>}
                   </div>
                 </motion.div>
               )}
