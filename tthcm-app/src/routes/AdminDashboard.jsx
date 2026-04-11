@@ -88,6 +88,7 @@ export default function AdminDashboard() {
   const [questionsOn,   setQuestionsOn]   = useState(true);
   const [reactionsOn,   setReactionsOn]   = useState(true);
   const [commentModeOn, setCommentModeOn] = useState(false);
+  const [rateMs,        setRateMs]        = useState({ reaction: 200, message: 2500 });
   const timerRef = useRef(null);
   // Student directory
   const [studentList,   setStudentList]   = useState([]);
@@ -141,6 +142,7 @@ export default function AdminDashboard() {
     socket.emit('get_quiz_bank');
     socket.emit('get_config');
     socket.emit('get_qr_config');
+    socket.emit('get_rate_ms');
     socket.on('admin_logs',          setLogs);
     socket.on('update_users',        setUsers);
     socket.on('update_votes',        setVotes);
@@ -160,9 +162,10 @@ export default function AdminDashboard() {
     socket.on('questions_status',    setQuestionsOn);
     socket.on('reactions_status',    setReactionsOn);
     socket.on('comment_mode_status', setCommentModeOn);
+    socket.on('rate_ms_updated',     setRateMs);
     socket.on('config_update',       d => { if (d.adminCode) setAdminCodeState(d.adminCode); if (d.slidePassword) setSlidePassState(d.slidePassword); });
     socket.on('slide_password_updated', d => { if (d.slidePassword) setSlidePassState(d.slidePassword); });
-    return () => ['admin_logs','update_users','update_votes','update_polls','quiz_bank_update','update_questions','new_question','question_answered','poll_status','blocked_ips','quiz_state','blocked_mssv_update','muted_mssv_update','comment_queue_update','comments_status','questions_status','reactions_status','comment_mode_status','config_update','slide_password_updated','qr_config_update'].forEach(e => socket.off(e));
+    return () => ['admin_logs','update_users','update_votes','update_polls','quiz_bank_update','update_questions','new_question','question_answered','poll_status','blocked_ips','quiz_state','blocked_mssv_update','muted_mssv_update','comment_queue_update','comments_status','questions_status','reactions_status','comment_mode_status','rate_ms_updated','config_update','slide_password_updated','qr_config_update'].forEach(e => socket.off(e));
   }, [authed]);
 
   useEffect(() => {
@@ -1055,6 +1058,40 @@ export default function AdminDashboard() {
                       </button>
                     </div>
                   ))}
+                </div>
+              </div>
+
+              {/* Tần Suất Tham Gia (Rate Limits) */}
+              <div style={G({ padding:'1.4rem' })}>
+                <h3 style={{ fontSize:'0.73rem', color:'#78726a', marginBottom:'1.2rem', letterSpacing:'0.1em', textTransform:'uppercase', fontWeight:700 }}>Giới Hạn Tần Suất (Chống Spam)</h3>
+                <div style={{ display:'flex', flexDirection:'column', gap:'0.8rem' }}>
+                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                    <div>
+                      <div style={{ fontSize:'0.88rem', fontWeight:600, color:'#3a3530' }}>Độ Trễ Reaction</div>
+                      <div style={{ fontSize:'0.7rem', color:'#78726a' }}>Khoảng tg tối thiểu giữa 2 lần thả icon (ms)</div>
+                    </div>
+                    <select value={rateMs.reaction || 200} onChange={e => socket.emit('update_rate_ms', { reaction: Number(e.target.value) })}
+                      style={{ padding:'0.4rem 0.6rem', borderRadius:'6px', border:'1px solid rgba(0,0,0,0.1)', outline:'none', background:'rgba(255,255,255,0.9)', color:'#1a1714', fontSize:'0.8rem' }}>
+                      <option value={100}>Rất nhanh (100ms)</option>
+                      <option value={200}>Nhanh (200ms)</option>
+                      <option value={800}>Vừa phải (800ms)</option>
+                      <option value={2000}>Chậm (2s)</option>
+                    </select>
+                  </div>
+                  
+                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                    <div>
+                      <div style={{ fontSize:'0.88rem', fontWeight:600, color:'#3a3530' }}>Độ Trễ Gửi Bình Luận/Câu Hỏi</div>
+                      <div style={{ fontSize:'0.7rem', color:'#78726a' }}>Ngừng spam liên tiếp</div>
+                    </div>
+                    <select value={rateMs.message || 2500} onChange={e => socket.emit('update_rate_ms', { message: Number(e.target.value) })}
+                      style={{ padding:'0.4rem 0.6rem', borderRadius:'6px', border:'1px solid rgba(0,0,0,0.1)', outline:'none', background:'rgba(255,255,255,0.9)', color:'#1a1714', fontSize:'0.8rem' }}>
+                      <option value={1000}>1 giây (Nhanh)</option>
+                      <option value={2500}>2.5 giây (Chuẩn)</option>
+                      <option value={5000}>5 giây (Chậm)</option>
+                      <option value={10000}>10 giây (Rất chậm)</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 

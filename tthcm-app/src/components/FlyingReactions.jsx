@@ -12,7 +12,7 @@ export default function FlyingReactions() {
     socket.on('show_reaction', (data) => {
       const id = Math.random();
       const x  = 10 + Math.random() * 80; // percentage from left
-      const bottom = 5 + Math.random() * 25; // percentage from bottom
+      const bottom = Math.random() * 20; // 0 to 20% from bottom
       setReactions(prev => [...prev, { ...data, id, x, bottom }]);
       setTimeout(() => setReactions(prev => prev.filter(r => r.id !== id)), 2200);
     });
@@ -25,7 +25,7 @@ export default function FlyingReactions() {
         {reactions.map(r => (
           <motion.div key={r.id}
             initial={{ opacity:0, y: 20, scale:0.3 }}
-            animate={{ opacity:[0, 0.75, 0.75, 0], y:[20, 0, 0, -15], scale:[0.3, 1.1, 1, 0.8] }}
+            animate={{ opacity:[0, 0.45, 0.45, 0], y:[20, 0, 0, -15], scale:[0.3, 1.1, 1, 0.8] }}
             exit={{ opacity:0, scale:0.5 }}
             transition={{ duration:2.2, ease:'easeOut', times:[0, 0.15, 0.7, 1] }}
             style={{ position:'absolute', left:`${r.x}%`, bottom:`${r.bottom}%`, display:'flex', flexDirection:'column', alignItems:'center', gap:'0px', transform:'translateX(-50%)' }}

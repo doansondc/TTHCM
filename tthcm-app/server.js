@@ -477,6 +477,8 @@ io.on('connection', (socket) => {
   socket.on('toggle_questions',    (v) => { questionsEnabled = v; io.emit('questions_status', v); io.emit('toast_notification', { message: v ? '❓ Câu hỏi đã bật!'    : '🔒 Câu hỏi đã tắt.'   }); });
   socket.on('toggle_reactions',    (v) => { reactionsEnabled = v; io.emit('reactions_status', v); });
   socket.on('toggle_comment_mode', (v) => { commentModeOn = v; commentQueue = []; io.emit('comment_mode_status', v); io.emit('comment_queue_update', []); io.emit('toast_notification', { message: v ? '📬 Chế độ duyệt bình luận BẬT' : '📢 Bình luận tự động phát' }); });
+  socket.on('update_rate_ms',      (newRates) => { Object.assign(RATE_MS, newRates); io.emit('rate_ms_updated', RATE_MS); });
+  socket.on('get_rate_ms',         () => socket.emit('rate_ms_updated', RATE_MS));
 
   // ── Comment Moderation ──────────────────────────────
   socket.on('get_comment_queue',  ()   => socket.emit('comment_queue_update', commentQueue));
