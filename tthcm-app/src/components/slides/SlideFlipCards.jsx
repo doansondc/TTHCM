@@ -141,13 +141,13 @@ function FlipCard({ card, idx, delay }) {
                   paddingTop: i === 0 ? 0 : '0.7rem',
                 }}>
                   <span style={{
-                    color: card.accentColor, fontWeight: 800, fontSize: '1.05rem',
+                    color: card.accentColor, fontWeight: 800, fontSize: '1.25rem',
                     lineHeight: 1.65, flexShrink: 0,
                     fontFamily: 'var(--font-mono)',
                   }}>
                     {String(i + 1).padStart(2, '0')}.
                   </span>
-                  <span style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.7, fontWeight: 500 }}>
+                  <span style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', lineHeight: 1.7, fontWeight: 500 }}>
                     {pt}
                   </span>
                 </li>

@@ -131,7 +131,7 @@ export default function SlideBamboo({ data }) {
             {/* Content */}
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '0.7rem', padding: '0 1rem 1rem' }}>
               <p style={{
-                fontSize: '1.3rem', fontStyle: 'italic', fontWeight: 600,
+                fontSize: '1.55rem', fontStyle: 'italic', fontWeight: 600,
                 color: s.color, textShadow: `0 0 12px ${s.color}50`,
                 margin: 0,
               }}>
@@ -155,7 +155,7 @@ export default function SlideBamboo({ data }) {
                       background: s.color, boxShadow: `0 0 6px ${s.color}`,
                       flexShrink: 0, marginTop: '0.5rem',
                     }} />
-                    <span style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.65, fontWeight: 500 }}>
+                    <span style={{ fontSize: '1.3rem', color: 'var(--text-secondary)', lineHeight: 1.65, fontWeight: 500 }}>
                       {pt}
                     </span>
                   </motion.div>

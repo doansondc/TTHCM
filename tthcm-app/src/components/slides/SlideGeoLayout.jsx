@@ -66,7 +66,7 @@ export default function SlideGeoLayout({ data }) {
               }}>
                 {topBlock.title}
               </div>
-              <p style={{ fontSize: '1.05rem', color: 'var(--text-primary)', lineHeight: 1.65, fontWeight: 500, maxWidth: '95%', margin: 0 }}>
+              <p style={{ fontSize: '1.25rem', color: 'var(--text-primary)', lineHeight: 1.65, fontWeight: 500, maxWidth: '95%', margin: 0 }}>
                 {topBlock.text}
               </p>
             </div>
@@ -108,7 +108,7 @@ export default function SlideGeoLayout({ data }) {
                         background: block.color, boxShadow: `0 0 6px ${block.color}`,
                         flexShrink: 0, marginTop: '0.55rem',
                       }} />
-                      <span style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.7, fontWeight: 500 }}>
+                      <span style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', lineHeight: 1.7, fontWeight: 500 }}>
                         {pt}
                       </span>
                     </motion.li>
