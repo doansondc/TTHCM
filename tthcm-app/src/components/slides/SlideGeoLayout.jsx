@@ -92,7 +92,7 @@ export default function SlideGeoLayout({ data }) {
                     {block.title}
                   </span>
                 </div>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.7rem', flex: 1, justifyContent: 'center' }}>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
                   {block.points.map((pt, j) => (
                     <motion.li
                       key={j}

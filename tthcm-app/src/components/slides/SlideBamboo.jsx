@@ -129,7 +129,7 @@ export default function SlideBamboo({ data }) {
             </div>
 
             {/* Content */}
-            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, padding: '0 1rem 1rem', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '0.7rem', padding: '0 1rem 1rem' }}>
               <p style={{
                 fontSize: '1.3rem', fontStyle: 'italic', fontWeight: 600,
                 color: s.color, textShadow: `0 0 12px ${s.color}50`,
@@ -138,7 +138,7 @@ export default function SlideBamboo({ data }) {
                 {s.headline}
               </p>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', flex: 1, justifyContent: 'center' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
                 {s.points.map((pt, j) => (
                   <motion.div
                     key={j}
