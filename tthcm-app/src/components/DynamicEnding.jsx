@@ -307,9 +307,11 @@ export default function DynamicEnding() {
                 textAlign: 'center',
                 maxWidth: '900px',
                 width: '100%',
+                maxHeight: '94%', // Khóa chặt không bao giờ vượt 94% khung 4/3
                 position: 'relative',
                 zIndex: 5,
-                overflow: 'hidden',
+                overflowY: 'auto',
+                overflowX: 'hidden',
               }}
             >
               <Particles color={result.color} emoji={result.particles} />
