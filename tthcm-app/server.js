@@ -583,7 +583,7 @@ Chủ đề mổ xẻ: "${data.title}".
 Đám đông đã chọn kịch bản chiến thắng: "${data.resultTitle}" (đã bị lu mờ đi các phương án: "${others}").
 YÊU CẦU: Viết một đoạn nhận định thật NGẮN GỌN (tuyệt đối DƯỚI 250 KÝ TỰ chữ cái). Hệ thống hóa lựa chọn trên theo lăng kính ngoại giao, đường lối chính trị học và cục diện Trung Đông đan xen. Từ ngữ hùng hồn, dứt khoát.`;
 
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`, {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
