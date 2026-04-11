@@ -63,6 +63,7 @@ export default function AdminDashboard() {
   const [qxCorrect,   setQXCorrect]  = useState('');
   const [qxExplan,    setQXExplan]   = useState(''); // explanation
   const [qxType,      setQXType]     = useState('mcq'); // 'mcq' or 'open'
+  const [qxTime,      setQXTime]     = useState(15); // per-question timer
   // Q&A
   const [selectedQ,  setSelQ]       = useState(null);
   const [answer,     setAns]        = useState('');
@@ -593,11 +594,7 @@ export default function AdminDashboard() {
               <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
                 <h3 style={{ fontSize:'0.73rem', color:'#78726a', letterSpacing:'0.1em', textTransform:'uppercase', fontWeight:700, margin:0 }}>Ngân Hàng Câu Hỏi ({quizBank.length})</h3>
                 <div style={{ display:'flex', gap:'0.8rem', alignItems:'center' }}>
-                  <div style={{ display:'flex', alignItems:'center', gap:'0.3rem', background:'rgba(255,255,255,0.7)', padding:'0.3rem 0.6rem', borderRadius:'8px', border:'1px solid rgba(0,0,0,0.08)' }}>
-                    <span style={{ fontSize:'0.72rem', color:'#78726a', fontWeight:600 }}>⏱️ Thời gian (giây):</span>
-                    <input type="number" value={quizTimeLimit} onChange={e => setQuizTimeLimit(Number(e.target.value))} style={{ width:'40px', padding:'0.2rem', borderRadius:'4px', border:'1px solid rgba(0,0,0,0.1)', fontSize:'0.75rem', fontWeight:700, outline:'none' }} min="5" max="300" />
-                  </div>
-                  <button onClick={() => { setSNQ(true); setEditQuiz(null); setQXType('mcq'); setQXTitle(''); setQXOpts([{id:'A',text:''},{id:'B',text:''},{id:'C',text:''}]); setQXCorrect(''); }}
+                  <button onClick={() => { setSNQ(true); setEditQuiz(null); setQXType('mcq'); setQXTitle(''); setQXOpts([{id:'A',text:''},{id:'B',text:''},{id:'C',text:''}]); setQXCorrect(''); setQXExplan(''); setQXTime(15); }}
                     style={{ padding:'0.45rem 1rem', borderRadius:'8px', background:'linear-gradient(135deg,#b5860d,#c9960f)', color:'#fff', border:'none', cursor:'pointer', fontSize:'0.82rem', fontWeight:700 }}>+ Tạo Câu Hỏi</button>
                 </div>
               </div>
@@ -614,6 +611,13 @@ export default function AdminDashboard() {
                     <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}>
                       <input type="radio" value="open" checked={qxType === 'open'} onChange={() => setQXType('open')} /> Tự Luận
                     </label>
+                  </div>
+                  
+                  <div style={{ display:'flex', alignItems:'center', gap:'0.5rem' }}>
+                    <span style={{ fontSize:'0.78rem', fontWeight:600, color:'#78726a' }}>⏱️ Thời gian:</span>
+                    <input type="number" min="5" max="300" value={qxTime} onChange={e => setQXTime(Number(e.target.value))} style={{ width:'50px', padding:'0.2rem', borderRadius:'4px', border:'1px solid rgba(0,0,0,0.1)', fontSize:'0.85rem', fontWeight:700, outline:'none' }} />
+                    <span style={{ fontSize:'0.75rem', color:'#78726a' }}>giây </span>
+                    <span style={{ fontSize:'0.8rem', color:'#b5860d', fontWeight:700, marginLeft:4 }}>({Math.floor(qxTime / 60).toString().padStart(2, '0')}:{(qxTime % 60).toString().padStart(2, '0')})</span>
                   </div>
 
                   <input type="text" value={qxTitle} onChange={e => setQXTitle(e.target.value)}
@@ -652,9 +656,9 @@ export default function AdminDashboard() {
                   <div style={{ display:'flex', gap:'0.6rem' }}>
                     <button onClick={() => {
                       if (!qxTitle.trim() || (qxType === 'mcq' && qxOpts.every(o=>!o.text.trim()))) return;
-                      const data = { id: editQuiz?.id || null, type: qxType, question: qxTitle, options: qxType === 'mcq' ? qxOpts.filter(o=>o.text.trim()) : [], correctId: qxCorrect || null, explanation: qxExplan.trim() };
+                      const data = { id: editQuiz?.id || null, type: qxType, question: qxTitle, options: qxType === 'mcq' ? qxOpts.filter(o=>o.text.trim()) : [], correctId: qxCorrect || null, explanation: qxExplan.trim(), duration: qxTime || 15 };
                       socket.emit('save_quiz_to_bank', data);
-                      setSNQ(false); setEditQuiz(null); setQXTitle(''); setQXOpts([{id:'A',text:''},{id:'B',text:''},{id:'C',text:''}]); setQXCorrect(''); setQXExplan(''); setQXType('mcq');
+                      setSNQ(false); setEditQuiz(null); setQXTitle(''); setQXOpts([{id:'A',text:''},{id:'B',text:''},{id:'C',text:''}]); setQXCorrect(''); setQXExplan(''); setQXType('mcq'); setQXTime(15);
                     }} style={{ flex:1, padding:'0.7rem', borderRadius:'8px', background:'linear-gradient(135deg,#b5860d,#c9960f)', color:'#fff', border:'none', cursor:'pointer', fontWeight:700, fontSize:'0.88rem' }}>Lưu vào Ngân Hàng</button>
                     <button onClick={() => setSNQ(false)} style={{ padding:'0.7rem 1rem', borderRadius:'8px', background:'rgba(0,0,0,0.06)', border:'1px solid rgba(0,0,0,0.1)', color:'#78726a', cursor:'pointer', fontSize:'0.88rem' }}>Hủy</button>
                   </div>
@@ -785,9 +789,9 @@ export default function AdminDashboard() {
                       )}
                     </div>
                     <div style={{ display:'flex', gap:'0.35rem', flexShrink:0 }}>
-                      <button onClick={() => socket.emit('start_quiz_from_bank', { id: q.id, duration: quizTimeLimit })}
-                        style={{ padding:'0.35rem 0.7rem', borderRadius:'6px', border:'1px solid rgba(181,134,13,0.3)', background:'rgba(181,134,13,0.08)', color:'#b5860d', cursor:'pointer', fontSize:'0.75rem', fontWeight:700, whiteSpace:'nowrap' }}>▶ Phát</button>
-                      <button onClick={() => { setEditQuiz(q); setQXType(q.type || 'mcq'); setQXTitle(q.question); setQXOpts(q.options?.length ? [...q.options] : [{id:'A',text:''},{id:'B',text:''}]); setQXCorrect(q.correctId||''); setSNQ(true); }}
+                      <button onClick={() => socket.emit('start_quiz_from_bank', { id: q.id, duration: q.duration || 15 })}
+                        style={{ padding:'0.35rem 0.7rem', borderRadius:'6px', border:'1px solid rgba(181,134,13,0.3)', background:'rgba(181,134,13,0.08)', color:'#b5860d', cursor:'pointer', fontSize:'0.75rem', fontWeight:700, whiteSpace:'nowrap' }}>▶ Phát ({q.duration || 15}s)</button>
+                      <button onClick={() => { setEditQuiz(q); setQXType(q.type || 'mcq'); setQXTitle(q.question); setQXOpts(q.options?.length ? [...q.options] : [{id:'A',text:''},{id:'B',text:''}]); setQXCorrect(q.correctId||''); setQXExplan(q.explanation || ''); setQXTime(q.duration || 15); setSNQ(true); }}
                         style={{ padding:'0.35rem 0.55rem', borderRadius:'6px', border:'1px solid rgba(0,0,0,0.1)', background:'transparent', color:'#78726a', cursor:'pointer', fontSize:'0.75rem' }}>✏️</button>
                       <button onClick={() => { if(window.confirm('Xóa câu hỏi này?')) socket.emit('delete_quiz_from_bank', q.id); }}
                         style={{ padding:'0.35rem 0.55rem', borderRadius:'6px', border:'1px solid rgba(220,38,38,0.2)', background:'rgba(220,38,38,0.06)', color:'#dc2626', cursor:'pointer', fontSize:'0.75rem' }}>🗑</button>
@@ -1195,7 +1199,7 @@ export default function AdminDashboard() {
                 <div style={G({ padding: '1.4rem' })}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '1rem' }}>
                     <span style={{ fontSize: '1.1rem' }}>🔑</span>
-                    <span style={{ fontWeight: 700, color: '#1a1714', fontSize: '0.95rem' }}>Đổi Mật Khẩu Slide</span>
+                    <span style={{ fontWeight: 700, color: '#1a1714', fontSize: '0.95rem' }}>Đổi Mật Khẩu Tài Khoản Khách</span>
                     <span style={{ fontSize: '0.72rem', color: '#a89e94', background: 'rgba(0,0,0,0.05)', padding: '2px 8px', borderRadius: 20 }}>Mã khán giả nhập khi tham gia</span>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -1215,7 +1219,7 @@ export default function AdminDashboard() {
                     <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={handleChangeSlidePass}
                       disabled={!adminCodeForSlide || !newSlidePass}
                       style={{ padding: '0.75rem', borderRadius: 10, background: (!adminCodeForSlide || !newSlidePass) ? 'rgba(0,0,0,0.06)' : 'linear-gradient(135deg,#2563eb,#1d4ed8)', color: (!adminCodeForSlide || !newSlidePass) ? '#a89e94' : '#fff', border: 'none', fontWeight: 700, cursor: (!adminCodeForSlide || !newSlidePass) ? 'not-allowed' : 'pointer', fontSize: '0.88rem', transition: 'all 0.2s' }}>
-                      Đổi Mật Khẩu Slide
+                      Đổi Mật Khẩu Khách
                     </motion.button>
                   </div>
                 </div>

@@ -379,6 +379,7 @@ io.on('connection', (socket) => {
         q.options     = data.options;
         q.correctId   = data.correctId;
         q.explanation = data.explanation || '';
+        q.duration    = data.duration || 15;
       }
     } else {
       quizBank.push({
@@ -387,7 +388,8 @@ io.on('connection', (socket) => {
         question:    data.question,
         options:     data.options || [],
         correctId:   data.correctId   || null,
-        explanation: data.explanation || ''
+        explanation: data.explanation || '',
+        duration:    data.duration || 15
       });
     }
     commitDB();
