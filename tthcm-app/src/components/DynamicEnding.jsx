@@ -172,6 +172,8 @@ export default function DynamicEnding() {
       width: '100%', maxWidth: '1100px', minHeight: 0,
       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem',
       position: 'relative',
+      height: '100%',
+      justifyContent: 'center',
     }}>
 
       {/* ── WAITING phase ──────────────────────────────── */}
@@ -307,7 +309,8 @@ export default function DynamicEnding() {
                 textAlign: 'center',
                 maxWidth: '900px',
                 width: '100%',
-                maxHeight: '92vh', // MUST NOT EXCEED SLIDE FRAME
+                maxHeight: '100%', // MUST NOT EXCEED SLIDE FRAME, NO VH UNITS!
+                boxSizing: 'border-box',
                 display: 'flex',
                 flexDirection: 'column',
                 position: 'relative',
