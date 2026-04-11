@@ -240,7 +240,7 @@ export default function AdminDashboard() {
 
   // ── Dashboard ────────────────────────────────────
   return (
-    <div style={{ minHeight:'100vh', background:'linear-gradient(145deg,#f8f4ec,#ede7d9)', color:'#1a1714', fontFamily:'Inter,sans-serif', display:'flex', flexDirection:'column' }}>
+    <div style={{ height:'100vh', overflow:'hidden', background:'linear-gradient(145deg,#f8f4ec,#ede7d9)', color:'#1a1714', fontFamily:'Inter,sans-serif', display:'flex', flexDirection:'column' }}>
       <div style={{ position:'fixed', inset:0, opacity:0.025, backgroundImage:`url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundSize:'180px', pointerEvents:'none', zIndex:0 }} />
 
       {/* Sticky Header */}
@@ -269,9 +269,9 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div style={{ display:'flex', flex:1, position:'relative', zIndex:1 }}>
+      <div style={{ display:'flex', flex:1, position:'relative', zIndex:1, minHeight: 0 }}>
         {/* Sidebar */}
-        <div style={{ width:'210px', flexShrink:0, padding:'1rem 0', borderRight:'1px solid rgba(0,0,0,0.06)', background:'rgba(255,255,255,0.5)', backdropFilter:'blur(10px)' }}>
+        <div style={{ width:'210px', flexShrink:0, padding:'1rem 0', borderRight:'1px solid rgba(0,0,0,0.06)', background:'rgba(255,255,255,0.5)', backdropFilter:'blur(10px)', overflowY:'auto' }}>
           {[
             ['overview','📊','Tổng Quan', null],
             ['toolbar','🎛️','Điều Khiển', null],
