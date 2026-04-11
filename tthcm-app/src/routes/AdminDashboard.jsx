@@ -1153,6 +1153,20 @@ export default function AdminDashboard() {
                       <option value={10000}>10 giây (Rất chậm)</option>
                     </select>
                   </div>
+
+                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                    <div>
+                      <div style={{ fontSize:'0.88rem', fontWeight:600, color:'#3a3530' }}>Độ Trễ Hỏi Đáp AI (Gemini)</div>
+                      <div style={{ fontSize:'0.7rem', color:'#78726a' }}>Ngừng lạm dụng AI</div>
+                    </div>
+                    <select value={rateMs.ai || 60000} onChange={e => socket.emit('update_rate_ms', { ai: Number(e.target.value) })}
+                      style={{ padding:'0.4rem 0.6rem', borderRadius:'6px', border:'1px solid rgba(0,0,0,0.1)', outline:'none', background:'rgba(255,255,255,0.9)', color:'#1a1714', fontSize:'0.8rem' }}>
+                      <option value={10000}>10 giây</option>
+                      <option value={30000}>30 giây</option>
+                      <option value={60000}>1 phút</option>
+                      <option value={180000}>3 phút</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 

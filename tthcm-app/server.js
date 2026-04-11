@@ -94,7 +94,7 @@ let pinnedItem     = State.pinnedItem || null;
 let geminiApiKey   = State.geminiApiKey || 'AIzaSyBK4eGLsAC1x5dzrKHsZtCbMF3XYC-OCCk';
 
 const lastAction = {};
-const RATE_MS    = { reaction:200, message:2500 };
+const RATE_MS    = { reaction:200, message:2500, ai:60000 };
 
 // ── Express Middleware for IP Blocking ──────────────
 app.use((req, res, next) => {
@@ -612,8 +612,8 @@ const aiCooldowns = new Map();
     const userId = data.mssv || socket.id;
     const lastTime = aiCooldowns.get(userId) || 0;
     const now = Date.now();
-    if (now - lastTime < 60000) {
-      const waitTime = Math.ceil((60000 - (now - lastTime)) / 1000);
+    if (now - lastTime < RATE_MS.ai) {
+      const waitTime = Math.ceil((RATE_MS.ai - (now - lastTime)) / 1000);
       callback?.({ ok: false, text: `Hệ thống phân tích đang nạp lại năng lượng. Vui lòng chờ thêm ${waitTime} giây trước khi đặt câu hỏi tiếp theo.` });
       return;
     }
@@ -630,11 +630,17 @@ YÊU CẦU: Đưa ra lời giải đáp lịch sự, cực kì học thuật và
         body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
       });
       const json = await res.json();
+      
+      if (json.error) {
+        callback?.({ ok: false, text: "Bị từ chối bởi Google AI: " + json.error.message });
+        return;
+      }
+      
       const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
       if (text) {
         callback?.({ ok: true, text: text.trim() });
       } else {
-        callback?.({ ok: false, text: "Xin lỗi, câu hỏi quá phức tạp để hệ thống phân tích tức thời (Lỗi Parsing)." });
+        callback?.({ ok: false, text: "Câu hỏi nhạy cảm hoặc vi phạm chính sách nội dung (Safety Blocked), AI từ chối trả lời." });
       }
     } catch (e) {
       callback?.({ ok: false, text: "Máy chủ đang quá tải: " + e.message });
