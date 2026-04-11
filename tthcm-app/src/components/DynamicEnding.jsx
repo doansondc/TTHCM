@@ -87,7 +87,39 @@ export default function DynamicEnding() {
       }
       setOutcome(winnerOpt.id);
       setPhase('reveal');
-    }, 2800);
+    }, 3500);
+  };
+
+  const analyzeWithAI = async () => {
+    setIsAnalyzingAI(true);
+    setAiText('');
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    
+    let textToStream = '';
+    const resultTitle = result?.title || 'Không rõ';
+    const prompt = `Bạn là chuyên gia phân tích địa chính trị. ${activePoll?.title}. Số phiếu: ${totalVotes}. Kịch bản thắng: ${resultTitle}. Viết 1 đoạn (150 chữ) nhận định lý do khán giả chọn kịch bản này.`;
+
+    if (apiKey && apiKey !== 'undefined') {
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+        const data = await res.json();
+        textToStream = data.candidates?.[0]?.content?.parts?.[0]?.text || "Không có phản hồi từ AI.";
+      } catch(e) {
+        textToStream = "Lỗi kết nối AI: " + e.message;
+      }
+    } else {
+      textToStream = `[Hệ thống Phân tích Chiến lược - Giả lập AI]\n\nDựa trên dữ liệu từ ${totalVotes} chuyên gia trong hội trường:\n\nKhán giả nghiêng hẳn về kịch bản "${resultTitle}". Sự lựa chọn này cho thấy một góc nhìn vô cùng thực tế: đối mặt với sự phân mảnh hệ thống hiện tại, phần lớn tin rằng khu vực sẽ duy trì trạng thái "giằng co chiến lược" thay vì hòa bình lý tưởng hay chiến tranh tổng lực. Điều này phản ánh rõ quy luật "Hedging" (Đu dây) khôn ngoan, khi các nước đều muốn tối đa hóa lợi ích nhưng không dám qua lằn ranh đỏ.\n\nKết luận: Đây là một cuộc quản trị khủng hoảng điển hình.`;
+    }
+
+    let i = 0;
+    const interval = setInterval(() => {
+      setAiText(prev => prev + textToStream.charAt(i));
+      i++;
+      if (i >= textToStream.length) clearInterval(interval);
+    }, 15);
   };
 
   // Get outcome display data — try OUTCOMES map first, else build from poll option

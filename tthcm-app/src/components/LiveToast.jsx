@@ -42,14 +42,14 @@ export default function LiveToast() {
               exit={{ opacity:0, x:30, scale:0.95 }}
               transition={{ type:'spring', stiffness:300, damping:25 }}
               style={{
-                background: 'rgba(255, 255, 255, 0.4)',
+                background: 'rgba(0, 0, 0, 0.4)',
                 backdropFilter: 'blur(25px)',
                 WebkitBackdropFilter: 'blur(25px)',
                 border: `1px solid ${s.accent}88`,
                 borderLeft: `5px solid ${s.accent}`,
                 borderRadius: '16px',
                 padding: '12px 16px',
-                boxShadow: `0 8px 32px rgba(0,0,0,0.1), 0 0 15px ${s.accent}55`,
+                boxShadow: `0 8px 32px rgba(0,0,0,0.15), 0 0 15px ${s.accent}55`,
                 display: 'flex', gap: '12px', alignItems: 'flex-start',
                 fontFamily: 'Inter, sans-serif'
               }}
@@ -57,11 +57,11 @@ export default function LiveToast() {
               <span style={{ fontSize: '1.2rem', flexShrink:0, marginTop:'-2px', filter:`drop-shadow(0 0 8px ${s.accent})` }}>{s.icon}</span>
               <div style={{ minWidth:0, marginTop: '2px' }}>
                 {toast.name && (
-                  <div style={{ fontSize:'0.85rem', fontWeight:600, color: '#1a1714', marginBottom:'4px', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', fontFamily: 'Playfair Display, serif', letterSpacing: '0.02em' }}>
+                  <div style={{ fontSize:'0.85rem', fontWeight:600, color: '#f3f4f6', marginBottom:'4px', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', fontFamily: 'Playfair Display, serif', letterSpacing: '0.02em' }}>
                     {toast.name}
                   </div>
                 )}
-                <div style={{ fontSize:'0.82rem', color:'#524d47', lineHeight:1.5, wordBreak:'break-word', fontWeight:400 }}>
+                <div style={{ fontSize:'0.82rem', color:'#d1d5db', lineHeight:1.5, wordBreak:'break-word', fontWeight:400 }}>
                   {toast.text}
                 </div>
               </div>
