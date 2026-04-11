@@ -129,24 +129,24 @@ export default function SlideBamboo({ data }) {
             </div>
 
             {/* Content */}
-            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '0.65rem', padding: '0 1rem 1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, padding: '0 1rem 1rem', justifyContent: 'space-between' }}>
               <p style={{
-                fontSize: '1.25rem', fontStyle: 'italic', fontWeight: 600,
+                fontSize: '1.3rem', fontStyle: 'italic', fontWeight: 600,
                 color: s.color, textShadow: `0 0 12px ${s.color}50`,
                 margin: 0,
               }}>
                 {s.headline}
               </p>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', flex: 1 }}>
                 {s.points.map((pt, j) => (
                   <motion.div
                     key={j}
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                     transition={{ delay: 0.55 + idx * 0.08 + j * 0.09 }}
                     style={{
-                      borderTop: '1px solid rgba(255,255,255,0.05)',
-                      paddingTop: '0.5rem',
+                      borderTop: j === 0 ? 'none' : '1px solid rgba(255,255,255,0.06)',
+                      paddingTop: j === 0 ? 0 : '0.5rem',
                       display: 'flex', gap: '0.5rem', alignItems: 'flex-start',
                     }}
                   >
@@ -155,7 +155,7 @@ export default function SlideBamboo({ data }) {
                       background: s.color, boxShadow: `0 0 6px ${s.color}`,
                       flexShrink: 0, marginTop: '0.5rem',
                     }} />
-                    <span style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                    <span style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', lineHeight: 1.65, fontWeight: 500 }}>
                       {pt}
                     </span>
                   </motion.div>

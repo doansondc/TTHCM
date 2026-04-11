@@ -66,7 +66,7 @@ export default function SlideGeoLayout({ data }) {
               }}>
                 {topBlock.title}
               </div>
-              <p style={{ fontSize: 'var(--fs-md)', color: 'var(--text-primary)', lineHeight: 1.6, fontWeight: 500, maxWidth: '95%', margin: 0 }}>
+              <p style={{ fontSize: '1.05rem', color: 'var(--text-primary)', lineHeight: 1.65, fontWeight: 500, maxWidth: '95%', margin: 0 }}>
                 {topBlock.text}
               </p>
             </div>
@@ -92,7 +92,7 @@ export default function SlideGeoLayout({ data }) {
                     {block.title}
                   </span>
                 </div>
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.55rem', flex: 1 }}>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', justifyContent: 'space-around', flex: 1 }}>
                   {block.points.map((pt, j) => (
                     <motion.li
                       key={j}
@@ -100,15 +100,15 @@ export default function SlideGeoLayout({ data }) {
                       transition={{ delay: 0.44 + i * 0.08 + j * 0.07 }}
                       style={{
                         display: 'flex', gap: '0.6rem', alignItems: 'flex-start',
-                        borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '0.55rem',
+                        borderTop: j === 0 ? 'none' : '1px solid rgba(255,255,255,0.06)', paddingTop: j === 0 ? 0 : '0.55rem',
                       }}
                     >
                       <span style={{
-                        width: 5, height: 5, borderRadius: '50%',
+                        width: 6, height: 6, borderRadius: '50%',
                         background: block.color, boxShadow: `0 0 6px ${block.color}`,
-                        flexShrink: 0, marginTop: '0.5rem',
+                        flexShrink: 0, marginTop: '0.55rem',
                       }} />
-                      <span style={{ fontSize: 'var(--fs-md)', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                      <span style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.7, fontWeight: 500 }}>
                         {pt}
                       </span>
                     </motion.li>
