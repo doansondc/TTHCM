@@ -91,7 +91,7 @@ let adminCode    = State.adminCode    || '654321';
 let slidePassword = State.slidePassword || 'SSH1151';
 let commentHistory = State.commentHistory || [];
 let pinnedItem     = State.pinnedItem || null;
-let geminiApiKey   = State.geminiApiKey || 'AIzaSyBK4eGLsAC1x5dzrKHsZtCbMF3XYC-OCCk';
+let geminiApiKey   = State.geminiApiKey || '';
 
 const lastAction = {};
 const RATE_MS    = { reaction:200, message:2500, ai:60000 };
