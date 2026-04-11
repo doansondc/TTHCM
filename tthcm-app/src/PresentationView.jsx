@@ -18,6 +18,7 @@ import QABoard        from './components/QABoard';
 import FlyingReactions from './components/FlyingReactions';
 import LiveToast       from './components/LiveToast';
 import SplashScreen    from './components/SplashScreen';
+import AmbientParticles  from './components/AmbientParticles';
 import './index.css';
 
 const ENV_URL = window.location.hostname === 'localhost' ? 'http://localhost:3001' : '';
@@ -517,7 +518,7 @@ export default function PresentationView() {
       <SplashScreen onStart={() => setStarted(true)} />
 
       {/* Ambient Dark Theme Background */}
-      <div style={{ position:'fixed', inset:0, zIndex:0, overflow:'hidden', background:'linear-gradient(160deg, #0b0f14 0%, #111824 100%)' }}>
+      <div style={{ position:'fixed', inset:0, zIndex:0, overflow:'hidden', background:'linear-gradient(160deg, #020305 0%, #06090f 100%)' }}>
         <AnimatePresence mode="wait">
           {slide?.bg && slide.bg !== 'none' && (
             <motion.div key={slide.bg}
@@ -527,10 +528,7 @@ export default function PresentationView() {
             />
           )}
         </AnimatePresence>
-        {/* Subtle radial glow from the golden palette */}
-        <div style={{ position:'absolute', top:'-20%', left:'-10%', width:'70vw', height:'70vw', background:'radial-gradient(circle, rgba(232,184,75,0.035) 0%, transparent 60%)', filter:'blur(40px)', pointerEvents:'none' }} />
-        {/* Subtle blue depth */}
-        <div style={{ position:'absolute', bottom:'-30%', right:'-20%', width:'80vw', height:'80vw', background:'radial-gradient(circle, rgba(96,165,250,0.02) 0%, transparent 60%)', filter:'blur(40px)', pointerEvents:'none' }} />
+        <AmbientParticles />
       </div>
 
       <FlyingReactions />
