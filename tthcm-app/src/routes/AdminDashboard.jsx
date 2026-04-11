@@ -73,7 +73,7 @@ export default function AdminDashboard() {
   const [timerMins,  setTimerMins]  = useState(10);
   const [timerSecs,  setTimerSecs]  = useState(0);
   const [timerOn,    setTimerOn]    = useState(false);
-  const [showQR,     setShowQR]     = useState(false);
+  const [qrConfig,   setQrConfig]   = useState({ show: false, position: 'right', size: 100 });
   const [activeQuiz, setActiveQuiz] = useState(null);
   const [quizTimeLimit, setQuizTimeLimit] = useState(15);
   const [correctOpt, setCorrectOpt] = useState('');
