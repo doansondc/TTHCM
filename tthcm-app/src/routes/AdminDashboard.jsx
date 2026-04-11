@@ -111,6 +111,8 @@ export default function AdminDashboard() {
   const [adminCodeForSlide, setAdminCodeForSlide] = useState('');
   const [unlockSlidePassCode, setUnlockSlidePassCode] = useState('');
   const [isSlidePassUnlocked, setIsSlidePassUnlocked] = useState(false);
+  const [showAILogs, setShowAILogs] = useState(false);
+
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(interval);
@@ -1370,12 +1372,18 @@ export default function AdminDashboard() {
 
                 {/* Gemini AI Config */}
                 <div style={G({ padding: '1.4rem' })}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '1rem' }}>
-                    <span style={{ fontSize: '1.1rem' }}>🤖</span>
-                    <span style={{ fontWeight: 700, color: '#1a1714', fontSize: '0.95rem' }}>Cấu Hình Trí Tuệ Nhân Tạo (Gemini API)</span>
-                    <span style={{ fontSize: '0.72rem', color: hasGeminiKey ? '#16a34a' : '#dc2626', background: hasGeminiKey ? 'rgba(22,163,74,0.1)' : 'rgba(220,38,38,0.1)', padding: '2px 8px', borderRadius: 20, fontWeight:700 }}>
-                      {hasGeminiKey ? 'ĐANG KẾT NỐI' : 'CHƯA CẤU HÌNH'}
-                    </span>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontSize: '1.1rem' }}>🤖</span>
+                      <span style={{ fontWeight: 700, color: '#1a1714', fontSize: '0.95rem' }}>Cấu Hình Trí Tuệ Nhân Tạo (Gemini API)</span>
+                      <span style={{ fontSize: '0.72rem', color: hasGeminiKey ? '#16a34a' : '#dc2626', background: hasGeminiKey ? 'rgba(22,163,74,0.1)' : 'rgba(220,38,38,0.1)', padding: '2px 8px', borderRadius: 20, fontWeight:700 }}>
+                        {hasGeminiKey ? 'ĐANG KẾT NỐI' : 'CHƯA CẤU HÌNH'}
+                      </span>
+                    </div>
+                    <button onClick={() => setShowAILogs(!showAILogs)}
+                      style={{ padding: '0.3rem 0.8rem', borderRadius: 8, background: showAILogs ? 'rgba(0,0,0,0.8)' : 'rgba(0,0,0,0.05)', color: showAILogs ? '#fff' : '#1a1714', border: 'none', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s' }}>
+                      {showAILogs ? 'Ẩn Logs AI' : 'Xem Logs AI'}
+                    </button>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     <div>
@@ -1391,6 +1399,27 @@ export default function AdminDashboard() {
                       Lưu Key & Khởi Động AI
                     </motion.button>
                   </div>
+
+                  {/* AI Logs Panel */}
+                  <AnimatePresence>
+                    {showAILogs && (
+                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} style={{ overflow: 'hidden' }}>
+                        <div style={{ marginTop: '1.2rem', padding: '1rem', background: '#0d1117', borderRadius: 12, border: '1px solid #30363d', color: '#c9d1d9', fontFamily: 'monospace', fontSize: '0.8rem', maxHeight: '300px', overflowY: 'auto' }}>
+                          {logs.filter(l => l.type === 'ai_status').length === 0 ? (
+                            <div style={{ opacity: 0.5, fontStyle: 'italic', textAlign: 'center', padding: '1rem' }}>Hệ thống AI chưa có hoạt động nào được ghi nhận.</div>
+                          ) : (
+                            logs.filter(l => l.type === 'ai_status').map((l, i) => (
+                              <div key={i} style={{ display: 'flex', gap: '0.8rem', padding: '0.4rem 0', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                                <span style={{ color: '#8b949e', whiteSpace: 'nowrap' }}>{new Date(l.ts).toLocaleTimeString('vi-VN')}</span>
+                                <span style={{ color: '#58a6ff', whiteSpace: 'nowrap', width: '120px', overflow: 'hidden', textOverflow: 'ellipsis' }}>[{l.name}]</span>
+                                <span style={{ flex: 1, color: l.txt?.includes('❌')||l.txt?.includes('⚠️') ? '#ff7b72' : l.txt?.includes('✅') ? '#3fb950' : '#c9d1d9', lineHeight: 1.4 }}>{l.txt}</span>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
               </div>
