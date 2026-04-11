@@ -543,11 +543,17 @@ export default function PresentationView() {
       <SplashScreen onStart={() => setStarted(true)} />
 
       {/* Ambient Dark-to-Dawn Theme Background */}
-      <motion.div 
-        animate={{ background: currentGradient }} 
-        transition={{ duration: 1.2, ease: 'easeInOut' }}
-        style={{ position:'fixed', inset:0, zIndex:0, overflow:'hidden', background: currentGradient }}
-      >
+      <div style={{ position:'fixed', inset:0, zIndex:0, overflow:'hidden', background: '#020305' }}>
+        <AnimatePresence>
+          <motion.div
+            key={currentGradient}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: 'easeInOut' }}
+            style={{ position: 'absolute', inset: 0, background: currentGradient }}
+          />
+        </AnimatePresence>
         <AnimatePresence mode="wait">
           {slide?.bg && slide.bg !== 'none' && (
             <motion.div key={slide.bg}
@@ -558,7 +564,7 @@ export default function PresentationView() {
           )}
         </AnimatePresence>
         <AmbientParticles />
-      </motion.div>
+      </div>
 
       <FlyingReactions />
       <LiveToast />
@@ -580,13 +586,13 @@ export default function PresentationView() {
             <GlobalPickerOverlay active={pickerActive} winner={pickerWinner} pool={pickerPool} />
             <QuizOverlay quiz={activeQuiz} />
             
-            <AnimatePresence mode="wait" custom={direction}>
+            <AnimatePresence custom={direction}>
               <motion.div key={currentSlide}
                 custom={direction}
-                initial={{ opacity:0, x: direction * 32, scale: 0.995 }}
+                initial={{ opacity:0, x: direction * 40, scale: 0.995 }}
                 animate={{ opacity:1, x:0, scale:1 }}
-                exit={{ opacity:0, x: direction * -32, scale: 0.995 }}
-                transition={{ duration:0.30, ease:[0.4,0,0.2,1] }}
+                exit={{ opacity:0, x: direction * -40, scale: 0.995 }}
+                transition={{ duration:0.45, ease:[0.4,0,0.2,1] }}
                 style={{ position:'absolute', inset:0 }}
               >
                 <SlideComp data={slide?.data} />
