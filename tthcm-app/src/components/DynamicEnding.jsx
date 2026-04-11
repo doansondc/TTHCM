@@ -111,7 +111,12 @@ export default function DynamicEnding() {
         textToStream = "Lỗi kết nối AI: " + e.message;
       }
     } else {
-      textToStream = `[Hệ thống Phân tích Chiến lược - Giả lập AI]\n\nDựa trên dữ liệu từ ${totalVotes} chuyên gia trong hội trường:\n\nKhán giả nghiêng hẳn về kịch bản "${resultTitle}". Sự lựa chọn này cho thấy một góc nhìn vô cùng thực tế: đối mặt với sự phân mảnh hệ thống hiện tại, phần lớn tin rằng khu vực sẽ duy trì trạng thái "giằng co chiến lược" thay vì hòa bình lý tưởng hay chiến tranh tổng lực. Điều này phản ánh rõ quy luật "Hedging" (Đu dây) khôn ngoan, khi các nước đều muốn tối đa hóa lợi ích nhưng không dám qua lằn ranh đỏ.\n\nKết luận: Đây là một cuộc quản trị khủng hoảng điển hình.`;
+      // Thuật toán sinh text phân tích chiến lược tự động cho MỌI loại Poll mới
+      const winLabel = resultTitle;
+      const otherOpts = activePoll?.options.filter(o => o.id !== outcome).map(o => o.label || o.id);
+      const othersText = otherOpts.length > 0 ? `các kịch bản khác như "${otherOpts.join('", "')}"` : 'các ngã rẽ khác';
+      
+      textToStream = `[Hệ thống Phân tích Chiến lược - Smart AI]\n\nPhân tích dữ liệu từ ${totalVotes} quyết định tại hội trường về chủ đề "${activePoll?.title}":\n\nĐám đông đã nghiêng hẳn về phương án: "${winLabel}". \n\nSự phân bổ phiếu bầu cho thấy một khuynh hướng tư duy rất thực tế: Thay vì phân tán vào ${othersText}, phần lớn nhận định rằng "${winLabel}" mang logic cốt lõi và phù hợp với thực tiễn hiện tại nhất.\n\nNhìn từ lăng kính địa chính trị và quản trị rủi ro, sự lựa chọn này hoàn toàn phản ánh tư duy "cân bằng lợi ích". Khi đối mặt với môi trường bất định, đám đông ưu tiên kịch bản duy trì được năng lực kiểm soát, phản chiếu cách các chủ thể lớn đang đấu trí và "đi trên dây" trong bối cảnh thực.\n\nKết luận: Đây là hệ quả tất yếu của một hệ thống có quản trị.`;
     }
 
     let i = 0;
