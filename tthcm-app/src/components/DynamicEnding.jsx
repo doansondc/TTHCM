@@ -106,14 +106,14 @@ export default function DynamicEnding() {
       setAiText(''); // Clear loading text
       let textToStream = '';
       if (res.ok && res.text) {
-        textToStream = "[Google Deepmind Gemini 2.5 Flash]\n\n" + res.text;
+        textToStream = "**Google Deepmind Gemini 2.5 Flash**\n\n" + res.text;
       } else {
         // Thuật toán sinh text phân tích chiến lược tự động cho MỌI loại Poll mới
         const winLabel = resultTitle;
         const otherOpts = activePoll?.options.filter(o => o.id !== outcome).map(o => o.label || o.id);
         const othersText = otherOpts.length > 0 ? `các kịch bản khác như "${otherOpts.join('", "')}"` : 'các ngã rẽ khác';
         
-        textToStream = `[Hệ thống Phân tích Chiến lược - Smart AI]\n\nPhân tích dữ liệu từ ${totalVotes} quyết định tại hội trường về chủ đề "${activePoll?.title}":\n\nĐám đông đã nghiêng hẳn về phương án: "${winLabel}". \n\nSự phân bổ phiếu bầu cho thấy một khuynh hướng tư duy rất thực tế: Thay vì phân tán vào ${othersText}, phần lớn nhận định rằng "${winLabel}" mang logic cốt lõi và phù hợp với thực tiễn hiện tại nhất.\n\nNhìn từ lăng kính địa chính trị và quản trị rủi ro, sự lựa chọn này hoàn toàn phản ánh tư duy "cân bằng lợi ích". Khi đối mặt với môi trường bất định, đám đông ưu tiên kịch bản duy trì được năng lực kiểm soát, phản chiếu cách các chủ thể lớn đang đấu trí và "đi trên dây" trong bối cảnh thực.\n\nKết luận: Đây là hệ quả tất yếu của một hệ thống có quản trị.`;
+        textToStream = `**Hệ thống Phân tích Chiến lược - Smart AI**\n\nPhân tích dữ liệu từ ${totalVotes} quyết định tại hội trường về chủ đề "${activePoll?.title}":\n\nĐám đông đã nghiêng hẳn về phương án: "${winLabel}". \n\nSự phân bổ phiếu bầu cho thấy một khuynh hướng tư duy rất thực tế: Thay vì phân tán vào ${othersText}, phần lớn nhận định rằng "${winLabel}" mang logic cốt lõi và phù hợp với thực tiễn hiện tại nhất.\n\nNhìn từ lăng kính địa chính trị và quản trị rủi ro, sự lựa chọn này hoàn toàn phản ánh tư duy "cân bằng lợi ích". Khi đối mặt với môi trường bất định, đám đông ưu tiên kịch bản duy trì được năng lực kiểm soát, phản chiếu cách các chủ thể lớn đang đấu trí và "đi trên dây" trong bối cảnh thực.\n\nKết luận: Đây là hệ quả tất yếu của một hệ thống có quản trị.`;
       }
 
       let i = 0;
@@ -400,12 +400,12 @@ export default function DynamicEnding() {
               ) : (
                 <motion.div
                   initial={{ opacity:0, height:0 }} animate={{ opacity:1, height:'auto' }}
-                  style={{ background:'rgba(0,0,0,0.3)', border:'1px solid rgba(255,255,255,0.15)', padding:'1.5rem', borderRadius:'16px', position:'relative', zIndex:1, marginTop:'1rem', textAlign:'left', maxHeight:'45vh', overflowY:'auto' }}>
+                  style={{ background:'rgba(0,0,0,0.3)', border:'1px solid rgba(255,255,255,0.15)', padding:'1.2rem', borderRadius:'16px', position:'relative', zIndex:1, marginTop:'0.5rem', textAlign:'left', maxHeight:'22vh', overflowY:'auto' }}>
                   <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', marginBottom:'0.6rem' }}>
                     <span style={{ fontSize:'1.2rem', filter:'drop-shadow(0 0 6px #60a5fa)' }}>🤖</span>
                     <span style={{ fontSize:'0.85rem', color:'#60a5fa', fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase' }}>AI Analysis</span>
                   </div>
-                  <div style={{ fontSize:'0.9rem', color:'#e8eaf0', lineHeight:1.7, whiteSpace:'pre-wrap', fontFamily:'var(--font-sans)', minHeight:'80px' }}>
+                  <div style={{ fontSize:'0.85rem', color:'#e8eaf0', lineHeight:1.6, whiteSpace:'pre-wrap', fontFamily:'var(--font-sans)' }}>
                     {aiText}
                     {aiText.length > 0 && <motion.span animate={{ opacity:[1,0] }} transition={{ repeat:Infinity, duration:0.8 }} style={{ display:'inline-block', width:'6px', height:'14px', background:'#60a5fa', marginLeft:'4px', verticalAlign:'middle' }}/>}
                   </div>
