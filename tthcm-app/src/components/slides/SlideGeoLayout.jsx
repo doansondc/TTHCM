@@ -147,30 +147,30 @@ export default function SlideGeoLayout({ data }) {
               }} 
             />
             
-            {/* Hoàng Sa Marker — SVG center: ~x:1020/1200=85%, y:1265/2349=53.8% */}
+            {/* Hoàng Sa Marker — Center anchor: top: 52%, left: 88% */}
             <motion.div 
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 1.0, type: 'spring' }}
-              style={{ position: 'absolute', top: '53.8%', left: '85%', transform: 'translate(-50%, -100%)', display:'flex', flexDirection:'column', alignItems:'center', gap:'2px', zIndex: 2 }}
+              style={{ position: 'absolute', top: '52%', left: '88%', transform: 'translate(-50%, -50%)', display:'flex', alignItems:'center', zIndex: 2 }}
             >
-              <div style={{ color:'#fff', fontSize:'0.5rem', fontWeight:'700', textShadow:'0 1px 3px rgba(0,0,0,0.9)', background:'rgba(13,17,23,0.85)', padding:'2px 5px', borderRadius: 3, textAlign: 'center', border: '1px solid rgba(248,113,113,0.3)', lineHeight: 1.3, whiteSpace:'nowrap' }}>
-                QĐ. Hoàng Sa<br/><span style={{fontSize:'0.42rem', color: '#f87171'}}>(Việt Nam)</span>
+              <div style={{ width: 8, height: 8, background: '#f87171', borderRadius: '50%', border: '1.5px solid white', boxShadow: '0 0 10px rgba(248,113,113,0.9)', flexShrink: 0 }} />
+              <div style={{ marginLeft: '6px', color:'#fff', fontSize:'0.48rem', fontWeight:'700', textShadow:'0 1px 3px rgba(0,0,0,0.9)', background:'rgba(13,17,23,0.85)', padding:'3px 6px', borderRadius: 4, border: '1px solid rgba(248,113,113,0.3)', lineHeight: 1.3, whiteSpace:'nowrap' }}>
+                QĐ. Hoàng Sa<br/><span style={{fontSize:'0.4rem', color: '#f87171'}}>(Việt Nam)</span>
               </div>
-              <div style={{ width: 7, height: 7, background: '#f87171', borderRadius: '50%', border: '1.5px solid white', boxShadow: '0 0 8px rgba(248,113,113,0.8)' }} />
             </motion.div>
 
-            {/* Trường Sa Marker — SVG center: ~x:1000/1200=83.3%, y:2145/2349=91.3% */}
+            {/* Trường Sa Marker — Center anchor: top: 89%, left: 85% */}
             <motion.div 
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 1.2, type: 'spring' }}
-              style={{ position: 'absolute', top: '91.3%', left: '83.3%', transform: 'translate(-50%, -100%)', display:'flex', flexDirection:'column', alignItems:'center', gap:'2px', zIndex: 2 }}
+              style={{ position: 'absolute', top: '89%', left: '85%', transform: 'translate(-50%, -50%)', display:'flex', alignItems:'center', zIndex: 2 }}
             >
-              <div style={{ color:'#fff', fontSize:'0.5rem', fontWeight:'700', textShadow:'0 1px 3px rgba(0,0,0,0.9)', background:'rgba(13,17,23,0.85)', padding:'2px 5px', borderRadius: 3, textAlign: 'center', border: '1px solid rgba(248,113,113,0.3)', lineHeight: 1.3, whiteSpace:'nowrap' }}>
-                QĐ. Trường Sa<br/><span style={{fontSize:'0.42rem', color: '#f87171'}}>(Việt Nam)</span>
+              <div style={{ width: 8, height: 8, background: '#f87171', borderRadius: '50%', border: '1.5px solid white', boxShadow: '0 0 10px rgba(248,113,113,0.9)', flexShrink: 0 }} />
+              <div style={{ marginLeft: '6px', color:'#fff', fontSize:'0.48rem', fontWeight:'700', textShadow:'0 1px 3px rgba(0,0,0,0.9)', background:'rgba(13,17,23,0.85)', padding:'3px 6px', borderRadius: 4, border: '1px solid rgba(248,113,113,0.3)', lineHeight: 1.3, whiteSpace:'nowrap' }}>
+                QĐ. Trường Sa<br/><span style={{fontSize:'0.4rem', color: '#f87171'}}>(Việt Nam)</span>
               </div>
-              <div style={{ width: 7, height: 7, background: '#f87171', borderRadius: '50%', border: '1.5px solid white', boxShadow: '0 0 8px rgba(248,113,113,0.8)' }} />
             </motion.div>
           </div>
         </motion.div>
