@@ -125,67 +125,62 @@ export default function SlideGeoLayout({ data }) {
           transition={{ delay: 0.35 }}
           style={{
             flex: 0.55, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center',
+            alignItems: 'center', justifyContent: 'flex-start',
             background: 'rgba(232,184,75,0.03)',
             border: '1px solid rgba(232,184,75,0.14)',
             borderRadius: 14,
-            padding: '0.75rem 0.8rem 0.6rem',
+            padding: '0.6rem 0.5rem 0.4rem',
             overflow: 'hidden', position: 'relative',
           }}
         >
           <div style={{
-            fontSize: '0.60rem', color: 'var(--gold)', fontWeight: 700,
+            fontSize: '0.58rem', color: 'var(--gold)', fontWeight: 700,
             letterSpacing: '0.14em', textTransform: 'uppercase',
-            fontFamily: 'var(--font-mono)', marginBottom: '0.5rem', textAlign: 'center',
+            fontFamily: 'var(--font-mono)', marginBottom: '0.3rem', textAlign: 'center',
+            flexShrink: 0,
           }}>
             🗺️ Bản Đồ Việt Nam
           </div>
+          {/* Map container — use object-fit:contain so nothing is cropped */}
           <div style={{
             flex: 1, width: '100%', position: 'relative',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            borderRadius: 8, overflow: 'hidden'
+            overflow: 'hidden',
           }}>
             <img 
               src="/images/vietnam_map.svg" 
               alt="Bản đồ Việt Nam"
               style={{
-                width: '180%', 
-                height: 'auto',
-                transform: 'translate(-5%, -2%)'
+                position: 'absolute',
+                top: 0, left: '50%',
+                transform: 'translateX(-50%)',
+                height: '100%',
+                width: 'auto',
               }} 
             />
             
-            {/* Hoàng Sa Marker */}
+            {/* Hoàng Sa Marker — SVG coords: ~x:1118/1200=93%, y:1246/2349=53% */}
             <motion.div 
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 1.0, type: 'spring' }}
-              style={{ position: 'absolute', top: '38%', right: '10%', display:'flex', flexDirection:'column', alignItems:'center', gap:'0.25rem' }}
+              style={{ position: 'absolute', top: '52%', right: '8%', display:'flex', flexDirection:'column', alignItems:'center', gap:'2px', zIndex: 2 }}
             >
-              <motion.div 
-                animate={{ boxShadow: ['0 0 10px rgba(248,113,113,0.4)', '0 0 25px rgba(248,113,113,0.9)', '0 0 10px rgba(248,113,113,0.4)'] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                style={{ width: 8, height: 8, background: '#f87171', borderRadius: '50%', border: '1.5px solid white' }} 
-              />
-              <div style={{ color:'var(--text-primary)', fontSize:'0.65rem', fontWeight:'700', textShadow:'0 2px 4px rgba(0,0,0,0.8)', background:'rgba(13,17,23,0.7)', padding:'3px 6px', borderRadius: 4, textAlign: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
-                QĐ. HOÀNG SA<br/><span style={{fontSize:'0.50rem', color: '#f87171'}}>(VIỆT NAM)</span>
+              <div style={{ width: 7, height: 7, background: '#f87171', borderRadius: '50%', border: '1.5px solid white', boxShadow: '0 0 8px rgba(248,113,113,0.8)' }} />
+              <div style={{ color:'#fff', fontSize:'0.55rem', fontWeight:'700', textShadow:'0 1px 3px rgba(0,0,0,0.9)', background:'rgba(13,17,23,0.85)', padding:'2px 5px', borderRadius: 3, textAlign: 'center', border: '1px solid rgba(248,113,113,0.3)', lineHeight: 1.3, whiteSpace:'nowrap' }}>
+                QĐ. Hoàng Sa<br/><span style={{fontSize:'0.45rem', color: '#f87171'}}>(Việt Nam)</span>
               </div>
             </motion.div>
 
-            {/* Trường Sa Marker */}
+            {/* Trường Sa Marker — SVG coords: ~x:997/1200=83%, y:2020/2349=86% */}
             <motion.div 
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 1.2, type: 'spring' }}
-              style={{ position: 'absolute', bottom: '15%', right: '14%', display:'flex', flexDirection:'column', alignItems:'center', gap:'0.25rem' }}
+              style={{ position: 'absolute', top: '84%', right: '12%', display:'flex', flexDirection:'column', alignItems:'center', gap:'2px', zIndex: 2 }}
             >
-              <motion.div 
-                animate={{ boxShadow: ['0 0 10px rgba(248,113,113,0.4)', '0 0 25px rgba(248,113,113,0.9)', '0 0 10px rgba(248,113,113,0.4)'] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
-                style={{ width: 8, height: 8, background: '#f87171', borderRadius: '50%', border: '1.5px solid white' }} 
-              />
-              <div style={{ color:'var(--text-primary)', fontSize:'0.65rem', fontWeight:'700', textShadow:'0 2px 4px rgba(0,0,0,0.8)', background:'rgba(13,17,23,0.7)', padding:'3px 6px', borderRadius: 4, textAlign: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
-                QĐ. TRƯỜNG SA<br/><span style={{fontSize:'0.50rem', color: '#f87171'}}>(VIỆT NAM)</span>
+              <div style={{ width: 7, height: 7, background: '#f87171', borderRadius: '50%', border: '1.5px solid white', boxShadow: '0 0 8px rgba(248,113,113,0.8)' }} />
+              <div style={{ color:'#fff', fontSize:'0.55rem', fontWeight:'700', textShadow:'0 1px 3px rgba(0,0,0,0.9)', background:'rgba(13,17,23,0.85)', padding:'2px 5px', borderRadius: 3, textAlign: 'center', border: '1px solid rgba(248,113,113,0.3)', lineHeight: 1.3, whiteSpace:'nowrap' }}>
+                QĐ. Trường Sa<br/><span style={{fontSize:'0.45rem', color: '#f87171'}}>(Việt Nam)</span>
               </div>
             </motion.div>
           </div>
