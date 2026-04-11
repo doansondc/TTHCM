@@ -117,34 +117,37 @@ function FlipCard({ card, idx, delay }) {
               height: '100%', cursor: 'pointer',
               background: `linear-gradient(145deg, rgba(22,30,40,0.95) 0%, rgba(16,22,30,0.98) 100%)`,
               border: `1px solid ${card.accentColor}25`,
-              borderRadius: '10px', padding: '1rem 1.1rem',
+              borderRadius: '10px', padding: '1.2rem 1.3rem',
               boxShadow: `0 0 30px ${card.accentColor}18, inset 0 0 30px rgba(0,0,0,0.2)`,
+              display: 'flex', flexDirection: 'column',
+              boxSizing: 'border-box',
             }}
           >
             <h4 style={{
-              color: card.accentColor, fontSize: '0.80rem',
+              color: card.accentColor, fontSize: '0.85rem',
               textTransform: 'uppercase', letterSpacing: '0.12em',
-              marginBottom: '0.9rem', fontFamily: 'var(--font-mono)',
+              marginBottom: '0.6rem', fontFamily: 'var(--font-mono)',
               display: 'flex', alignItems: 'center', gap: 6,
+              flexShrink: 0,
             }}>
-              <span style={{ width: 5, height: 5, borderRadius: '50%', background: card.accentColor, boxShadow: `0 0 8px ${card.accentColor}`, display: 'inline-block' }} />
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: card.accentColor, boxShadow: `0 0 8px ${card.accentColor}`, display: 'inline-block' }} />
               Chi tiết phân tích ↻
             </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.65rem', padding: 0, margin: 0 }}>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', padding: 0, margin: 0, flex: 1 }}>
               {card.back.points.map((pt, i) => (
                 <li key={i} style={{
                   display: 'flex', gap: '0.7rem', alignItems: 'flex-start',
-                  borderTop: '1px solid rgba(255,255,255,0.05)',
-                  paddingTop: '0.65rem',
+                  borderTop: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.06)',
+                  paddingTop: i === 0 ? 0 : '0.7rem',
                 }}>
                   <span style={{
-                    color: card.accentColor, fontWeight: 800, fontSize: '0.92rem',
-                    lineHeight: 1.6, flexShrink: 0,
+                    color: card.accentColor, fontWeight: 800, fontSize: '1.05rem',
+                    lineHeight: 1.65, flexShrink: 0,
                     fontFamily: 'var(--font-mono)',
                   }}>
                     {String(i + 1).padStart(2, '0')}.
                   </span>
-                  <span style={{ fontSize: 'var(--fs-md)', color: 'var(--text-secondary)', lineHeight: 1.65 }}>
+                  <span style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.7, fontWeight: 500 }}>
                     {pt}
                   </span>
                 </li>
