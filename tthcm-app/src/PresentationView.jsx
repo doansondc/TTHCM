@@ -520,12 +520,12 @@ export default function PresentationView() {
       <div style={{ position:'fixed', inset:0, zIndex:0, overflow:'hidden', background:'#000' }}>
         <video 
           autoPlay loop muted playsInline 
-          style={{ width: '100vw', height: '100vh', objectFit: 'cover', filter: 'blur(12px) brightness(0.28) contrast(1.1) grayscale(0.2)' }}
+          style={{ width: '100vw', height: '100vh', objectFit: 'cover', filter: 'blur(4px) brightness(0.45)', transform: 'scale(1.02)' }}
         >
           <source src="/video/alb_ocen0110_1080p.mp4" type="video/mp4" />
         </video>
-        {/* CSS Noise Overlay */}
-        <div style={{ position:'absolute', inset:0, background:'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")', opacity:0.18, mixBlendMode:'screen', pointerEvents:'none' }} />
+        {/* Subtle Vignette Overlay for Depth */}
+        <div style={{ position:'absolute', inset:0, background:'radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(13,17,23,0.85) 100%)', pointerEvents:'none' }} />
       </div>
 
       <FlyingReactions />
