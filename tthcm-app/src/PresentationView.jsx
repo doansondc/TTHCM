@@ -426,6 +426,28 @@ function useSlideScale(frameRef) {
   return scale;
 }
 
+// ── Background Interpolation: Night to Dawn ──────────────────────────
+function lerp(start, end, amt) {
+  return (1 - amt) * start + amt * end;
+}
+function getDawnGradient(progress) {
+  // progress: 0.0 (Night) to 1.0 (Dawn)
+  const botHueCurve = progress < 0.5
+    ? lerp(225, 300, progress * 2) 
+    : lerp(300, 390, (progress - 0.5) * 2);
+
+  const topHue = lerp(225, 210, progress);
+  const botHue = botHueCurve > 360 ? botHueCurve - 360 : botHueCurve;
+
+  const topLight = lerp(3, 25, progress);
+  const topSat = lerp(80, 20, progress);
+
+  const botLight = lerp(7, 45, progress);
+  const botSat = lerp(60, 60, progress);
+
+  return `linear-gradient(160deg, hsl(${topHue}, ${topSat}%, ${topLight}%) 0%, hsl(${botHue}, ${botSat}%, ${botLight}%) 100%)`;
+}
+
 // ── Main View ────────────────────────────────────────────
 export default function PresentationView() {
   const [started,      setStarted]      = useState(false);
@@ -443,6 +465,9 @@ export default function PresentationView() {
   const scale    = useSlideScale(frameRef);
 
   const total  = slideData.length;
+  const bgProgress = currentSlide / Math.max(1, total - 1);
+  const currentGradient = getDawnGradient(bgProgress);
+
   const qrUrl  = `${window.location.protocol}//${window.location.host}/vote`;
 
   const goTo = (idx) => {
@@ -517,8 +542,12 @@ export default function PresentationView() {
     <>
       <SplashScreen onStart={() => setStarted(true)} />
 
-      {/* Ambient Dark Theme Background */}
-      <div style={{ position:'fixed', inset:0, zIndex:0, overflow:'hidden', background:'linear-gradient(160deg, #020305 0%, #06090f 100%)' }}>
+      {/* Ambient Dark-to-Dawn Theme Background */}
+      <motion.div 
+        animate={{ background: currentGradient }} 
+        transition={{ duration: 1.2, ease: 'easeInOut' }}
+        style={{ position:'fixed', inset:0, zIndex:0, overflow:'hidden', background: currentGradient }}
+      >
         <AnimatePresence mode="wait">
           {slide?.bg && slide.bg !== 'none' && (
             <motion.div key={slide.bg}
@@ -529,7 +558,7 @@ export default function PresentationView() {
           )}
         </AnimatePresence>
         <AmbientParticles />
-      </div>
+      </motion.div>
 
       <FlyingReactions />
       <LiveToast />
