@@ -161,7 +161,7 @@ export default function DynamicEnding() {
 
   return (
     <div style={{
-      width: '100%', maxWidth: '900px', minHeight: 0,
+      width: '100%', maxWidth: '1100px', minHeight: 0,
       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem',
       position: 'relative',
     }}>
@@ -297,7 +297,7 @@ export default function DynamicEnding() {
                 boxShadow: `0 0 60px ${result.glow}, 0 0 120px ${result.glow}55, 0 20px 50px rgba(0,0,0,0.7)`,
                 padding: '1.8rem 2.4rem',
                 textAlign: 'center',
-                maxWidth: '680px',
+                maxWidth: '900px',
                 width: '100%',
                 position: 'relative',
                 zIndex: 5,
@@ -400,7 +400,7 @@ export default function DynamicEnding() {
               ) : (
                 <motion.div
                   initial={{ opacity:0, height:0 }} animate={{ opacity:1, height:'auto' }}
-                  style={{ background:'rgba(0,0,0,0.3)', border:'1px solid rgba(255,255,255,0.15)', padding:'1.5rem', borderRadius:'16px', position:'relative', zIndex:1, marginTop:'1rem', textAlign:'left', maxHeight:'30vh', overflowY:'auto' }}>
+                  style={{ background:'rgba(0,0,0,0.3)', border:'1px solid rgba(255,255,255,0.15)', padding:'1.5rem', borderRadius:'16px', position:'relative', zIndex:1, marginTop:'1rem', textAlign:'left', maxHeight:'45vh', overflowY:'auto' }}>
                   <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', marginBottom:'0.6rem' }}>
                     <span style={{ fontSize:'1.2rem', filter:'drop-shadow(0 0 6px #60a5fa)' }}>🤖</span>
                     <span style={{ fontSize:'0.85rem', color:'#60a5fa', fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase' }}>AI Analysis</span>

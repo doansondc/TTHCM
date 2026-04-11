@@ -61,6 +61,7 @@ const commitDB = () => {
   State.adminCode = adminCode;
   State.slidePassword = slidePassword;
   State.aiChats = aiChats;
+  State.reactionHistory = reactionHistory;
   saveDB(State);
 };
 
@@ -93,6 +94,7 @@ let voterProfiles = State.voterProfiles;
 let adminCode    = State.adminCode    || '654321';
 let slidePassword = State.slidePassword || 'SSH1151';
 let commentHistory = State.commentHistory || [];
+let reactionHistory = State.reactionHistory || [];
 let pinnedItem     = State.pinnedItem || null;
 let geminiApiKey   = State.geminiApiKey || '';
 
@@ -244,6 +246,13 @@ io.on('connection', (socket) => {
     lastAction[socket.id].reaction = now;
     const user = users[socket.id]; if (!user) return;
     if (mutedMSSV.has(user.mssv)) return; // silently drop
+
+    if (user.mssv) {
+      reactionHistory.push({ mssv: user.mssv, emoji, ts: now });
+      if (reactionHistory.length > 20000) reactionHistory.shift();
+      commitDB();
+    }
+    
     io.emit('show_reaction', { emoji, name: user.name, id: Math.random() });
   });
 
@@ -465,6 +474,7 @@ io.on('connection', (socket) => {
     const chats = aiChats[mssv] || [];
     const qs = questions.filter(q => q.mssv === mssv);
     const cmts = commentHistory.filter(c => c.mssv === mssv);
+    const rx = reactionHistory.filter(r => r.mssv === mssv);
     const votes = [];
     for (const p of polls) {
       for (const opt of p.options) {
@@ -473,7 +483,7 @@ io.on('connection', (socket) => {
         if (v) votes.push({ pollTitle: p.title, option: opt.label || opt.id, date: v.date });
       }
     }
-    callback?.({ chats, qs, cmts, votes });
+    callback?.({ chats, qs, cmts, votes, rx });
   });
 
   // Admin controls

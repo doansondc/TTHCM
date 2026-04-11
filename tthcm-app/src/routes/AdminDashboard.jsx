@@ -1483,6 +1483,20 @@ export default function AdminDashboard() {
                       )}
                     </div>
 
+                    {/* Reactions */}
+                    <div>
+                      <h3 style={{ fontSize:'0.9rem', color:'#d946ef', fontWeight:700, marginBottom:'0.8rem', borderBottom:'1px solid rgba(217,70,239,0.2)', paddingBottom:'0.4rem', display:'flex', alignItems:'center', gap:'0.4rem' }}><span>🎈</span> LỊCH SỬ THẢ TIM ({userHistoryData.rx?.length || 0})</h3>
+                      {(!userHistoryData.rx || userHistoryData.rx.length === 0) ? <div style={{ fontSize:'0.8rem', color:'#a89e94' }}>Chưa thả biểu cảm nào.</div> : (
+                        <div style={{ display:'flex', flexWrap:'wrap', gap:'0.4rem' }}>
+                          {userHistoryData.rx.map((r, i) => (
+                            <div key={i} style={{ padding:'0.4rem 0.6rem', background:'rgba(217,70,239,0.06)', border:'1px solid rgba(217,70,239,0.2)', borderRadius:'8px', fontSize:'1rem' }} title={new Date(r.ts).toLocaleTimeString('vi-VN')}>
+                              {r.emoji}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
                     {/* Comments */}
                     <div>
                       <h3 style={{ fontSize:'0.9rem', color:'#dc2626', fontWeight:700, marginBottom:'0.8rem', borderBottom:'1px solid rgba(220,38,38,0.2)', paddingBottom:'0.4rem', display:'flex', alignItems:'center', gap:'0.4rem' }}><span>💬</span> BÌNH LUẬN TRỰC TIẾP ({userHistoryData.cmts.length})</h3>

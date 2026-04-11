@@ -48,7 +48,7 @@ function FlipCard({ card, idx, delay }) {
             {/* Image */}
             {card.front.image && (
               <div style={{
-                height: '155px', flexShrink: 0, overflow: 'hidden',
+                height: '195px', flexShrink: 0, overflow: 'hidden',
                 borderRadius: '10px', position: 'relative',
                 background: `linear-gradient(135deg, ${card.accentColor}18 0%, ${card.accentColor}35 100%)`,
               }}>
@@ -88,8 +88,8 @@ function FlipCard({ card, idx, delay }) {
             {/* Headline */}
             <div style={{ padding: '0.9rem 0.2rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
               <p style={{
-                fontSize: '1.18rem', color: 'var(--text-primary)',
-                lineHeight: 1.6, fontWeight: 600, margin: 0,
+                fontSize: '1.35rem', color: 'var(--text-primary)',
+                lineHeight: 1.5, fontWeight: 600, margin: 0,
               }}>
                 {card.front.headline}
               </p>
