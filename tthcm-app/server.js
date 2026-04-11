@@ -584,7 +584,7 @@ io.on('connection', (socket) => {
 Hội trường vừa tiến hành biểu quyết với ${data.totalVotes} phiếu.
 Chủ đề mổ xẻ: "${data.title}".
 Đám đông đã chọn kịch bản chiến thắng: "${data.resultTitle}" (đã bị lu mờ đi các phương án: "${others}").
-YÊU CẦU: Viết một đoạn nhận định thật CHUYÊN MÔN (tuyệt đối DƯỚI 600 KÝ TỰ chữ cái). Hệ thống hóa lựa chọn trên theo lăng kính ngoại giao, đường lối chính trị học và cục diện thay đổi qua lời giải thích hùng biện.`;
+YÊU CẦU: Viết một đoạn nhận định thật CHUYÊN MÔN nhưng SỬ DỤNG NGÔN TỪ DỄ HIỂU ĐỂ CÁC BẠN SINH VIÊN ĐẠI TRÀ VÀ NGƯỜI KHÔNG CÓ CHUYÊN MÔN CHÍNH TRỊ CŨNG CÓ THỂ HIỂU ĐƯỢC. Trình bày tách bạch các ý rõ ràng. Tuyệt đối GIỚI HẠN DƯỚI 700 KÝ TỰ chữ cái. Hệ thống hóa lựa chọn trên theo lăng kính ngoại giao, đường lối chính trị học và cục diện thay đổi qua lời giải thích hùng biện.`;
 
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`, {
         method: 'POST',
@@ -636,7 +636,7 @@ const aiCooldowns = new Map();
     try {
       const prompt = `Đây là Chương trình phần đáp án thuộc môn học Tư tưởng Hồ Chí Minh tại Đại học Bách Khoa Hà Nội, Nhóm 11 trình bày. Bài học là phân tích đường lối ngoại giao của một số quốc gia (Trung Đông) và ngoại giao cây tre của Việt Nam.
 Một sinh viên trong hội trường tên là "${data.name}" đang đặt ra câu hỏi cho chuyên gia: "${data.question}".
-YÊU CẦU: Đưa ra lời giải đáp lịch sự, cực kì học thuật và trọng tâm, thuyết phục (súc tích, đầy đủ ý, không được quá dài dòng). Sử dụng thông tin chính luận và bám sát tư tưởng ngoại giao Hồ Chí Minh nếu liên quan tới VN. Đóng vai xưng tôi/chuyên gia.`;
+YÊU CẦU: Đưa ra lời giải đáp lịch sự, chuyên nghiệp nhưng SỬ DỤNG NGÔN TỪ DỄ HIỂU ĐỂ SINH VIÊN ĐẠI TRÀ KHÔNG CẦN AM HIỂU SÂU VẪN NẮM ĐƯỢC VẤN ĐỀ. Đóng vai xưng tôi/chuyên gia. Trình bày rành mạch, tách bạch các ý rõ ràng. Bám sát tư tưởng ngoại giao Hồ Chí Minh nếu liên quan tới VN. TUYỆT ĐỐI GIỚI HẠN TỐI ĐA KHOẢNG 700 KÝ TỰ.`;
 
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`, {
         method: 'POST',

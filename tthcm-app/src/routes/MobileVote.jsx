@@ -677,8 +677,8 @@ export default function MobileVote() {
             {myAnswer && (
               <div style={{ background:'rgba(22,163,74,0.08)', border:'1px solid rgba(22,163,74,0.25)', borderRadius:'14px', padding:'1rem', marginBottom:'1.2rem' }}>
                 <div style={{ fontSize:'0.75rem', color:'#16a34a', fontWeight:700, marginBottom:'0.4rem', textTransform:'uppercase', letterSpacing:'0.05em' }}>🔔 Phản hồi từ Admin</div>
-                <div style={{ fontSize:'0.88rem', color:'#1a1714', fontWeight:600, fontStyle:'italic', marginBottom:'0.6rem', paddingLeft:'0.5rem', borderLeft:'2px solid rgba(0,0,0,0.1)' }}>"{myAnswer.questionText}"</div>
-                <div style={{ fontSize:'0.9rem', color:'#3a3530', lineHeight:1.5 }}>{myAnswer.answer}</div>
+                <div style={{ fontSize:'0.88rem', color:'#b0b8c8', fontWeight:600, fontStyle:'italic', marginBottom:'0.6rem', paddingLeft:'0.5rem', borderLeft:'2px solid rgba(255,255,255,0.2)' }}>"{myAnswer.questionText}"</div>
+                <div style={{ fontSize:'0.9rem', color:'#ffffff', lineHeight:1.5, fontWeight:500 }}>{myAnswer.answer}</div>
               </div>
             )}
             
@@ -728,7 +728,7 @@ export default function MobileVote() {
                     <div style={{ fontSize:'0.75rem', color: aiAnswer.type === 'success' ? '#10b981' : '#dc2626', fontWeight:800, marginBottom:'0.6rem', textTransform:'uppercase', letterSpacing:'0.05em', display:'flex', alignItems:'center', gap:'6px' }}>
                       {aiAnswer.type === 'success' ? '✨ Phân tích từ hệ thống Gemini' : '⚠️ Thông báo hệ thống'}
                     </div>
-                    <div style={{ fontSize:'0.9rem', color: aiAnswer.type === 'success' ? '#2d333a' : '#991b1b', lineHeight:1.6, whiteSpace:'pre-line', textAlign:'justify' }}>
+                    <div style={{ fontSize:'0.9rem', color: aiAnswer.type === 'success' ? '#ffffff' : '#ffb3b3', lineHeight:1.6, whiteSpace:'pre-line', textAlign:'justify', fontWeight:500 }}>
                       {aiAnswer.text.replace(/\*\*/g, '')}
                     </div>
                     <button type="button" onClick={() => setAiAnswer(null)} style={{ position:'absolute', top:'1rem', right:'1rem', background:'rgba(0,0,0,0.05)', borderRadius:'50%', width:'24px', height:'24px', display:'flex', alignItems:'center', justifyContent:'center', border:'none', color:'#7a8494', cursor:'pointer', padding:0 }}>✕</button>
@@ -795,7 +795,7 @@ export default function MobileVote() {
 }
 
 const S = {
-  page: { minHeight:'100vh', position:'relative', fontFamily:'Inter,sans-serif', WebkitFontSmoothing:'antialiased', color:'#e8eaf0' },
+  page: { height:'100%', overflowY:'auto', position:'relative', fontFamily:'Inter,sans-serif', WebkitFontSmoothing:'antialiased', color:'#e8eaf0' },
   content: { position:'relative', zIndex:1, maxWidth:'480px', margin:'0 auto', padding:'1.2rem 1rem 90px' },
   label: { display:'block', fontSize:'0.78rem', fontWeight:600, color:'#7a8494', marginBottom:'0.4rem', letterSpacing:'0.03em' },
   input: { width:'100%', padding:'0.85rem 1rem', borderRadius:'12px', border:'1px solid rgba(255,255,255,0.10)', background:'rgba(255,255,255,0.05)', color:'#e8eaf0', fontSize:'0.9rem', outline:'none', fontFamily:'Inter,sans-serif', backdropFilter:'blur(10px)', transition:'border-color 0.2s', boxShadow:'0 2px 8px rgba(0,0,0,0.2)' },
