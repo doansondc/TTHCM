@@ -91,6 +91,7 @@ let adminCode    = State.adminCode    || '654321';
 let slidePassword = State.slidePassword || 'SSH1151';
 let commentHistory = State.commentHistory || [];
 let pinnedItem     = State.pinnedItem || null;
+let geminiApiKey   = State.geminiApiKey || '';
 
 const lastAction = {};
 const RATE_MS    = { reaction:200, message:2500 };
@@ -557,7 +558,42 @@ io.on('connection', (socket) => {
   });
 
   socket.on('get_config', () => {
-    socket.emit('config_update', { adminCode, slidePassword });
+    socket.emit('config_update', { adminCode, slidePassword, hasGeminiKey: !!geminiApiKey });
+  });
+
+  // ── AI Integration ────────────────────────────────
+  socket.on('change_gemini_key', ({ key }, callback) => {
+    geminiApiKey = key.trim();
+    State.geminiApiKey = geminiApiKey;
+    commitDB();
+    callback?.({ ok: true });
+    io.emit('config_update', { hasGeminiKey: !!geminiApiKey });
+  });
+
+  socket.on('analyze_poll_ai', async (data, callback) => {
+    if (!geminiApiKey) {
+      callback?.({ ok: false, text: "Chưa cấu hình Gemini API Key." });
+      return;
+    }
+    try {
+      const others = data.options.filter(o => o.label !== data.resultTitle).map(o => o.label).join(', ');
+      const prompt = `Bạn là chuyên gia phân tích địa chính trị. Phân tích kết quả từ ${data.totalVotes} biểu quyết của hội trường về chủ đề "${data.title}". Khán giả đã chọn kịch bản chiến thắng: "${data.resultTitle}", thay vì: "${others}". Viết ĐÚNG một đoạn văn (khoảng 150 chữ) nhận định lý do cực kỳ sắc nét, mạch lạc tại sao đám đông lại chọn phương án này, ý nghĩa chiến lược đằng sau nó. Ngôn từ hùng biện.`;
+
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+      const json = await res.json();
+      const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text) {
+        callback?.({ ok: true, text });
+      } else {
+        callback?.({ ok: false, text: "API trả về kết quả rỗng." });
+      }
+    } catch (e) {
+      callback?.({ ok: false, text: "Lỗi phía máy chủ: " + e.message });
+    }
   });
 
 

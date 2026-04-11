@@ -90,41 +90,38 @@ export default function DynamicEnding() {
     }, 3500);
   };
 
-  const analyzeWithAI = async () => {
+  const analyzeWithAI = () => {
     setIsAnalyzingAI(true);
     setAiText('');
-    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     
-    let textToStream = '';
     const resultTitle = result?.title || 'Không rõ';
-    const prompt = `Bạn là chuyên gia phân tích địa chính trị. ${activePoll?.title}. Số phiếu: ${totalVotes}. Kịch bản thắng: ${resultTitle}. Viết 1 đoạn (150 chữ) nhận định lý do khán giả chọn kịch bản này.`;
+    const payload = {
+      title: activePoll?.title,
+      totalVotes,
+      resultTitle,
+      options: activePoll?.options.map(o => ({ id: o.id, label: o.label || o.id }))
+    };
 
-    if (apiKey && apiKey !== 'undefined') {
-      try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-        });
-        const data = await res.json();
-        textToStream = data.candidates?.[0]?.content?.parts?.[0]?.text || "Không có phản hồi từ AI.";
-      } catch(e) {
-        textToStream = "Lỗi kết nối AI: " + e.message;
+    socket.emit('analyze_poll_ai', payload, (res) => {
+      let textToStream = '';
+      if (res.ok && res.text) {
+        textToStream = "[Google Deepmind Gemini 1.5 Pro]\n\n" + res.text;
+      } else {
+        // Thuật toán sinh text phân tích chiến lược tự động cho MỌI loại Poll mới
+        const winLabel = resultTitle;
+        const otherOpts = activePoll?.options.filter(o => o.id !== outcome).map(o => o.label || o.id);
+        const othersText = otherOpts.length > 0 ? `các kịch bản khác như "${otherOpts.join('", "')}"` : 'các ngã rẽ khác';
+        
+        textToStream = `[Hệ thống Phân tích Chiến lược - Smart AI]\n\nPhân tích dữ liệu từ ${totalVotes} quyết định tại hội trường về chủ đề "${activePoll?.title}":\n\nĐám đông đã nghiêng hẳn về phương án: "${winLabel}". \n\nSự phân bổ phiếu bầu cho thấy một khuynh hướng tư duy rất thực tế: Thay vì phân tán vào ${othersText}, phần lớn nhận định rằng "${winLabel}" mang logic cốt lõi và phù hợp với thực tiễn hiện tại nhất.\n\nNhìn từ lăng kính địa chính trị và quản trị rủi ro, sự lựa chọn này hoàn toàn phản ánh tư duy "cân bằng lợi ích". Khi đối mặt với môi trường bất định, đám đông ưu tiên kịch bản duy trì được năng lực kiểm soát, phản chiếu cách các chủ thể lớn đang đấu trí và "đi trên dây" trong bối cảnh thực.\n\nKết luận: Đây là hệ quả tất yếu của một hệ thống có quản trị.`;
       }
-    } else {
-      // Thuật toán sinh text phân tích chiến lược tự động cho MỌI loại Poll mới
-      const winLabel = resultTitle;
-      const otherOpts = activePoll?.options.filter(o => o.id !== outcome).map(o => o.label || o.id);
-      const othersText = otherOpts.length > 0 ? `các kịch bản khác như "${otherOpts.join('", "')}"` : 'các ngã rẽ khác';
-      
-      textToStream = `[Hệ thống Phân tích Chiến lược - Smart AI]\n\nPhân tích dữ liệu từ ${totalVotes} quyết định tại hội trường về chủ đề "${activePoll?.title}":\n\nĐám đông đã nghiêng hẳn về phương án: "${winLabel}". \n\nSự phân bổ phiếu bầu cho thấy một khuynh hướng tư duy rất thực tế: Thay vì phân tán vào ${othersText}, phần lớn nhận định rằng "${winLabel}" mang logic cốt lõi và phù hợp với thực tiễn hiện tại nhất.\n\nNhìn từ lăng kính địa chính trị và quản trị rủi ro, sự lựa chọn này hoàn toàn phản ánh tư duy "cân bằng lợi ích". Khi đối mặt với môi trường bất định, đám đông ưu tiên kịch bản duy trì được năng lực kiểm soát, phản chiếu cách các chủ thể lớn đang đấu trí và "đi trên dây" trong bối cảnh thực.\n\nKết luận: Đây là hệ quả tất yếu của một hệ thống có quản trị.`;
-    }
 
-    let i = 0;
-    const interval = setInterval(() => {
-      setAiText(prev => prev + textToStream.charAt(i));
-      i++;
-      if (i >= textToStream.length) clearInterval(interval);
-    }, 15);
+      let i = 0;
+      const interval = setInterval(() => {
+        setAiText(prev => prev + textToStream.charAt(i));
+        i++;
+        if (i >= textToStream.length) clearInterval(interval);
+      }, 15);
+    });
   };
 
   // Get outcome display data — try OUTCOMES map first, else build from poll option

@@ -105,6 +105,9 @@ export default function AdminDashboard() {
   const [adminCodeMsg,     setAdminCodeMsg]     = useState(null);
   const [newSlidePass,     setNewSlidePass]     = useState('');
   const [slidePassMsg,     setSlidePassMsg]     = useState(null);
+  const [hasGeminiKey,     setHasGeminiKey]     = useState(false);
+  const [geminiApiKeyInput, setGeminiApiKeyInput] = useState('');
+  const [geminiKeyMsg,     setGeminiKeyMsg]     = useState(null);
   const [adminCodeForSlide, setAdminCodeForSlide] = useState('');
 
   useEffect(() => {
@@ -172,7 +175,11 @@ export default function AdminDashboard() {
     socket.on('rate_ms_updated',     setRateMs);
     socket.on('comment_history',     setCHist);
     socket.on('pinned_item_update',  setPinnedItem);
-    socket.on('config_update',       d => { if (d.adminCode) setAdminCodeState(d.adminCode); if (d.slidePassword) setSlidePassState(d.slidePassword); });
+    socket.on('config_update',       d => { 
+      if (d.adminCode) setAdminCodeState(d.adminCode); 
+      if (d.slidePassword) setSlidePassState(d.slidePassword); 
+      if (d.hasGeminiKey !== undefined) setHasGeminiKey(d.hasGeminiKey);
+    });
     socket.on('slide_password_updated', d => { if (d.slidePassword) setSlidePassState(d.slidePassword); });
     return () => ['admin_logs','update_users','update_votes','update_polls','quiz_bank_update','update_questions','new_question','question_answered','poll_status','blocked_ips','quiz_state','blocked_mssv_update','muted_mssv_update','comment_queue_update','comments_status','questions_status','reactions_status','comment_mode_status','rate_ms_updated','comment_history','pinned_item_update','config_update','slide_password_updated','qr_config_update'].forEach(e => socket.off(e));
   }, [authed]);
@@ -1248,6 +1255,18 @@ export default function AdminDashboard() {
                 setTimeout(() => setSlidePassMsg(null), 3500);
               });
             };
+            const handleChangeGeminiKey = () => {
+              if (!geminiApiKeyInput) return;
+              socket.emit('change_gemini_key', { key: geminiApiKeyInput }, (res) => {
+                if (res?.ok) {
+                  setGeminiKeyMsg({ ok: true, txt: `✅ Đã lưu Google Gemini API Key!` });
+                  setGeminiApiKeyInput('');
+                } else {
+                  setGeminiKeyMsg({ ok: false, txt: `❌ Lỗi khi lưu API Key` });
+                }
+                setTimeout(() => setGeminiKeyMsg(null), 3500);
+              });
+            };
             return (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: 560 }}>
                 <div style={{ fontSize: '0.78rem', color: '#78726a', background: 'rgba(181,134,13,0.07)', border: '1px solid rgba(181,134,13,0.18)', borderRadius: 12, padding: '0.8rem 1rem', display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
@@ -1324,6 +1343,32 @@ export default function AdminDashboard() {
                     </motion.button>
                   </div>
                 </div>
+
+                {/* Gemini AI Config */}
+                <div style={G({ padding: '1.4rem' })}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '1rem' }}>
+                    <span style={{ fontSize: '1.1rem' }}>🤖</span>
+                    <span style={{ fontWeight: 700, color: '#1a1714', fontSize: '0.95rem' }}>Cấu Hình Trí Tuệ Nhân Tạo (Gemini API)</span>
+                    <span style={{ fontSize: '0.72rem', color: hasGeminiKey ? '#16a34a' : '#dc2626', background: hasGeminiKey ? 'rgba(22,163,74,0.1)' : 'rgba(220,38,38,0.1)', padding: '2px 8px', borderRadius: 20, fontWeight:700 }}>
+                      {hasGeminiKey ? 'ĐANG KẾT NỐI' : 'CHƯA CẤU HÌNH'}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <div>
+                      <p style={{ fontSize: '0.8rem', color: '#78726a', marginBottom: '0.8rem', lineHeight: 1.5 }}>Nhập Google Gemini API Key để hệ thống có khả năng phân tích bình chọn sâu sắc trên màn hình chiếu.</p>
+                      <input type="password" value={geminiApiKeyInput} onChange={e => setGeminiApiKeyInput(e.target.value)}
+                        placeholder="AIzaSy..."
+                        style={{ width: '100%', padding: '0.75rem', borderRadius: 10, border: '1.5px solid rgba(0,0,0,0.1)', background: 'rgba(255,255,255,0.9)', color: '#1a1714', fontSize: '1rem', fontFamily: 'monospace', letterSpacing: '0.05em', boxSizing: 'border-box', outline: 'none' }} />
+                    </div>
+                    {geminiKeyMsg && <div style={{ fontSize: '0.82rem', padding: '0.5rem 0.8rem', borderRadius: 8, background: geminiKeyMsg.ok ? 'rgba(37,99,235,0.07)' : 'rgba(220,38,38,0.08)', color: geminiKeyMsg.ok ? '#2563eb' : '#dc2626', border: `1px solid ${geminiKeyMsg.ok ? 'rgba(37,99,235,0.2)' : 'rgba(220,38,38,0.2)'}` }}>{geminiKeyMsg.txt}</div>}
+                    <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={handleChangeGeminiKey}
+                      disabled={!geminiApiKeyInput}
+                      style={{ padding: '0.75rem', borderRadius: 10, background: !geminiApiKeyInput ? 'rgba(0,0,0,0.06)' : 'linear-gradient(135deg, #10b981, #059669)', color: !geminiApiKeyInput ? '#a89e94' : '#fff', border: 'none', fontWeight: 700, cursor: !geminiApiKeyInput ? 'not-allowed' : 'pointer', fontSize: '0.88rem', transition: 'all 0.2s' }}>
+                      Lưu Key & Khởi Động AI
+                    </motion.button>
+                  </div>
+                </div>
+
               </div>
             );
           })()}
