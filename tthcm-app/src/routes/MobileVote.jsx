@@ -265,10 +265,10 @@ export default function MobileVote() {
     setAiAnswer(null);
     socket.emit('ask_ai_direct', { question, name, mssv }, (res) => {
       setIsAskingAI(false);
-      if (res && res.text) {
-        setAiAnswer(res.text);
+      if (res) {
+        setAiAnswer({ type: res.ok ? 'success' : 'error', text: res.text || "Lỗi xử lý tín hiệu." });
       } else {
-        setAiAnswer("Lỗi kết nối vệ tinh AI. Có vẻ đường truyền tới Google Deepmind gặp sự cố, vui lòng gửi lời nhắn cho ban quản trị!");
+        setAiAnswer({ type: 'error', text: "Lỗi kết nối vệ tinh AI. Hệ thống đang bận." });
       }
     });
   };
@@ -724,10 +724,14 @@ export default function MobileVote() {
                 </div>
 
                 {aiAnswer && (
-                  <motion.div initial={{ opacity:0, y:-10 }} animate={{ opacity:1, y:0 }} style={{ marginTop:'0.5rem', background:'rgba(16,185,129,0.1)', border:'1.5px solid rgba(16,185,129,0.3)', borderRadius:'14px', padding:'1rem', position:'relative' }}>
-                    <div style={{ fontSize:'0.75rem', color:'#059669', fontWeight:800, marginBottom:'0.5rem', textTransform:'uppercase', letterSpacing:'0.05em', display:'flex', alignItems:'center', gap:'5px' }}>✨ Phân tích từ Gemini</div>
-                    <div style={{ fontSize:'0.9rem', color:'#1a1714', lineHeight:1.55 }}>{aiAnswer}</div>
-                    <button type="button" onClick={() => setAiAnswer(null)} style={{ position:'absolute', top:'0.8rem', right:'0.8rem', background:'transparent', border:'none', color:'#a89e94', cursor:'pointer' }}>✕</button>
+                  <motion.div initial={{ opacity:0, y:-10, scale:0.98 }} animate={{ opacity:1, y:0, scale:1 }} style={{ marginTop:'1rem', background: aiAnswer.type === 'success' ? 'linear-gradient(145deg, rgba(16,185,129,0.08), rgba(16,185,129,0.02))' : 'rgba(220,38,38,0.08)', border: aiAnswer.type === 'success' ? '1px solid rgba(16,185,129,0.25)' : '1px solid rgba(220,38,38,0.3)', borderRadius:'16px', padding:'1.2rem', position:'relative', boxShadow:'0 10px 30px rgba(0,0,0,0.1)', backdropFilter:'blur(20px)' }}>
+                    <div style={{ fontSize:'0.75rem', color: aiAnswer.type === 'success' ? '#10b981' : '#dc2626', fontWeight:800, marginBottom:'0.6rem', textTransform:'uppercase', letterSpacing:'0.05em', display:'flex', alignItems:'center', gap:'6px' }}>
+                      {aiAnswer.type === 'success' ? '✨ Phân tích từ hệ thống Gemini' : '⚠️ Thông báo hệ thống'}
+                    </div>
+                    <div style={{ fontSize:'0.9rem', color: aiAnswer.type === 'success' ? '#2d333a' : '#991b1b', lineHeight:1.6, whiteSpace:'pre-line', textAlign:'justify' }}>
+                      {aiAnswer.text.replace(/\*\*/g, '')}
+                    </div>
+                    <button type="button" onClick={() => setAiAnswer(null)} style={{ position:'absolute', top:'1rem', right:'1rem', background:'rgba(0,0,0,0.05)', borderRadius:'50%', width:'24px', height:'24px', display:'flex', alignItems:'center', justifyContent:'center', border:'none', color:'#7a8494', cursor:'pointer', padding:0 }}>✕</button>
                   </motion.div>
                 )}
               </form>
