@@ -90,6 +90,7 @@ let voterProfiles = State.voterProfiles;
 let adminCode    = State.adminCode    || '654321';
 let slidePassword = State.slidePassword || 'SSH1151';
 let commentHistory = State.commentHistory || [];
+let pinnedItem     = State.pinnedItem || null;
 
 const lastAction = {};
 const RATE_MS    = { reaction:200, message:2500 };
@@ -294,6 +295,7 @@ io.on('connection', (socket) => {
     logAction('answer', { qId: id, answer });
     commitDB();
     io.emit('question_answered', { id, answer });
+    io.emit('toast_notification', { message: `👨‍💼 Admin đã trả lời câu hỏi của ${q.name}` });
 
     // Cố gắng gửi trả lời về đúng người hỏi bằng mssv nếu socket.id đã đổi do reload
     let targetSocketId = q.socketId;
@@ -433,6 +435,21 @@ io.on('connection', (socket) => {
     commitDB();
     broadcastQuizBank();
   });
+
+  // ── Pinned Items ────────────────────────────────────
+  socket.on('pin_item', (item) => {
+    pinnedItem = item;
+    State.pinnedItem = pinnedItem;
+    commitDB();
+    io.emit('pinned_item_update', pinnedItem);
+  });
+  socket.on('unpin_item', () => {
+    pinnedItem = null;
+    State.pinnedItem = null;
+    commitDB();
+    io.emit('pinned_item_update', null);
+  });
+  socket.on('get_pinned_item', () => socket.emit('pinned_item_update', pinnedItem));
 
   // Admin controls
   socket.on('get_logs',    ()          => socket.emit('admin_logs', logs));

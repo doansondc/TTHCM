@@ -42,19 +42,19 @@ export default function LiveToast() {
               exit={{ opacity:0, x:30, scale:0.95 }}
               transition={{ type:'spring', stiffness:300, damping:25 }}
               style={{
-                background: 'rgba(255, 255, 255, 0.75)',
+                background: 'rgba(255, 255, 255, 0.4)',
                 backdropFilter: 'blur(25px)',
                 WebkitBackdropFilter: 'blur(25px)',
-                border: '1px solid rgba(0, 0, 0, 0.06)',
-                borderLeft: `4px solid ${s.accent}`,
+                border: `1px solid ${s.accent}88`,
+                borderLeft: `5px solid ${s.accent}`,
                 borderRadius: '16px',
                 padding: '12px 16px',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.03)',
+                boxShadow: `0 8px 32px rgba(0,0,0,0.1), 0 0 15px ${s.accent}55`,
                 display: 'flex', gap: '12px', alignItems: 'flex-start',
                 fontFamily: 'Inter, sans-serif'
               }}
             >
-              <span style={{ fontSize: '1.2rem', flexShrink:0, marginTop:'-2px', filter:'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}>{s.icon}</span>
+              <span style={{ fontSize: '1.2rem', flexShrink:0, marginTop:'-2px', filter:`drop-shadow(0 0 8px ${s.accent})` }}>{s.icon}</span>
               <div style={{ minWidth:0, marginTop: '2px' }}>
                 {toast.name && (
                   <div style={{ fontSize:'0.85rem', fontWeight:600, color: '#1a1714', marginBottom:'4px', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', fontFamily: 'Playfair Display, serif', letterSpacing: '0.02em' }}>

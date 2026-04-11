@@ -89,6 +89,8 @@ export default function AdminDashboard() {
   const [reactionsOn,   setReactionsOn]   = useState(true);
   const [commentModeOn, setCommentModeOn] = useState(false);
   const [rateMs,        setRateMs]        = useState({ reaction: 200, message: 2500 });
+  const [pinnedItem,    setPinnedItem]    = useState(null);
+  const [commentHistory, setCHist]        = useState([]);
   const timerRef = useRef(null);
   // Student directory
   const [studentList,   setStudentList]   = useState([]);
@@ -148,6 +150,7 @@ export default function AdminDashboard() {
     socket.emit('get_qr_config');
     socket.emit('get_rate_ms');
     socket.emit('get_comment_history');
+    socket.emit('get_pinned_item');
     socket.on('admin_logs',          setLogs);
     socket.on('update_users',        setUsers);
     socket.on('update_votes',        setVotes);
@@ -168,9 +171,10 @@ export default function AdminDashboard() {
     socket.on('reactions_status',    setReactionsOn);
     socket.on('rate_ms_updated',     setRateMs);
     socket.on('comment_history',     setCHist);
+    socket.on('pinned_item_update',  setPinnedItem);
     socket.on('config_update',       d => { if (d.adminCode) setAdminCodeState(d.adminCode); if (d.slidePassword) setSlidePassState(d.slidePassword); });
     socket.on('slide_password_updated', d => { if (d.slidePassword) setSlidePassState(d.slidePassword); });
-    return () => ['admin_logs','update_users','update_votes','update_polls','quiz_bank_update','update_questions','new_question','question_answered','poll_status','blocked_ips','quiz_state','blocked_mssv_update','muted_mssv_update','comment_queue_update','comments_status','questions_status','reactions_status','comment_mode_status','rate_ms_updated','comment_history','config_update','slide_password_updated','qr_config_update'].forEach(e => socket.off(e));
+    return () => ['admin_logs','update_users','update_votes','update_polls','quiz_bank_update','update_questions','new_question','question_answered','poll_status','blocked_ips','quiz_state','blocked_mssv_update','muted_mssv_update','comment_queue_update','comments_status','questions_status','reactions_status','comment_mode_status','rate_ms_updated','comment_history','pinned_item_update','config_update','slide_password_updated','qr_config_update'].forEach(e => socket.off(e));
   }, [authed]);
 
   useEffect(() => {
@@ -838,6 +842,7 @@ export default function AdminDashboard() {
                     <div style={{ display:'flex', justifyContent:'space-between', marginBottom:'0.3rem' }}>
                       <span style={{ fontWeight:700, fontSize:'0.82rem', color:'#b5860d' }}>{q.name}</span>
                       <div style={{ display:'flex', gap:'0.4rem', alignItems:'center' }}>
+                        {pinnedItem?.id === q.id && <span style={{ fontSize:'0.65rem', color:'#fff', background:'#f59e0b', padding:'0.1rem 0.4rem', borderRadius:'6px', fontWeight:700 }}>📌 ĐANG GHIM</span>}
                         {q.mssv && <span style={{ fontSize:'0.7rem', color:'#a89e94' }}>{q.mssv}</span>}
                         {q.answer 
                           ? <span style={{ fontSize:'0.65rem', color:'#16a34a', fontWeight:700, padding:'0.1rem 0.4rem', background:'rgba(22,163,74,0.1)', borderRadius:'6px' }}>✓ TL</span>
@@ -866,6 +871,15 @@ export default function AdminDashboard() {
                         Gửi → Push về thiết bị khán giả
                       </button>
                     </>
+                  )}
+                  {selectedQ && (
+                    <div style={{ marginTop:'auto', paddingTop:'1rem', borderTop:'1px solid rgba(0,0,0,0.06)', display:'flex', gap:'0.5rem' }}>
+                      {pinnedItem?.id === selectedQ.id ? (
+                        <button onClick={() => socket.emit('unpin_item')} style={{ flex:1, padding:'0.7rem', borderRadius:'8px', background:'rgba(220,38,38,0.1)', border:'1px solid rgba(220,38,38,0.3)', color:'#dc2626', fontWeight:700, cursor:'pointer' }}>Bỏ Ghim</button>
+                      ) : (
+                        <button onClick={() => socket.emit('pin_item', { ...selectedQ, type: 'question' })} style={{ flex:1, padding:'0.7rem', borderRadius:'8px', background:'linear-gradient(135deg, #f59e0b, #d97706)', border:'none', color:'#fff', fontWeight:700, cursor:'pointer' }}>📌 Ghim lên Màn Chiếu</button>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
@@ -1056,12 +1070,19 @@ export default function AdminDashboard() {
                 {cHist.map((item) => (
                   <div key={item.id} style={G({ padding:'1.1rem 1.3rem', display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:'1rem' })}>
                     <div style={{ flex:1, minWidth:0 }}>
-                      <div style={{ fontWeight:700, fontSize:'0.85rem', color:'#2563eb', marginBottom:'0.3rem' }}>
-                        {item.name} <span style={{ color:'#a89e94', fontWeight:400 }}>· {item.mssv} · {new Date(item.ts).toLocaleTimeString('vi-VN')}</span>
+                      <div style={{ fontWeight:700, fontSize:'0.85rem', color:'#2563eb', marginBottom:'0.3rem', display:'flex', gap:'0.6rem', alignItems:'center' }}>
+                        <span>{item.name}</span>
+                        <span style={{ color:'#a89e94', fontWeight:400 }}>· {item.mssv} · {new Date(item.ts).toLocaleTimeString('vi-VN')}</span>
+                        {pinnedItem?.id === item.id && <span style={{ fontSize:'0.65rem', color:'#fff', background:'#f59e0b', padding:'0.1rem 0.4rem', borderRadius:'6px', fontWeight:700 }}>📌 GHIM</span>}
                       </div>
                       <div style={{ fontSize:'0.9rem', color:'#3a3530', lineHeight:1.5 }}>{item.text}</div>
                     </div>
                     <div style={{ display:'flex', gap:'0.5rem', flexShrink:0 }}>
+                      {pinnedItem?.id === item.id ? (
+                        <button onClick={() => socket.emit('unpin_item')} style={{ padding:'0.35rem 0.8rem', borderRadius:'6px', border:'1px solid rgba(220,38,38,0.25)', background:'rgba(220,38,38,0.06)', color:'#dc2626', cursor:'pointer', fontSize:'0.78rem', fontWeight:600 }}>Bỏ Ghim</button>
+                      ) : (
+                        <button onClick={() => socket.emit('pin_item', { ...item, type: 'comment' })} style={{ padding:'0.35rem 0.8rem', borderRadius:'6px', border:'none', background:'linear-gradient(135deg, #f59e0b, #d97706)', color:'#fff', cursor:'pointer', fontSize:'0.78rem', fontWeight:600 }}>📌 Ghim</button>
+                      )}
                       <button onClick={() => { if(window.confirm('Xoá vĩnh viễn bình luận này khỏi lịch sử?')) socket.emit('delete_comment_history', item.id); }}
                         style={{ padding:'0.35rem 0.8rem', borderRadius:'6px', border:'1px solid rgba(220,38,38,0.25)', background:'rgba(220,38,38,0.06)', color:'#dc2626', cursor:'pointer', fontSize:'0.78rem', fontWeight:600 }}>✕ Xoá</button>
                     </div>

@@ -436,6 +436,7 @@ export default function PresentationView() {
   const [pickerWinner, setPickerWinner] = useState(null);
   const [pickerPool,   setPickerPool]   = useState([]);
   const [pickerActive, setPickerActive] = useState(false);
+  const [pinnedItem, setPinnedItem] = useState(null);
 
   const frameRef = useRef(null);
   const scale    = useSlideScale(frameRef);
@@ -457,6 +458,7 @@ export default function PresentationView() {
 
   useEffect(() => {
     socket.emit('get_qr_config');
+    socket.emit('get_pinned_item');
     socket.on('qr_config_update', setQrConfig);
     socket.on('poll_status', setPollOn);
     socket.on('quiz_state', setActiveQuiz);
@@ -474,12 +476,14 @@ export default function PresentationView() {
       setPickerActive(false);
       setTimeout(() => setPickerWinner(null), 500);
     });
+    socket.on('pinned_item_update', setPinnedItem);
     return () => {
       socket.off('qr_config_update');
       socket.off('poll_status');
       socket.off('quiz_state');
       socket.off('global_picker_winner');
       socket.off('global_picker_close');
+      socket.off('pinned_item_update');
     };
   }, []);
 
@@ -563,6 +567,50 @@ export default function PresentationView() {
       </div>
 
       <QROverlay qrUrl={qrUrl} config={qrConfig} />
+
+      {/* Pinned Discussion Overlay */}
+      <AnimatePresence>
+        {pinnedItem && (
+          <motion.div
+            initial={{ opacity:0, y: 50, scale:0.95 }}
+            animate={{ opacity:1, y:0, scale:1 }}
+            exit={{ opacity:0, y:20, scale:0.95 }}
+            transition={{ type:'spring', damping:25, stiffness:200 }}
+            style={{
+              position:'absolute', bottom:'5%', left:'50%', transform:'translateX(-50%)',
+              zIndex:500, width:'85%', maxWidth:'52rem',
+              background:'linear-gradient(145deg, rgba(255,255,255,0.85), rgba(255,255,255,0.95))',
+              backdropFilter:'blur(40px)', border:'1.5px solid rgba(232,184,75,0.5)',
+              borderRadius:'24px', padding:'2.5rem 3rem',
+              boxShadow:'0 30px 60px rgba(0,0,0,0.15), 0 0 30px rgba(232,184,75,0.2)'
+            }}
+          >
+            <div style={{ display:'flex', gap:'1rem', alignItems:'center', marginBottom:'1.2rem' }}>
+              <span style={{ fontSize:'2.5rem', filter:'drop-shadow(0 4px 10px rgba(232,184,75,0.4))' }}>
+                {pinnedItem.type === 'question' ? '❓' : '💬'}
+              </span>
+              <div style={{ display:'flex', flexDirection:'column' }}>
+                <span style={{ fontSize:'1rem', color:'#b5860d', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.1em' }}>
+                  {pinnedItem.type === 'question' ? 'Câu Hỏi' : 'Bình Luận'} Tương Tác
+                </span>
+                <span style={{ fontSize:'1.4rem', color:'#1a1714', fontWeight:800, fontFamily:'var(--font-display)' }}>
+                  {pinnedItem.name} <span style={{ fontSize:'1rem', color:'#78726a', fontWeight:600 }}>({pinnedItem.mssv})</span>
+                </span>
+              </div>
+            </div>
+            
+            <div style={{ fontSize:'1.75rem', color:'#3a3530', lineHeight:1.5, fontWeight:600 }}>
+              "{pinnedItem.text}"
+            </div>
+
+            {pinnedItem.type === 'question' && pinnedItem.answer && (
+              <motion.div initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} style={{ marginTop:'1.5rem', background:'rgba(37,99,235,0.06)', border:'1px solid rgba(37,99,235,0.2)', padding:'1rem 1.5rem', borderRadius:'12px', color:'#1d4ed8', fontSize:'1.2rem', lineHeight:1.5 }}>
+                <strong style={{ color:'#2563eb' }}>👨‍💼 Phản hồi:</strong> {pinnedItem.answer}
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Auto-hide centered toolbar */}
       <DirectorToolbar currentSlide={currentSlide} total={total} pollOn={pollOn} togglePoll={togglePoll} slideData={slideData} goTo={goTo} />

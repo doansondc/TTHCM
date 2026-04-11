@@ -6,7 +6,6 @@ const ENV_URL = window.location.hostname === 'localhost' ? 'http://localhost:300
 const socket = io(ENV_URL, { transports: ['websocket', 'polling'] });
 
 // ── Outcome definitions ──────────────────────────────────────────────────────
-// Keyed by option ID (matches default poll options)
 const OUTCOMES = {
   'Tổng lực': {
     icon: '💥',
@@ -37,29 +36,6 @@ const OUTCOMES = {
   },
 };
 
-// Fallback: extract outcome from any poll option label
-function findOutcome(polls) {
-  const active = polls?.find(p => p.active);
-  if (!active) return null;
-  // Try to match option ids with known OUTCOMES keys
-  for (const key of Object.keys(OUTCOMES)) {
-    const opt = active.options.find(o => o.id === key || o.label?.includes(key) || o.id?.includes(key));
-    if (opt) return { poll: active };
-  }
-  return { poll: active };
-}
-
-function getVoteCounts(polls) {
-  const active = polls?.find(p => p.active);
-  if (!active) return {};
-  const counts = {};
-  for (const o of active.options) {
-    counts[o.id] = active.votes?.[o.id]?.length || 0;
-  }
-  return { active, counts };
-}
-
-// Float-up particles
 function Particles({ color, emoji }) {
   return (
     <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', borderRadius: 'inherit' }}>
@@ -78,18 +54,18 @@ function Particles({ color, emoji }) {
 }
 
 export default function DynamicEnding() {
-  const [polls, setPolls]       = useState([]);
-  const [outcome, setOutcome]   = useState(null); // option id string
-  const [phase, setPhase]       = useState('waiting'); // waiting | counting | reveal
+  const [polls, setPolls] = useState([]);
+  const [outcome, setOutcome] = useState(null);
+  const [phase, setPhase] = useState('waiting');
+  const [isAnalyzingAI, setIsAnalyzingAI] = useState(false);
+  const [aiText, setAiText] = useState('');
 
   useEffect(() => {
-    // Listen to the new multi-poll format
     socket.on('update_polls', setPolls);
     socket.emit('get_polls');
     return () => socket.off('update_polls');
   }, []);
 
-  // Derived: active poll + totals
   const activePoll = polls.find(p => p.active) || null;
   const totalVotes = activePoll
     ? activePoll.options.reduce((s, o) => s + (activePoll.votes?.[o.id]?.length || 0), 0)
@@ -100,8 +76,9 @@ export default function DynamicEnding() {
   const handleReveal = () => {
     if (!activePoll) return;
     setPhase('counting');
+    setIsAnalyzingAI(false);
+    setAiText('');
     setTimeout(() => {
-      // Find option with most votes
       let winnerOpt = activePoll.options[0];
       let maxVotes = -1;
       for (const opt of activePoll.options) {
@@ -364,25 +341,41 @@ export default function DynamicEnding() {
               <motion.div
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 transition={{ delay: 1.3 }}
-                style={{ fontSize: '0.72rem', color: 'var(--text-quaternary)', fontFamily: 'var(--font-mono)', letterSpacing: '0.08em', marginBottom: '1rem', position: 'relative', zIndex: 1 }}>
-                KẾT CỤC TỪ <span style={{ color: result.color, fontWeight: 700 }}>{totalVotes}</span> PHIẾU BẦU
+                style={{ fontSize: '0.72rem', color: 'var(--text-quaternary)', fontFamily: 'var(--font-mono)', letterSpacing: '0.08em', marginBottom: '1rem', position: 'relative', zIndex: 1, display:'flex', gap:'1rem', justifyContent:'center' }}>
+                <span>KẾT CỤC TỪ <span style={{ color: result.color, fontWeight: 700 }}>{totalVotes}</span> PHIẾU BẦU</span>
               </motion.div>
 
-              <motion.button
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                transition={{ delay: 1.5 }}
-                whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
-                onClick={() => { setPhase('waiting'); setOutcome(null); }}
-                style={{
-                  background: 'rgba(255,255,255,0.07)',
-                  border: '1px solid rgba(255,255,255,0.12)',
-                  borderRadius: 100, padding: '0.5rem 1.5rem',
-                  color: 'var(--text-tertiary)', cursor: 'pointer',
-                  fontSize: '0.82rem', fontFamily: 'var(--font-sans)',
-                  transition: 'all 0.2s', position: 'relative', zIndex: 1,
-                }}>
-                ↩ Xem lại kết quả
-              </motion.button>
+              {!isAnalyzingAI ? (
+                <div style={{ display:'flex', gap:'0.8rem', justifyContent:'center', position:'relative', zIndex:1, marginTop:'0.5rem' }}>
+                  <motion.button
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }}
+                    whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+                    onClick={() => { setPhase('waiting'); setOutcome(null); }}
+                    style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 100, padding: '0.6rem 1.4rem', color: 'var(--text-tertiary)', cursor: 'pointer', fontSize: '0.82rem', fontFamily: 'var(--font-sans)', transition: 'all 0.2s' }}>
+                    ↩ Trở lại
+                  </motion.button>
+                  <motion.button
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6 }}
+                    whileHover={{ scale: 1.04, boxShadow: `0 0 20px ${result.color}66` }} whileTap={{ scale: 0.97 }}
+                    onClick={analyzeWithAI}
+                    style={{ background: `linear-gradient(135deg, ${result.color}, ${result.color}aa)`, border: 'none', borderRadius: 100, padding: '0.6rem 1.6rem', color: '#fff', cursor: 'pointer', fontSize: '0.82rem', fontFamily: 'var(--font-sans)', fontWeight:700, transition: 'all 0.2s' }}>
+                    ✨ Phân tích với AI
+                  </motion.button>
+                </div>
+              ) : (
+                <motion.div
+                  initial={{ opacity:0, height:0 }} animate={{ opacity:1, height:'auto' }}
+                  style={{ background:'rgba(0,0,0,0.3)', border:'1px solid rgba(255,255,255,0.15)', padding:'1.5rem', borderRadius:'16px', position:'relative', zIndex:1, marginTop:'1rem', textAlign:'left' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', marginBottom:'0.6rem' }}>
+                    <span style={{ fontSize:'1.2rem', filter:'drop-shadow(0 0 6px #60a5fa)' }}>🤖</span>
+                    <span style={{ fontSize:'0.85rem', color:'#60a5fa', fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase' }}>AI Analysis</span>
+                  </div>
+                  <div style={{ fontSize:'0.9rem', color:'#e8eaf0', lineHeight:1.7, whiteSpace:'pre-wrap', fontFamily:'var(--font-sans)', minHeight:'80px' }}>
+                    {aiText}
+                    {aiText.length > 0 && <motion.span animate={{ opacity:[1,0] }} transition={{ repeat:Infinity, duration:0.8 }} style={{ display:'inline-block', width:'6px', height:'14px', background:'#60a5fa', marginLeft:'4px', verticalAlign:'middle' }}/>}
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
           </>
         )}
