@@ -6,9 +6,9 @@ const ENV_URL = window.location.hostname === 'localhost' ? 'http://localhost:300
 const socket  = io(ENV_URL, { transports: ['websocket', 'polling'] });
 
 const TYPE_STYLE = {
-  comment: { icon: '💬', border: 'rgba(37,99,235,0.25)', bg: 'rgba(37,99,235,0.07)', accent: '#2563eb' },
-  vote:    { icon: '✅', border: 'rgba(22,163,74,0.25)',  bg: 'rgba(22,163,74,0.07)',  accent: '#16a34a' },
-  join:    { icon: '👋', border: 'rgba(181,134,13,0.25)', bg: 'rgba(181,134,13,0.07)', accent: '#b5860d' },
+  comment: { icon: '💬', accent: '#b5860d' },
+  vote:    { icon: '🗳️', accent: '#2563eb' },
+  join:    { icon: '👋', accent: '#16a34a' },
 };
 
 export default function LiveToast() {
@@ -35,31 +35,31 @@ export default function LiveToast() {
           const s = TYPE_STYLE[toast.type] || TYPE_STYLE.comment;
           return (
             <motion.div key={toast.id}
-              initial={{ opacity:0, y:20, scale:0.9 }}
+              initial={{ opacity:0, y:20, scale:0.95 }}
               animate={{ opacity:1, y:0, scale:1 }}
-              exit={{ opacity:0, x:20, scale:0.95 }}
-              transition={{ type:'spring', stiffness:200, damping:22 }}
+              exit={{ opacity:0, x:30, scale:0.95 }}
+              transition={{ type:'spring', stiffness:300, damping:25 }}
               style={{
-                background: `${s.bg}`,
-                backdropFilter: 'blur(30px)',
-                WebkitBackdropFilter: 'blur(30px)',
-                border: `1px solid ${s.border}`,
-                borderLeft: `3px solid ${s.accent}`,
-                borderRadius: '14px',
-                padding: '10px 14px',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-                display: 'flex', gap: '10px', alignItems: 'flex-start',
-                background: 'rgba(255,255,255,0.88)',
+                background: 'rgba(255, 255, 255, 0.75)',
+                backdropFilter: 'blur(25px)',
+                WebkitBackdropFilter: 'blur(25px)',
+                border: '1px solid rgba(0, 0, 0, 0.06)',
+                borderLeft: `4px solid ${s.accent}`,
+                borderRadius: '16px',
+                padding: '12px 16px',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.03)',
+                display: 'flex', gap: '12px', alignItems: 'flex-start',
+                fontFamily: 'Inter, sans-serif'
               }}
             >
-              <span style={{ fontSize: '1.1rem', flexShrink:0, marginTop:'1px' }}>{s.icon}</span>
-              <div style={{ minWidth:0 }}>
+              <span style={{ fontSize: '1.2rem', flexShrink:0, marginTop:'-2px', filter:'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}>{s.icon}</span>
+              <div style={{ minWidth:0, marginTop: '2px' }}>
                 {toast.name && (
-                  <div style={{ fontSize:'0.75rem', fontWeight:700, color: s.accent, marginBottom:'2px', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
+                  <div style={{ fontSize:'0.85rem', fontWeight:600, color: '#1a1714', marginBottom:'4px', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', fontFamily: 'Playfair Display, serif', letterSpacing: '0.02em' }}>
                     {toast.name}
                   </div>
                 )}
-                <div style={{ fontSize:'0.82rem', color:'#3a3530', lineHeight:1.45, wordBreak:'break-word' }}>
+                <div style={{ fontSize:'0.82rem', color:'#524d47', lineHeight:1.5, wordBreak:'break-word', fontWeight:400 }}>
                   {toast.text}
                 </div>
               </div>
