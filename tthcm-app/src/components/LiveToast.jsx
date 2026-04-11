@@ -6,9 +6,10 @@ const ENV_URL = window.location.hostname === 'localhost' ? 'http://localhost:300
 const socket  = io(ENV_URL, { transports: ['websocket', 'polling'] });
 
 const TYPE_STYLE = {
-  comment: { icon: '💬', accent: '#b5860d' },
-  vote:    { icon: '🗳️', accent: '#2563eb' },
-  join:    { icon: '👋', accent: '#16a34a' },
+  comment:  { icon: '💬', accent: '#b5860d' },
+  question: { icon: '❓', accent: '#dc2626' }, // Red accent for questions
+  vote:     { icon: '🗳️', accent: '#2563eb' },
+  join:     { icon: '👋', accent: '#16a34a' },
 };
 
 export default function LiveToast() {
@@ -21,11 +22,12 @@ export default function LiveToast() {
       setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 4500);
     };
 
-    socket.on('new_message',        (d) => addToast('comment', { name: d.name, text: d.text }));
-    socket.on('toast_notification', (d) => addToast('vote',    { text: d.message }));
-    socket.on('user_joined',        (d) => addToast('join',    { name: d.name, text: `vừa tham gia` }));
+    socket.on('new_message',        (d) => addToast('comment',  { name: d.name, text: d.text }));
+    socket.on('question_toast',     (d) => addToast('question', { name: d.name, text: d.text }));
+    socket.on('toast_notification', (d) => addToast('vote',     { text: d.message }));
+    socket.on('user_joined',        (d) => addToast('join',     { name: d.name, text: `vừa tham gia` }));
 
-    return () => { socket.off('new_message'); socket.off('toast_notification'); socket.off('user_joined'); };
+    return () => { socket.off('new_message'); socket.off('question_toast'); socket.off('toast_notification'); socket.off('user_joined'); };
   }, []);
 
   return (

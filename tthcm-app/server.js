@@ -91,7 +91,7 @@ let adminCode    = State.adminCode    || '654321';
 let slidePassword = State.slidePassword || 'SSH1151';
 
 const lastAction = {};
-const RATE_MS    = { reaction:800, message:3000 };
+const RATE_MS    = { reaction:200, message:2500 };
 
 // ── Express Middleware for IP Blocking ──────────────
 app.use((req, res, next) => {
@@ -268,7 +268,7 @@ io.on('connection', (socket) => {
     const q = { id: Date.now() + Math.random(), name: user.name, mssv: user.mssv, socketId: socket.id, text: filtered, answer: null, verifyCode };
     questions.unshift(q);
     logAction('question', { name: user.name, mssv: user.mssv, text: filtered, ip });
-    io.emit('toast_notification', { message: `❓ ${user.name} đã đặt một câu hỏi!` });
+    io.emit('question_toast', { name: user.name, text: 'vừa đặt một câu hỏi!' });
     commitDB();
     io.emit('new_question', q);
     io.emit('update_questions', questions);
