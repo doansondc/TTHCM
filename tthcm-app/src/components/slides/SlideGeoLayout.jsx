@@ -145,15 +145,12 @@ export default function SlideGeoLayout({ data }) {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             borderRadius: 8, overflow: 'hidden'
           }}>
-            {/* SVG Map of Vietnam */}
             <img 
               src="/images/vietnam_map.svg" 
               alt="Bản đồ Việt Nam"
               style={{
                 width: '180%', 
                 height: 'auto',
-                WebkitMaskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 80%)',
-                maskImage: 'radial-gradient(ellipse at center, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 80%)',
                 transform: 'translate(-5%, -2%)'
               }} 
             />

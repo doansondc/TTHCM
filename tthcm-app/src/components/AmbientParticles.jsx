@@ -19,16 +19,16 @@ export default function AmbientParticles() {
   return (
     <div style={{ position: 'absolute', top: 0, left: 0, width: '100vw', height: '100vh', pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
       
-      {/* Light Flares / Optical Glows */}
+      {/* Light Flares / Optical Glows: No blur() to save FPS */}
       <motion.div
         animate={{ opacity: [0.15, 0.35, 0.15], scale: [1, 1.1, 1] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        style={{ position:'absolute', top:'-20%', left:'-10%', width:'70vw', height:'70vw', background:'radial-gradient(circle, rgba(255,100,50,0.06) 0%, transparent 60%)', filter:'blur(40px)', pointerEvents:'none' }}
+        style={{ position:'absolute', top:'-20%', left:'-10%', width:'70vw', height:'70vw', background:'radial-gradient(circle, rgba(255,100,50,0.06) 0%, transparent 60%)', pointerEvents:'none', willChange: 'opacity, transform' }}
       />
       <motion.div
         animate={{ opacity: [0.1, 0.25, 0.1], scale: [1, 1.2, 1] }}
         transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        style={{ position:'absolute', bottom:'-30%', right:'-20%', width:'85vw', height:'85vw', background:'radial-gradient(circle, rgba(232,184,75,0.05) 0%, transparent 60%)', filter:'blur(40px)', pointerEvents:'none' }}
+        style={{ position:'absolute', bottom:'-30%', right:'-20%', width:'85vw', height:'85vw', background:'radial-gradient(circle, rgba(232,184,75,0.05) 0%, transparent 60%)', pointerEvents:'none', willChange: 'opacity, transform' }}
       />
 
       {/* Floating Sparks */}
@@ -55,7 +55,7 @@ export default function AmbientParticles() {
             background: p.color,
             borderRadius: '50%',
             boxShadow: `0 0 ${p.size * 3}px ${p.color}`,
-            filter: 'blur(0.5px)'
+            willChange: 'opacity, transform'
           }}
         />
       ))}
