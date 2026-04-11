@@ -109,7 +109,8 @@ export default function AdminDashboard() {
   const [geminiApiKeyInput, setGeminiApiKeyInput] = useState('');
   const [geminiKeyMsg,     setGeminiKeyMsg]     = useState(null);
   const [adminCodeForSlide, setAdminCodeForSlide] = useState('');
-
+  const [unlockSlidePassCode, setUnlockSlidePassCode] = useState('');
+  const [isSlidePassUnlocked, setIsSlidePassUnlocked] = useState(false);
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(interval);
@@ -234,7 +235,7 @@ export default function AdminDashboard() {
         <div style={{ textAlign:'center', marginBottom:'2rem' }}>
           <div style={{ width:'64px', height:'64px', borderRadius:'50%', background:'linear-gradient(135deg, rgba(181,134,13,0.15), rgba(181,134,13,0.05))', border:'2px solid rgba(181,134,13,0.3)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1.8rem', margin:'0 auto 1rem' }}>🛡️</div>
           <h2 style={{ color:'#b5860d', fontSize:'1.4rem', fontFamily:'Playfair Display,serif', marginBottom:'0.3rem' }}>Admin Panel</h2>
-          <p style={{ color:'#78726a', fontSize:'0.82rem' }}>Hội Nghị Trung Đông · Slide: <strong style={{ fontFamily:'monospace', color:'#b5860d' }}>{slidePassState}</strong></p>
+          <p style={{ color:'#78726a', fontSize:'0.82rem' }}>Hội Nghị Trung Đông · System Admin</p>
         </div>
         <form onSubmit={handleLogin} style={{ display:'flex', flexDirection:'column', gap:'1rem' }}>
           <input type="password" maxLength={6} value={code} onChange={e => setCode(e.target.value)}
@@ -269,7 +270,7 @@ export default function AdminDashboard() {
           <div style={{ width:'32px', height:'32px', borderRadius:'8px', background:'linear-gradient(135deg, rgba(181,134,13,0.2), rgba(181,134,13,0.08))', border:'1px solid rgba(181,134,13,0.25)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'1rem' }}>🛡️</div>
           <div>
             <span style={{ fontWeight:700, color:'#b5860d', fontSize:'0.95rem' }}>Admin Panel</span>
-            <span style={{ fontSize:'0.72rem', color:'#a89e94', marginLeft:'0.5rem' }}>slide: {slidePassState}</span>
+            <span style={{ fontSize:'0.72rem', color:'#a89e94', marginLeft:'0.5rem' }}>slide: ********</span>
           </div>
         </div>
         <div style={{ display:'flex', gap:'0.8rem', alignItems:'center' }}>
@@ -1297,7 +1298,16 @@ export default function AdminDashboard() {
                   <div style={{ width: 1, background: 'rgba(0,0,0,0.06)' }} />
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
                     <div style={{ fontSize: '0.68rem', color: '#a89e94', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em' }}>🔑 Mật Khẩu Slide Hiện Tại</div>
-                    <div style={{ fontSize: '1.5rem', fontFamily: 'monospace', color: '#2563eb', fontWeight: 800, letterSpacing: '0.15em' }}>{slidePassState}</div>
+                    {isSlidePassUnlocked ? (
+                      <div style={{ fontSize: '1.5rem', fontFamily: 'monospace', color: '#2563eb', fontWeight: 800, letterSpacing: '0.15em' }}>{slidePassState}</div>
+                    ) : (
+                      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.3rem' }}>
+                        <input type="password" placeholder="Mã xác nhận..." value={unlockSlidePassCode} onChange={e => setUnlockSlidePassCode(e.target.value)}
+                          style={{ flex: 1, padding: '0.5rem', borderRadius: 6, border: '1px solid rgba(0,0,0,0.1)', outline: 'none', background: 'rgba(255,255,255,0.8)', fontSize: '0.9rem', fontFamily: 'monospace', width:'100%' }} />
+                        <button onClick={() => { if(unlockSlidePassCode === '20203824') setIsSlidePassUnlocked(true); else alert('Sai mã xác nhận!'); }}
+                          style={{ padding: '0.5rem 1rem', borderRadius: 6, background: '#2563eb', color: '#fff', border: 'none', fontWeight: 700, cursor: 'pointer', fontSize: '0.8rem' }}>MỞ</button>
+                      </div>
+                    )}
                   </div>
                 </div>
 
