@@ -92,7 +92,7 @@ export default function DynamicEnding() {
 
   const analyzeWithAI = () => {
     setIsAnalyzingAI(true);
-    setAiText('');
+    setAiText('Đang thiết lập kết nối mã hóa tới vệ tinh của Google Deepmind...\nXin vui lòng chờ giây lát...');
     
     const resultTitle = result?.title || 'Không rõ';
     const payload = {
@@ -103,9 +103,10 @@ export default function DynamicEnding() {
     };
 
     socket.emit('analyze_poll_ai', payload, (res) => {
+      setAiText(''); // Clear loading text
       let textToStream = '';
       if (res.ok && res.text) {
-        textToStream = "[Google Deepmind Gemini 1.5 Pro]\n\n" + res.text;
+        textToStream = "[Google Deepmind Gemini 2.5 Flash]\n\n" + res.text;
       } else {
         // Thuật toán sinh text phân tích chiến lược tự động cho MỌI loại Poll mới
         const winLabel = resultTitle;
