@@ -439,7 +439,14 @@ export default function PresentationView() {
   const [pinnedItem, setPinnedItem] = useState(null);
 
   const frameRef = useRef(null);
+  const videoRef = useRef(null);
   const scale    = useSlideScale(frameRef);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 0.4;
+    }
+  }, []);
 
   const total  = slideData.length;
   const qrUrl  = `${window.location.protocol}//${window.location.host}/vote`;
@@ -519,6 +526,7 @@ export default function PresentationView() {
       {/* Ambient Video Background */}
       <div style={{ position:'fixed', inset:0, zIndex:0, overflow:'hidden', background:'#000' }}>
         <video 
+          ref={videoRef}
           autoPlay loop muted playsInline 
           style={{ width: '100vw', height: '100vh', objectFit: 'cover', filter: 'blur(4px) brightness(0.45)', transform: 'scale(1.02)' }}
         >
