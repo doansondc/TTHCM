@@ -1,0 +1,767 @@
+[
+  {
+    "name": "Nguyen Pham Viet Anh",
+    "mssv": "202412095",
+    "password": "anh"
+  },
+  {
+    "name": "Nguyen Khoa Bach",
+    "mssv": "202419477",
+    "password": "bach"
+  },
+  {
+    "name": "Mai Duc Trung",
+    "mssv": "020233679",
+    "password": "trung"
+  },
+  {
+    "name": "Nguyen Mau Tuy",
+    "mssv": "020222713",
+    "password": "tuy"
+  },
+  {
+    "name": "Vo Alexander",
+    "mssv": "020232386",
+    "password": "alexander"
+  },
+  {
+    "name": "Nguyen Thi Tra My",
+    "mssv": "202419868",
+    "password": "my"
+  },
+  {
+    "name": "Nguyen Tien Dung",
+    "mssv": "202417359",
+    "password": "dung"
+  },
+  {
+    "name": "Pham Ngoc Anh",
+    "mssv": "020232606",
+    "password": "anh"
+  },
+  {
+    "name": "Mai Tuan Minh",
+    "mssv": "202420797",
+    "password": "minh"
+  },
+  {
+    "name": "Pham Minh Khoa",
+    "mssv": "020214217",
+    "password": "khoa"
+  },
+  {
+    "name": "Nguyen Anh Kiet",
+    "mssv": "020233860",
+    "password": "kiet"
+  },
+  {
+    "name": "Tran Nhat Linh",
+    "mssv": "020234658",
+    "password": "linh"
+  },
+  {
+    "name": "Le Minh Tien",
+    "mssv": "020233668",
+    "password": "tien"
+  },
+  {
+    "name": "Luu Anh Minh",
+    "mssv": "020238432",
+    "password": "minh"
+  },
+  {
+    "name": "Duong Truong Giang",
+    "mssv": "020221746",
+    "password": "giang"
+  },
+  {
+    "name": "Nguyen Dang Minh",
+    "mssv": "020221236",
+    "password": "minh"
+  },
+  {
+    "name": "Nguyen Nhat Long",
+    "mssv": "020238096",
+    "password": "long"
+  },
+  {
+    "name": "Nguyen The Hai",
+    "mssv": "202414623",
+    "password": "hai"
+  },
+  {
+    "name": "Vuong Ngoc Quyen",
+    "mssv": "020223342",
+    "password": "quyen"
+  },
+  {
+    "name": "Pham Duc Hung",
+    "mssv": "020233432",
+    "password": "hung"
+  },
+  {
+    "name": "Dang Ngoc Minh",
+    "mssv": "202418947",
+    "password": "minh"
+  },
+  {
+    "name": "Ho Quang Anh",
+    "mssv": "202418396",
+    "password": "anh"
+  },
+  {
+    "name": "Do Quyen Anh",
+    "mssv": "020233012",
+    "password": "anh"
+  },
+  {
+    "name": "Pham Trang Dung",
+    "mssv": "020238033",
+    "password": "dung"
+  },
+  {
+    "name": "Nguyen Quoc Sang",
+    "mssv": "202417543",
+    "password": "sang"
+  },
+  {
+    "name": "Bui Thanh Tung",
+    "mssv": "020236915",
+    "password": "tung"
+  },
+  {
+    "name": "Vi Kieu Tram",
+    "mssv": "202413445",
+    "password": "tram"
+  },
+  {
+    "name": "Vo Hai Trung",
+    "mssv": "020233883",
+    "password": "trung"
+  },
+  {
+    "name": "Vu Trung Hieu",
+    "mssv": "020233404",
+    "password": "hieu"
+  },
+  {
+    "name": "Ha Hien Ngan Giang",
+    "mssv": "020233155",
+    "password": "giang"
+  },
+  {
+    "name": "Nguyen Duc Manh",
+    "mssv": "020238427",
+    "password": "manh"
+  },
+  {
+    "name": "Tran Thi Dieu",
+    "mssv": "202415299",
+    "password": "dieu"
+  },
+  {
+    "name": "Luong Ngoc Phuong Uyen",
+    "mssv": "202411475",
+    "password": "uyen"
+  },
+  {
+    "name": "Nguyen Xuan Chi Thanh",
+    "mssv": "020235623",
+    "password": "thanh"
+  },
+  {
+    "name": "Hoang Thi Be Nhi",
+    "mssv": "020223299",
+    "password": "nhi"
+  },
+  {
+    "name": "Doan Ngoc Son",
+    "mssv": "020203824",
+    "password": "son"
+  },
+  {
+    "name": "Nguyen Thi Hoai Duc",
+    "mssv": "202413348",
+    "password": "duc"
+  },
+  {
+    "name": "Nguyen Nguyen Ha",
+    "mssv": "020233377",
+    "password": "ha"
+  },
+  {
+    "name": "Nguyen Thi Thuong",
+    "mssv": "020230523",
+    "password": "thuong"
+  },
+  {
+    "name": "Tran Viet Hoang",
+    "mssv": "202411036",
+    "password": "hoang"
+  },
+  {
+    "name": "Nguyen Dinh Manh",
+    "mssv": "020237459",
+    "password": "manh"
+  },
+  {
+    "name": "Nguyen Anh Duong",
+    "mssv": "202418883",
+    "password": "duong"
+  },
+  {
+    "name": "Nguyen Thi Anh Minh",
+    "mssv": "020233074",
+    "password": "minh"
+  },
+  {
+    "name": "Do Thanh Trung",
+    "mssv": "020226760",
+    "password": "trung"
+  },
+  {
+    "name": "Nguyen Huy An",
+    "mssv": "020236385",
+    "password": "an"
+  },
+  {
+    "name": "Mac Phuc Loc",
+    "mssv": "020232503",
+    "password": "loc"
+  },
+  {
+    "name": "Nguyen Van Doi",
+    "mssv": "202420049",
+    "password": "doi"
+  },
+  {
+    "name": "Nguyen Duy Khoi",
+    "mssv": "020227875",
+    "password": "khoi"
+  },
+  {
+    "name": "NGUYEN ANH NGOC",
+    "mssv": "020193677",
+    "password": "ngoc"
+  },
+  {
+    "name": "Nguyen Duc Manh",
+    "mssv": "202420844",
+    "password": "manh"
+  },
+  {
+    "name": "Le Anh Minh",
+    "mssv": "020235530",
+    "password": "minh"
+  },
+  {
+    "name": "Le Huynh Tu",
+    "mssv": "020233690",
+    "password": "tu"
+  },
+  {
+    "name": "Nguyen Tien Dung",
+    "mssv": "202420069",
+    "password": "dung"
+  },
+  {
+    "name": "Le Nguyen Phuoc Thanh",
+    "mssv": "020235561",
+    "password": "thanh"
+  },
+  {
+    "name": "Pham Quang Huy",
+    "mssv": "020221208",
+    "password": "huy"
+  },
+  {
+    "name": "Khoa Minh Tri",
+    "mssv": "020227811",
+    "password": "tri"
+  },
+  {
+    "name": "Le Duy Anh",
+    "mssv": "020230660",
+    "password": "anh"
+  },
+  {
+    "name": "Nguyen Viet Hoang",
+    "mssv": "020238382",
+    "password": "hoang"
+  },
+  {
+    "name": "Dao Tuan Vu",
+    "mssv": "020236944",
+    "password": "vu"
+  },
+  {
+    "name": "Nguyen Duy Thai",
+    "mssv": "020232543",
+    "password": "thai"
+  },
+  {
+    "name": "Nguyen Van Vung",
+    "mssv": "202419460",
+    "password": "vung"
+  },
+  {
+    "name": "Duong Minh Quan",
+    "mssv": "202417183",
+    "password": "quan"
+  },
+  {
+    "name": "Chu Phuong Thao",
+    "mssv": "020234693",
+    "password": "thao"
+  },
+  {
+    "name": "Bui Quy Giap",
+    "mssv": "020222514",
+    "password": "giap"
+  },
+  {
+    "name": "Vu Thien Co",
+    "mssv": "020212482",
+    "password": "co"
+  },
+  {
+    "name": "Le Dang Bao Minh",
+    "mssv": "020232812",
+    "password": "minh"
+  },
+  {
+    "name": "Nguyen Thanh Trung",
+    "mssv": "202414415",
+    "password": "trung"
+  },
+  {
+    "name": "Nguyen Ngoc Bach",
+    "mssv": "020232453",
+    "password": "bach"
+  },
+  {
+    "name": "Ly Manh Cuong",
+    "mssv": "020231955",
+    "password": "cuong"
+  },
+  {
+    "name": "Le Tien Duong",
+    "mssv": "202412159",
+    "password": "duong"
+  },
+  {
+    "name": "Tran Minh Hoang Anh",
+    "mssv": "202413961",
+    "password": "anh"
+  },
+  {
+    "name": "Nguyen Bao An",
+    "mssv": "202411512",
+    "password": "an"
+  },
+  {
+    "name": "Do Tien Dung",
+    "mssv": "202419499",
+    "password": "dung"
+  },
+  {
+    "name": "Nguyen Ha Nhi",
+    "mssv": "202411719",
+    "password": "nhi"
+  },
+  {
+    "name": "Nguyen Tat Dat",
+    "mssv": "020232462",
+    "password": "dat"
+  },
+  {
+    "name": "Nguyen Ngoc Chau",
+    "mssv": "202410841",
+    "password": "chau"
+  },
+  {
+    "name": "Pham Khanh Duong",
+    "mssv": "020232471",
+    "password": "duong"
+  },
+  {
+    "name": "Dinh Thi Trang Nhung",
+    "mssv": "020221253",
+    "password": "nhung"
+  },
+  {
+    "name": "Bach Xuan Nam",
+    "mssv": "020231428",
+    "password": "nam"
+  },
+  {
+    "name": "Pham Tuan Khanh",
+    "mssv": "020221212",
+    "password": "khanh"
+  },
+  {
+    "name": "Phan Quoc Khai",
+    "mssv": "020233055",
+    "password": "khai"
+  },
+  {
+    "name": "Tran Hoai Nam",
+    "mssv": "020235609",
+    "password": "nam"
+  },
+  {
+    "name": "Nguyen Thi Kieu Trang",
+    "mssv": "020233102",
+    "password": "trang"
+  },
+  {
+    "name": "Hoang Chi Hieu",
+    "mssv": "020233162",
+    "password": "hieu"
+  },
+  {
+    "name": "Nguyen Trung Nam",
+    "mssv": "020233547",
+    "password": "nam"
+  },
+  {
+    "name": "Dang Hai Dang",
+    "mssv": "020232459",
+    "password": "dang"
+  },
+  {
+    "name": "Nguyen Thi Bich",
+    "mssv": "202419160",
+    "password": "bich"
+  },
+  {
+    "name": "Nguyen Khanh Linh",
+    "mssv": "020233964",
+    "password": "linh"
+  },
+  {
+    "name": "Nguyen Thanh Huyen",
+    "mssv": "202410370",
+    "password": "huyen"
+  },
+  {
+    "name": "Dao Trong Nguyen",
+    "mssv": "020235390",
+    "password": "nguyen"
+  },
+  {
+    "name": "Dang Van Hoang Tien",
+    "mssv": "020238625",
+    "password": "tien"
+  },
+  {
+    "name": "Tran Thi Tam Dan",
+    "mssv": "020233028",
+    "password": "dan"
+  },
+  {
+    "name": "Vu Minh Tan",
+    "mssv": "202417552",
+    "password": "tan"
+  },
+  {
+    "name": "Nguyen Nghia Thai Duong",
+    "mssv": "020233359",
+    "password": "duong"
+  },
+  {
+    "name": "Tran Dai Duong",
+    "mssv": "202419505",
+    "password": "duong"
+  },
+  {
+    "name": "Hoang Viet Thanh",
+    "mssv": "020221346",
+    "password": "thanh"
+  },
+  {
+    "name": "Nguyen Duc Quang",
+    "mssv": "020238122",
+    "password": "quang"
+  },
+  {
+    "name": "Nguyen Duc Manh",
+    "mssv": "020227062",
+    "password": "manh"
+  },
+  {
+    "name": "Nguyen Sy Hieu",
+    "mssv": "020238372",
+    "password": "hieu"
+  },
+  {
+    "name": "Tran Cong Nam",
+    "mssv": "202410129",
+    "password": "nam"
+  },
+  {
+    "name": "Nguyen Thu Ha",
+    "mssv": "202415317",
+    "password": "ha"
+  },
+  {
+    "name": "Tran Nhat Nam",
+    "mssv": "020222165",
+    "password": "nam"
+  },
+  {
+    "name": "Nguyen Thi Diem Quynh",
+    "mssv": "020232732",
+    "password": "quynh"
+  },
+  {
+    "name": "Bui Quang Minh",
+    "mssv": "202419587",
+    "password": "minh"
+  },
+  {
+    "name": "Hoang Quoc Truong",
+    "mssv": "020226765",
+    "password": "truong"
+  },
+  {
+    "name": "Nguyen Duc Khoi Nguyen",
+    "mssv": "202417515",
+    "password": "nguyen"
+  },
+  {
+    "name": "Pham Kieu Trang",
+    "mssv": "020233882",
+    "password": "trang"
+  },
+  {
+    "name": "Tong Ngoc Anh",
+    "mssv": "020230328",
+    "password": "anh"
+  },
+  {
+    "name": "Nguyen Thi Nhung",
+    "mssv": "020234683",
+    "password": "nhung"
+  },
+  {
+    "name": "Bui Ngoc Mai",
+    "mssv": "020233072",
+    "password": "mai"
+  },
+  {
+    "name": "Nguyen Yen Hy",
+    "mssv": "020234640",
+    "password": "hy"
+  },
+  {
+    "name": "Le Quang Huy",
+    "mssv": "020227874",
+    "password": "huy"
+  },
+  {
+    "name": "Pham Duc Trung",
+    "mssv": "020227860",
+    "password": "trung"
+  },
+  {
+    "name": "Le Minh Hoa",
+    "mssv": "202417409",
+    "password": "hoa"
+  },
+  {
+    "name": "Bui Nhu Quynh",
+    "mssv": "020232988",
+    "password": "quynh"
+  },
+  {
+    "name": "Dao Trung Nguyen",
+    "mssv": "202421643",
+    "password": "nguyen"
+  },
+  {
+    "name": "Nguyen Viet Tuan Minh",
+    "mssv": "020226391",
+    "password": "minh"
+  },
+  {
+    "name": "Pham Thi Nhu Y",
+    "mssv": "020232939",
+    "password": "y"
+  },
+  {
+    "name": "Vu Thi Diu",
+    "mssv": "020221173",
+    "password": "diu"
+  },
+  {
+    "name": "Pham Huu Nhat",
+    "mssv": "020227650",
+    "password": "nhat"
+  },
+  {
+    "name": "Hoang Van Nhan",
+    "mssv": "020235542",
+    "password": "nhan"
+  },
+  {
+    "name": "Tran Van Long",
+    "mssv": "020233068",
+    "password": "long"
+  },
+  {
+    "name": "Vu Bao Tu",
+    "mssv": "202418583",
+    "password": "tu"
+  },
+  {
+    "name": "Cao Xuan Nam",
+    "mssv": "020233080",
+    "password": "nam"
+  },
+  {
+    "name": "Nguyen Khanh Linh",
+    "mssv": "202415364",
+    "password": "linh"
+  },
+  {
+    "name": "Nguyen Xuan An",
+    "mssv": "020232441",
+    "password": "an"
+  },
+  {
+    "name": "Phung Minh Duy",
+    "mssv": "020238554",
+    "password": "duy"
+  },
+  {
+    "name": "Duong Minh Toan",
+    "mssv": "020238728",
+    "password": "toan"
+  },
+  {
+    "name": "Bui Minh Gia Tuan",
+    "mssv": "202417600",
+    "password": "tuan"
+  },
+  {
+    "name": "Kieu Quang Minh",
+    "mssv": "020221811",
+    "password": "minh"
+  },
+  {
+    "name": "Vu Tien Manh",
+    "mssv": "020237932",
+    "password": "manh"
+  },
+  {
+    "name": "Lai Tuan Hung",
+    "mssv": "020222543",
+    "password": "hung"
+  },
+  {
+    "name": "Nguyen Tien Do",
+    "mssv": "020231999",
+    "password": "do"
+  },
+  {
+    "name": "Nguyen Quang Khai",
+    "mssv": "202418923",
+    "password": "khai"
+  },
+  {
+    "name": "Dinh Thi Yen Nhi",
+    "mssv": "020234679",
+    "password": "nhi"
+  },
+  {
+    "name": "Bui Thi Thanh Giang",
+    "mssv": "202410309",
+    "password": "giang"
+  },
+  {
+    "name": "Luu Kien Quoc",
+    "mssv": "020232538",
+    "password": "quoc"
+  },
+  {
+    "name": "Nguyen Duy Nhat",
+    "mssv": "020233563",
+    "password": "nhat"
+  },
+  {
+    "name": "Luong The Hiep",
+    "mssv": "020226610",
+    "password": "hiep"
+  },
+  {
+    "name": "Duong Xuan Bac",
+    "mssv": "020233272",
+    "password": "bac"
+  },
+  {
+    "name": "Truong Minh Thu",
+    "mssv": "020234699",
+    "password": "thu"
+  },
+  {
+    "name": "Phan Linh Tu",
+    "mssv": "202411442",
+    "password": "tu"
+  },
+  {
+    "name": "Nguyen Mai Linh",
+    "mssv": "020230435",
+    "password": "linh"
+  },
+  {
+    "name": "Nguyen Thi Phuong Nhung",
+    "mssv": "020232725",
+    "password": "nhung"
+  },
+  {
+    "name": "Nguyen Cong Hieu",
+    "mssv": "202417873",
+    "password": "hieu"
+  },
+  {
+    "name": "Le Thi Hong Phuc",
+    "mssv": "020238714",
+    "password": "phuc"
+  },
+  {
+    "name": "Dinh Xuan Bach",
+    "mssv": "020233953",
+    "password": "bach"
+  },
+  {
+    "name": "Nguyen Tran Duc Anh",
+    "mssv": "020237292",
+    "password": "anh"
+  },
+  {
+    "name": "Phan Huu Viet Anh",
+    "mssv": "020236421",
+    "password": "anh"
+  },
+  {
+    "name": "Duong Minh Kiem",
+    "mssv": "202411115",
+    "password": "kiem"
+  },
+  {
+    "name": "Tong Thai Son",
+    "mssv": "020232290",
+    "password": "son"
+  },
+  {
+    "name": "Vu Dinh Luc",
+    "mssv": "020233513",
+    "password": "luc"
+  },
+  {
+    "name": "Tran Yen Vy",
+    "mssv": "020234712",
+    "password": "vy"
+  }
+]

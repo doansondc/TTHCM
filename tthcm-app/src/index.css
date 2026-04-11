@@ -1,70 +1,530 @@
+/* ═══════════════════════════════════════════════════════════════
+   TTHCM — "War Room Premium" Design System  · Dark Mode
+   Bloomberg Terminal × Mission Control × Sơn mài Việt Nam
+   ═══════════════════════════════════════════════════════════════ */
 
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
+/* ── Color Tokens — Trung Đông Đêm ─────────────────────────── */
 :root {
-  --bg-color: #050811;
-  --card-bg: rgba(16, 22, 38, 0.7);
-  --card-border: rgba(212, 168, 67, 0.2);
-  --gold: #d4a843;
-  --gold-light: #f0c860;
-  --gold-gradient: linear-gradient(135deg, #d4a843, #f0c860, #b5880a);
-  --text-main: #ffffff;
-  --text-muted: #cbd5e1;
+  /* ── Surfaces ── */
+  --bg-base:         #0d1117;
+  --bg-elevated:     #161b22;
+  --bg-grouped:      #1c2128;
+  --bg-card:         #212830;
+  --bg-overlay:      rgba(13, 17, 23, 0.92);
+
+  /* ── Dark Glass ── */
+  --glass-bg:        rgba(22, 30, 40, 0.72);
+  --glass-bg-mid:    rgba(22, 30, 40, 0.86);
+  --glass-bg-strong: rgba(22, 30, 40, 0.96);
+  --glass-border:        rgba(255, 255, 255, 0.07);
+  --glass-border-mid:    rgba(255, 255, 255, 0.11);
+  --glass-border-strong: rgba(255, 255, 255, 0.18);
+
+  /* ── Glow Shadows ── */
+  --shadow-1: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-2: 0 4px 14px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.3);
+  --shadow-3: 0 8px 28px rgba(0,0,0,0.55), 0 3px 8px rgba(0,0,0,0.35);
+  --shadow-4: 0 16px 52px rgba(0,0,0,0.6), 0 6px 16px rgba(0,0,0,0.4);
+  --shadow-sheet: 0 24px 64px rgba(0,0,0,0.7), 0 4px 16px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.06) inset;
+
+  /* ── Text ── */
+  --text-primary:    #e8eaf0;
+  --text-secondary:  #b0b8c8;
+  --text-tertiary:   #7a8494;
+  --text-quaternary: #4a5468;
+  /* Legacy aliases */
+  --text-main:  #e8eaf0;
+  --text-sub:   #b0b8c8;
+  --text-muted: #7a8494;
+  --text-faint: #4a5468;
+
+  /* ── Gold — "Sơn Mài" Vietnamese lacquer gold ── */
+  --gold:        #e8b84b;
+  --gold-light:  #f0ca6a;
+  --gold-vivid:  #f5d070;
+  --gold-dim:    #b08830;
+  --gold-bg:     rgba(232, 184, 75, 0.10);
+  --gold-border: rgba(232, 184, 75, 0.22);
+  --gold-shadow: rgba(232, 184, 75, 0.30);
+  --glow-gold:   0 0 20px rgba(232,184,75,0.25), 0 0 60px rgba(232,184,75,0.10);
+
+  /* ── Red — Chiến sự / Alert ── */
+  --red:          #ff5555;
+  --red-dim:      #c0392b;
+  --red-bg:       rgba(255, 85, 85, 0.10);
+  --red-border:   rgba(255, 85, 85, 0.25);
+  --glow-red:     0 0 20px rgba(255,85,85,0.30), 0 0 60px rgba(255,85,85,0.10);
+
+  /* ── Teal — Intel / Data / Peace ── */
+  --teal:        #00d4aa;
+  --teal-dim:    #009978;
+  --teal-bg:     rgba(0, 212, 170, 0.10);
+  --teal-border: rgba(0, 212, 170, 0.22);
+  --glow-teal:   0 0 20px rgba(0,212,170,0.25), 0 0 60px rgba(0,212,170,0.10);
+
+  /* ── Amber — Warning ── */
+  --amber:       #f0a030;
+  --amber-bg:    rgba(240,160,48,0.10);
+  --amber-border:rgba(240,160,48,0.25);
+
+  /* ── Green — Diplomacy / Vietnam ── */
+  --green:       #3dd68c;
+  --green-dim:   #1a8a55;
+  --green-bg:    rgba(61,214,140,0.10);
+  --green-border:rgba(61,214,140,0.22);
+  --glow-green:  0 0 20px rgba(61,214,140,0.25), 0 0 60px rgba(61,214,140,0.08);
+
+  /* ── Blue — Neutral / UN ── */
+  --blue:        #4d9fff;
+  --blue-bg:     rgba(77,159,255,0.10);
+  --blue-border: rgba(77,159,255,0.22);
+
+  /* ── Purple — Analysis ── */
+  --purple:      #a78bfa;
+
+  /* ── Border Radius — Apple 8pt scale ── */
+  --r-xs:  6px;
+  --r-sm:  10px;
+  --r-md:  14px;
+  --r-lg:  20px;
+  --r-xl:  28px;
+  --r-2xl: 36px;
+  --r-pill: 100px;
+  /* Legacy */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --card-border: rgba(255,255,255,0.07);
+
+  /* ── Spatial scale (8pt) ── */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  20px;
+  --sp-6:  24px;
+  --sp-8:  32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+
+  /* ── Typography — Size Scale ── */
+  --fs-caption2:    0.67rem;
+  --fs-caption1:    0.75rem;
+  --fs-footnote:    0.81rem;
+  --fs-subhead:     0.94rem;
+  --fs-body:        1.00rem;
+  --fs-callout:     1.06rem;
+  --fs-headline:    1.06rem;
+  --fs-title3:      1.25rem;
+  --fs-title2:      1.375rem;
+  --fs-title1:      1.75rem;
+  --fs-large-title: 2.125rem;
+  /* Slide-adjusted */
+  --fs-xs:   0.72rem;
+  --fs-sm:   0.80rem;
+  --fs-base: 0.90rem;
+  --fs-md:   0.98rem;
+  --fs-lg:   1.06rem;
+  --fs-xl:   1.25rem;
+  --fs-2xl:  1.6rem;
+  --fs-3xl:  2.2rem;
+  --fs-4xl:  3.0rem;
+
+  /* ── Button Heights ── */
+  --btn-h-sm: 28px;
+  --btn-h-md: 36px;
+  --btn-h-lg: 44px;
+
+  /* ── Font families ── */
+  --font-sans:    'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-tactical:'Orbitron', 'Inter', monospace;
+  --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
 }
 
-* {
+/* ── Reset ──────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
-body {
-  font-family: 'Be Vietnam Pro', sans-serif;
-  background: var(--bg-color);
-  color: var(--text-main);
+html, body, #root {
+  width: 100%; height: 100%; overflow: hidden;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+/* ── Tactical Scanline Texture ──────────────────────────────── */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 9998;
+  pointer-events: none;
+  opacity: 0.018;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255,255,255,0.4) 2px,
+    rgba(255,255,255,0.4) 3px
+  );
+  background-size: 100% 3px;
+  animation: scanlines 8s linear infinite;
+}
+@keyframes scanlines {
+  from { background-position: 0 0; }
+  to   { background-position: 0 60px; }
+}
+
+/* ── 4:3 Slide Container ─────────────────────────────────────  */
+.slide-container {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  padding: var(--sp-4);
+  padding-bottom: 52px;
+  background: var(--bg-base);
+}
+
+.slide-frame {
+  position: relative;
+  width: min(calc(100vw - 32px), calc((100vh - 96px) * 4 / 3));
+  height: min(calc(100vh - 96px), calc((100vw - 32px) * 3 / 4));
+  max-width: 1440px;
+  border-radius: var(--r-xl);
   overflow: hidden;
+  background: var(--glass-bg-mid);
+  backdrop-filter: blur(48px) saturate(1.2);
+  -webkit-backdrop-filter: blur(48px) saturate(1.2);
+  border: 1px solid var(--glass-border-mid);
+  box-shadow: var(--shadow-sheet), 0 0 0 1px rgba(232,184,75,0.06);
 }
 
-h1, h2, h3, h4 {
-  font-family: 'Playfair Display', serif;
+/* ── Scale wrapper ── */
+.slide-scale-wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
 }
 
+@media (max-width: 640px) {
+  .slide-container {
+    padding: 8px;
+    padding-bottom: 52px;
+  }
+  .slide-frame {
+    width: calc(100vw - 16px);
+    height: calc((100vw - 16px) * 3 / 4);
+    border-radius: var(--r-lg);
+  }
+}
+
+/* ── Dark Glass Cards ─────────────────────────────────────────  */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-2);
+}
+
+.glass-card-mid {
+  background: var(--glass-bg-mid);
+  border: 1px solid var(--glass-border-mid);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-3);
+}
+
+.glass-card-strong {
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-4);
+}
+
+/* ── Gold Pill Label Tag ─────────────────────────────────────── */
+.label-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: var(--r-pill);
+  background: var(--gold-bg);
+  border: 1px solid var(--gold-border);
+  color: var(--gold);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+/* ── Gradient Text (Gold highlight) ─────────────────────────── */
 .highlight {
-  background: var(--gold-gradient);
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-vivid) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Base Utility Classes */
-.slide-container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 0;
-  left: 0;
+/* ── Teal Highlight ─────────────────────────── */
+.highlight-teal {
+  background: linear-gradient(135deg, var(--teal) 0%, #00ffcc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.slide-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 40px 8vw;
-  max-width: 1400px;
+/* ── Flip Card ───────────────────────────────────────────────── */
+.flip-card-scene { perspective: 2000px; }
+.flip-card-inner {
+  position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.35, 0, 0.15, 1);
+}
+.flip-card-inner.flipped { transform: rotateY(180deg); }
+.flip-card-face {
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flip-card-back { transform: rotateY(180deg); }
+
+/* ── Nav Dots Bar ────────────────────────────────────────────── */
+.nav-dots-bar {
+  position: fixed; bottom: 14px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; gap: 5px; align-items: center;
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border-mid);
+  border-radius: var(--r-pill);
+  padding: 5px 12px;
+  z-index: 500;
+  box-shadow: var(--shadow-2), 0 0 20px rgba(0,0,0,0.4);
 }
 
-/* Glass Card */
-.glass-card {
-  background: var(--card-bg);
-  border: 2px solid var(--card-border);
-  border-radius: 20px;
-  padding: 30px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-  transition: transform 0.3s;
-  overflow: hidden;
+/* ── Scrollbar — thin style ──────────────────────────────────── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.10); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.20); }
+
+/* ── Button System ───────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  font-family: var(--font-sans); font-weight: 600;
+  font-size: var(--fs-sm); line-height: 1;
+  height: var(--btn-h-md);
+  padding: 0 16px;
+  border-radius: var(--r-sm);
+  border: none; cursor: pointer; outline: none;
+  transition: opacity 0.15s ease, transform 0.12s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
+  user-select: none;
+  letter-spacing: -0.01em;
+}
+.btn:hover  { opacity: 0.88; }
+.btn:active { transform: scale(0.97); opacity: 0.92; }
+.btn:disabled { opacity: 0.30; cursor: not-allowed; pointer-events: none; }
+
+.btn-primary {
+  background: linear-gradient(160deg, var(--gold-vivid) 0%, var(--gold) 100%);
+  color: #0d1117;
+  font-weight: 700;
+  box-shadow: 0 2px 10px var(--gold-shadow), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.btn-primary:hover {
+  box-shadow: 0 4px 20px var(--gold-shadow), var(--glow-gold), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+.btn-pill { border-radius: var(--r-pill); padding: 0 20px; }
+
+.btn-secondary {
+  background: rgba(255,255,255,0.07);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.12); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-tertiary);
+  border: 1px solid var(--glass-border-mid);
+}
+
+.btn-danger {
+  background: var(--red-bg);
+  color: var(--red);
+  border: 1px solid var(--red-border);
+}
+.btn-danger:hover { background: rgba(255,85,85,0.18); }
+
+.btn-teal {
+  background: var(--teal-bg);
+  color: var(--teal);
+  border: 1px solid var(--teal-border);
+}
+
+.btn-sm {
+  font-size: var(--fs-xs); height: var(--btn-h-sm);
+  padding: 0 10px; border-radius: var(--r-xs);
+}
+.btn-lg {
+  font-size: var(--fs-md); height: var(--btn-h-lg);
+  padding: 0 24px; border-radius: var(--r-sm);
+}
+
+/* ── Divider ─────────────────────────────────────────────────── */
+.divider {
+  height: 1px; width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+}
+.divider-v {
+  width: 1px; height: 100%;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.08), transparent);
+}
+
+/* ── Live Indicator ──────────────────────────────────────────── */
+.live-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 8px var(--red);
+  animation: live-pulse 1.4s ease-in-out infinite;
+}
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--red); }
+  50%       { opacity: 0.5; box-shadow: 0 0 14px var(--red); }
+}
+
+/* ── Tactical Number (Orbitron) ──────────────────────────────── */
+.num-tactical {
+  font-family: var(--font-tactical);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--gold);
+}
+
+/* ── Mono text ─────────────────────────────────────────────────  */
+.text-mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.04em;
+  color: var(--text-tertiary);
+}
+
+/* ── Typography classes ──────────────────────────────────────── */
+.slide-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.12;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+.slide-subtitle {
+  font-family: var(--font-sans);
+  font-size: var(--fs-lg);
+  font-weight: 400;
+  color: var(--text-tertiary);
+  text-align: center;
+  line-height: 1.4;
+}
+.card-title {
+  font-family: var(--font-sans);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+.card-body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.card-caption {
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  color: var(--text-tertiary);
+  line-height: 1.4;
+}
+
+/* ── Section label (eyebrow uppercase) ──────────────────────── */
+.section-label {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--text-quaternary);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ── Glow border animation ───────────────────────────────────── */
+@keyframes border-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(232,184,75,0.20); border-color: rgba(232,184,75,0.25); }
+  50%       { box-shadow: 0 0 24px rgba(232,184,75,0.45); border-color: rgba(232,184,75,0.55); }
+}
+.glow-border { animation: border-glow 2.5s ease-in-out infinite; }
+
+/* ── Typewriter cursor ───────────────────────────────────────── */
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+.cursor-blink::after {
+  content: '|';
+  margin-left: 2px;
+  color: var(--gold);
+  animation: blink-cursor 0.9s ease-in-out infinite;
+}
+
+/* ── Radar sweep ─────────────────────────────────────────────── */
+@keyframes radar-sweep {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ── Ambient Background Shift ────────────────────────────────── */
+@keyframes ambient-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ── Input base ──────────────────────────────────────────────── */
+input, textarea {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  background: rgba(255,255,255,0.05);
+  color: var(--text-primary);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: var(--r-sm);
+}
+input::placeholder, textarea::placeholder { color: var(--text-quaternary); }
+input:focus, textarea:focus {
+  outline: none;
+  border-color: rgba(232,184,75,0.45);
+  box-shadow: 0 0 0 3px rgba(232,184,75,0.10);
+}
+
+/* ── Selection ───────────────────────────────────────────────── */
+::selection {
+  background: rgba(232, 184, 75, 0.25);
+  color: var(--text-primary);
 }

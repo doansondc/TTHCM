@@ -1,17 +1,10 @@
 # Build stage
-FROM node:20-alpine as build
+FROM node:20-alpine
 WORKDIR /app
 COPY tthcm-app/package*.json ./
 RUN npm install
 COPY tthcm-app/ .
 RUN npm run build
-
-# Serve stage
-FROM nginx:alpine
-# Copy the built React app to Nginx's default public directory
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Expose port 80 inside the container
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+# Start Node.js Server
+EXPOSE 3001
+CMD ["node", "server.js"]
