@@ -101,7 +101,7 @@ export default function MobileVote() {
   const [password,      setPassword]   = useState('');
   const [loginError,    setLoginError] = useState('');
   const [loginLoading,  setLoginLoading] = useState(false);
-  const [aiAnswer,      setAiAnswer]     = useState(null);
+  const [aiChats,       setAiChats]      = useState([]);
   const [isAskingAI,    setIsAskingAI]   = useState(false);
   // Change password
   const [showChangePw,  setShowChangePw]  = useState(false);
@@ -172,6 +172,7 @@ export default function MobileVote() {
       sessionStorage.setItem('voterName', name.trim());
       sessionStorage.setItem('voterMssv', paddedMssv);
       socket.emit('join', { name: name.trim(), mssv: paddedMssv, fingerprint: DEVICE_FP });
+      socket.emit('get_ai_history', paddedMssv, (res) => { if (res?.ok) setAiChats(res.history); });
       setStep('main');
       return;
     }
@@ -189,6 +190,7 @@ export default function MobileVote() {
       setName(res.name);
       setMssv(res.mssv);
       socket.emit('join', { name: res.name, mssv: res.mssv, fingerprint: DEVICE_FP });
+      socket.emit('get_ai_history', res.mssv, (resp) => { if (resp?.ok) setAiChats(resp.history); });
       setStep('main');
     });
   };
@@ -260,15 +262,26 @@ export default function MobileVote() {
 
   const askAI = (e) => {
     e.preventDefault();
-    if (!question.trim()) return;
+    const cleanQ = question.trim();
+    if (!cleanQ) return;
     setIsAskingAI(true);
-    setAiAnswer(null);
-    socket.emit('ask_ai_direct', { question, name, mssv }, (res) => {
+    setQuestion('');
+    
+    const loadingId = Date.now().toString() + '_loading';
+    setAiChats(prev => [...prev, 
+      { id: Date.now().toString(), role: 'user', text: cleanQ },
+      { id: loadingId, role: 'ai', text: 'Tư duy...', loading: true }
+    ]);
+
+    socket.emit('ask_ai_direct', { question: cleanQ, name, mssv }, (res) => {
       setIsAskingAI(false);
-      if (res) {
-        setAiAnswer({ type: res.ok ? 'success' : 'error', text: res.text || "Lỗi xử lý tín hiệu." });
+      if (res?.ok && res.history) {
+        setAiChats(res.history);
       } else {
-        setAiAnswer({ type: 'error', text: "Lỗi kết nối vệ tinh AI. Hệ thống đang bận." });
+        setAiChats(prev => {
+          const filtered = prev.filter(m => m.id !== loadingId);
+          return [...filtered, { id: Date.now().toString(), role:'ai', text: '❌ Lỗi: ' + (res?.text || 'Hệ thống bận.'), error: true }];
+        });
       }
     });
   };
@@ -723,16 +736,31 @@ export default function MobileVote() {
                   </motion.button>
                 </div>
 
-                {aiAnswer && (
-                  <motion.div initial={{ opacity:0, y:-10, scale:0.98 }} animate={{ opacity:1, y:0, scale:1 }} style={{ marginTop:'1rem', background: aiAnswer.type === 'success' ? 'linear-gradient(145deg, rgba(16,185,129,0.08), rgba(16,185,129,0.02))' : 'rgba(220,38,38,0.08)', border: aiAnswer.type === 'success' ? '1px solid rgba(16,185,129,0.25)' : '1px solid rgba(220,38,38,0.3)', borderRadius:'16px', padding:'1.2rem', position:'relative', boxShadow:'0 10px 30px rgba(0,0,0,0.1)', backdropFilter:'blur(20px)' }}>
-                    <div style={{ fontSize:'0.75rem', color: aiAnswer.type === 'success' ? '#10b981' : '#dc2626', fontWeight:800, marginBottom:'0.6rem', textTransform:'uppercase', letterSpacing:'0.05em', display:'flex', alignItems:'center', gap:'6px' }}>
-                      {aiAnswer.type === 'success' ? '✨ Phân tích từ hệ thống Gemini' : '⚠️ Thông báo hệ thống'}
+                {aiChats.length > 0 && (
+                  <div style={{ marginTop:'1.5rem', display:'flex', flexDirection:'column', gap:'0.8rem' }}>
+                    <div style={{ fontSize:'0.75rem', color:'#10b981', fontWeight:800, marginBottom:'0.2rem', textTransform:'uppercase', letterSpacing:'0.05em', display:'flex', alignItems:'center', gap:'6px', justifyContent:'center' }}>
+                      <span className="live-dot" style={{width:6,height:6,boxShadow:'none'}}></span> TRUNG TÂM GIẢI ĐÁP AI
                     </div>
-                    <div style={{ fontSize:'0.9rem', color: aiAnswer.type === 'success' ? '#ffffff' : '#ffb3b3', lineHeight:1.6, whiteSpace:'pre-line', textAlign:'justify', fontWeight:500 }}>
-                      {aiAnswer.text.replace(/\*\*/g, '')}
-                    </div>
-                    <button type="button" onClick={() => setAiAnswer(null)} style={{ position:'absolute', top:'1rem', right:'1rem', background:'rgba(0,0,0,0.05)', borderRadius:'50%', width:'24px', height:'24px', display:'flex', alignItems:'center', justifyContent:'center', border:'none', color:'#7a8494', cursor:'pointer', padding:0 }}>✕</button>
-                  </motion.div>
+                    {aiChats.map(msg => (
+                      <motion.div key={msg.id} initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }}
+                        style={{ display:'flex', flexDirection:'column', alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
+                        <div style={{ fontSize:'0.65rem', color:'#7a8494', marginBottom:'0.25rem', padding:'0 5px' }}>
+                          {msg.role === 'user' ? (name || 'Bạn') : '🤖 Chuyên gia AI Gemini'}
+                        </div>
+                        <div style={{ 
+                          maxWidth:'92%', padding:'0.8rem 1rem', borderRadius:'14px', 
+                          background: msg.role === 'user' ? 'linear-gradient(135deg, #10b981, #059669)' : msg.error ? 'rgba(220,38,38,0.1)' : 'rgba(255,255,255,0.06)',
+                          color: msg.role === 'user' ? '#fff' : msg.error ? '#ffb3b3' : '#e8eaf0',
+                          border: msg.role === 'user' ? 'none' : msg.error ? '1px solid rgba(220,38,38,0.3)' : '1px solid rgba(255,255,255,0.15)',
+                          fontSize:'0.88rem', lineHeight:1.55, whiteSpace:'pre-line', textAlign: msg.role === 'user' ? 'right' : 'justify'
+                        }}>
+                          {msg.loading ? (
+                            <span style={{ display:'flex', alignItems:'center', gap:'5px', fontStyle:'italic' }}><span className="live-dot" style={{width:6,height:6,background:'#e8b84b',boxShadow:'none',animation:'blink-cursor 0.9s infinite'}}></span> Đang nghĩ...</span>
+                          ) : msg.text.replace(/\*\*/g, '')}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
                 )}
               </form>
             )}

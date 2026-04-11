@@ -50,6 +50,7 @@ let State = loadDB({
   blockedFP: [],
   adminCode: '654321',
   slidePassword: 'SSH1151',
+  aiChats: {},
 });
 
 const commitDB = () => {
@@ -59,6 +60,7 @@ const commitDB = () => {
   State.blockedFP = [...blockedFP];
   State.adminCode = adminCode;
   State.slidePassword = slidePassword;
+  State.aiChats = aiChats;
   saveDB(State);
 };
 
@@ -82,6 +84,7 @@ let qrConfig = { show: false, position: 'right', size: 100 };
 
 let activeQuiz   = null;
 let quizVotes    = {};
+let aiChats      = State.aiChats || {};
 
 let polls        = State.polls;
 let quizBank     = State.quizBank;
@@ -453,6 +456,11 @@ io.on('connection', (socket) => {
   });
   socket.on('get_pinned_item', () => socket.emit('pinned_item_update', pinnedItem));
 
+  socket.on('get_ai_history', (mssv, callback) => {
+    const history = aiChats[mssv] || [];
+    callback?.({ ok: true, history });
+  });
+
   // Admin controls
   socket.on('get_logs',    ()          => socket.emit('admin_logs', logs));
   socket.on('get_polls',   ()          => socket.emit('update_polls', polls));
@@ -631,30 +639,46 @@ const aiCooldowns = new Map();
       return;
     }
     aiCooldowns.set(userId, now);
-    logAction('ai_status', { name: data.name || 'Khán giả', txt: `Hỏi: "${data.question.substring(0,60)}${data.question.length>60?'...':''}"` });
+    logAction('ai_status', { name: data.name || 'Khán giả', txt: `Chat AI: "${data.question.substring(0,60)}${data.question.length>60?'...':''}"` });
 
     try {
-      const prompt = `Đây là Chương trình phần đáp án thuộc môn học Tư tưởng Hồ Chí Minh tại Đại học Bách Khoa Hà Nội, Nhóm 11 trình bày. Bài học là phân tích đường lối ngoại giao của một số quốc gia (Trung Đông) và ngoại giao cây tre của Việt Nam.
-Một sinh viên trong hội trường tên là "${data.name}" đang đặt ra câu hỏi cho chuyên gia: "${data.question}".
-YÊU CẦU: Đưa ra lời giải đáp lịch sự, chuyên nghiệp nhưng SỬ DỤNG NGÔN TỪ DỄ HIỂU ĐỂ SINH VIÊN ĐẠI TRÀ KHÔNG CẦN AM HIỂU SÂU VẪN NẮM ĐƯỢC VẤN ĐỀ. Đóng vai xưng tôi/chuyên gia. Trình bày rành mạch, tách bạch các ý rõ ràng. Bám sát tư tưởng ngoại giao Hồ Chí Minh nếu liên quan tới VN. TUYỆT ĐỐI GIỚI HẠN TỐI ĐA KHOẢNG 700 KÝ TỰ.`;
+      const history = aiChats[userId] || [];
+      const recentHistory = history.map(m => ({
+         role: m.role === 'user' ? 'user' : 'model',
+         parts: [{ text: m.text }]
+      })).slice(-15); // keep last 15 messages max
+
+      recentHistory.push({ role: 'user', parts: [{ text: data.question }] });
+
+      const systemPrompt = `BỐI CẢNH: Đây là Chương trình Hội Thảo thuộc môn học Tư tưởng Hồ Chí Minh tại Đại học Bách Khoa Hà Nội, Nhóm 11 trình bày. Báo cáo phân tích đường lối ngoại giao linh hoạt của Trung Đông và ngoại giao cây tre của Việt Nam. Khán giả đang hỏi tên là: ${data.name}.
+YÊU CẦU: Nhập vai là chuyên gia để trò chuyện, hỏi đáp. Trình bày lịch sự, chuyên nghiệp, NHƯNG LỜI VĂN PHẢI DỄ HIỂU ĐỂ SINH VIÊN ĐẠI TRÀ KHÔNG CÓ CHUYÊN MÔN CHÍNH TRỊ CŨNG HIỂU ĐƯỢC. Tách bạch các ý (gạch đầu dòng) rõ ràng nếu cần. Bám sát chủ đề sự kiện. TUYỆT ĐỐI GIỚI HẠN DƯỚI 700 KÝ TỰ.`;
 
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        body: JSON.stringify({ 
+          system_instruction: { parts: [{ text: systemPrompt }] },
+          contents: recentHistory 
+        })
       });
       const json = await res.json();
       
       if (json.error) {
         logAction('ai_status', { name: 'Google Gemini', txt: `❌ Từ chối / Lỗi: ${json.error.message}` });
-        callback?.({ ok: false, text: "Bị từ chối bởi Google AI: " + json.error.message });
+        callback?.({ ok: false, text: "Lỗi kết nối AI: " + json.error.message });
         return;
       }
       
       const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
       if (text) {
-        logAction('ai_status', { name: 'Google Gemini', txt: `✅ Đã giải đáp thành công (${text.length} ký tự)` });
-        callback?.({ ok: true, text: text.trim() });
+        const cleanText = text.trim();
+        history.push({ id: Date.now().toString(), role: 'user', text: data.question });
+        history.push({ id: (Date.now()+1).toString(), role: 'ai', text: cleanText });
+        aiChats[userId] = history;
+        commitDB();
+
+        logAction('ai_status', { name: 'Google Gemini', txt: `✅ Chat phản hồi (${cleanText.length} ký tự)` });
+        callback?.({ ok: true, history: aiChats[userId] });
       } else {
         logAction('ai_status', { name: 'Google Gemini', txt: `⚠️ Vi phạm an toàn nội dung (Safety Blocked)` });
         callback?.({ ok: false, text: "Câu hỏi nhạy cảm hoặc vi phạm chính sách nội dung (Safety Blocked), AI từ chối trả lời." });
