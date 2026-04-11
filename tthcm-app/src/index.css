@@ -165,26 +165,7 @@ html, body, #root {
   letter-spacing: -0.01em;
 }
 
-/* ── Tactical Scanline Texture ──────────────────────────────── */
-body::after {
-  content: '';
-  position: fixed; inset: 0; z-index: 9998;
-  pointer-events: none;
-  opacity: 0.018;
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(255,255,255,0.4) 2px,
-    rgba(255,255,255,0.4) 3px
-  );
-  background-size: 100% 3px;
-  animation: scanlines 8s linear infinite;
-}
-@keyframes scanlines {
-  from { background-position: 0 0; }
-  to   { background-position: 0 60px; }
-}
+/* ── Tactical Scanline Texture (disabled for performance) ──── */
 
 /* ── 4:3 Slide Container ─────────────────────────────────────  */
 .slide-container {
@@ -202,9 +183,7 @@ body::after {
   max-width: 1440px;
   border-radius: var(--r-xl);
   overflow: hidden;
-  background: var(--glass-bg-mid);
-  backdrop-filter: blur(48px) saturate(1.2);
-  -webkit-backdrop-filter: blur(48px) saturate(1.2);
+  background: rgba(13, 17, 23, 0.88);
   border: 1px solid var(--glass-border-mid);
   box-shadow: var(--shadow-sheet), 0 0 0 1px rgba(232,184,75,0.06);
 }

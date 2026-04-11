@@ -7,7 +7,7 @@ const socket  = io(ENV_URL, { transports: ['websocket', 'polling'] });
 
 const TYPE_STYLE = {
   comment:  { icon: '💬', accent: '#b5860d' },
-  question: { icon: '❓', accent: '#dc2626' }, // Red accent for questions
+  question: { icon: '❓', accent: '#dc2626' },
   vote:     { icon: '🗳️', accent: '#2563eb' },
   join:     { icon: '👋', accent: '#16a34a' },
 };
@@ -42,19 +42,17 @@ export default function LiveToast() {
               exit={{ opacity:0, x:30, scale:0.95 }}
               transition={{ type:'spring', stiffness:300, damping:25 }}
               style={{
-                background: 'rgba(0, 0, 0, 0.4)',
-                backdropFilter: 'blur(25px)',
-                WebkitBackdropFilter: 'blur(25px)',
+                background: 'rgba(13, 17, 23, 0.92)',
                 border: `1px solid ${s.accent}88`,
                 borderLeft: `5px solid ${s.accent}`,
                 borderRadius: '16px',
                 padding: '12px 16px',
-                boxShadow: `0 8px 32px rgba(0,0,0,0.15), 0 0 15px ${s.accent}55`,
+                boxShadow: `0 4px 16px rgba(0,0,0,0.4)`,
                 display: 'flex', gap: '12px', alignItems: 'flex-start',
                 fontFamily: 'Inter, sans-serif'
               }}
             >
-              <span style={{ fontSize: '1.2rem', flexShrink:0, marginTop:'-2px', filter:`drop-shadow(0 0 8px ${s.accent})` }}>{s.icon}</span>
+              <span style={{ fontSize: '1.2rem', flexShrink:0, marginTop:'-2px' }}>{s.icon}</span>
               <div style={{ minWidth:0, marginTop: '2px' }}>
                 {toast.name && (
                   <div style={{ fontSize:'0.85rem', fontWeight:600, color: '#f3f4f6', marginBottom:'4px', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', fontFamily: 'Playfair Display, serif', letterSpacing: '0.02em' }}>

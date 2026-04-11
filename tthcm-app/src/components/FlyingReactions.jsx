@@ -11,8 +11,8 @@ export default function FlyingReactions() {
   useEffect(() => {
     socket.on('show_reaction', (data) => {
       const id = Math.random();
-      const x  = 10 + Math.random() * 80; // percentage from left
-      const bottom = Math.random() * 20; // 0 to 20% from bottom
+      const x  = 10 + Math.random() * 80;
+      const bottom = Math.random() * 20;
       setReactions(prev => [...prev, { ...data, id, x, bottom }]);
       setTimeout(() => setReactions(prev => prev.filter(r => r.id !== id)), 2200);
     });
@@ -30,21 +30,16 @@ export default function FlyingReactions() {
             transition={{ duration:2.2, ease:'easeOut', times:[0, 0.15, 0.7, 1] }}
             style={{ position:'absolute', left:`${r.x}%`, bottom:`${r.bottom}%`, display:'flex', flexDirection:'column', alignItems:'center', gap:'0px', transform:'translateX(-50%)' }}
           >
-            {/* Animated Emoji */}
-            <motion.div
-              animate={{ rotate: [-10, 10, -10, 10, 0], scale: [1, 1.1, 1, 1.1, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-              style={{ fontSize: '2.5rem', lineHeight: 1, filter:'drop-shadow(0 4px 10px rgba(0,0,0,0.5))' }}
-            >
+            {/* Emoji — NO infinite rotation, NO drop-shadow */}
+            <div style={{ fontSize: '2.5rem', lineHeight: 1 }}>
               {r.emoji}
-            </motion.div>
-            {/* User Name underneath */}
+            </div>
+            {/* User Name — NO backdropFilter */}
             <span style={{ 
               fontSize: '0.72rem', fontWeight: 700, color: '#e8eaf0', 
-              background: 'rgba(13,17,23,0.7)', backdropFilter: 'blur(10px)',
+              background: 'rgba(13,17,23,0.85)',
               padding: '2px 8px', borderRadius: '12px', 
               border: '1px solid rgba(255,255,255,0.1)',
-              boxShadow: '0 2px 8px rgba(0,0,0,0.6)',
               whiteSpace: 'nowrap', marginTop: '4px'
             }}>
               {r.name}

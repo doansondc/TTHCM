@@ -76,7 +76,6 @@ function QROverlay({ qrUrl, config }) {
         style={{
           position:'fixed', zIndex:2000,
           background:'rgba(13,17,23,0.96)',
-          backdropFilter:'blur(32px) saturate(1.4)',
           border:'1px solid rgba(232,184,75,0.25)',
           borderRadius:20,
           padding:'18px',
@@ -615,8 +614,8 @@ export default function PresentationView() {
             style={{
               position:'absolute', bottom:'5%', left:'50%', transform:'translateX(-50%)',
               zIndex:500, width:'85%', maxWidth:'52rem',
-              background:'rgba(13,17,23,0.92)',
-              backdropFilter:'blur(40px)', border:'1.5px solid rgba(232,184,75,0.4)',
+              background:'rgba(13,17,23,0.95)',
+              border:'1.5px solid rgba(232,184,75,0.4)',
               borderRadius:'24px', padding:'2.5rem 3rem',
               boxShadow:'0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(232,184,75,0.15)'
             }}
