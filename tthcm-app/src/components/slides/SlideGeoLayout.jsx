@@ -159,12 +159,12 @@ export default function SlideGeoLayout({ data }) {
               </div>
             </motion.div>
 
-            {/* Trường Sa Marker — Center inside the white polygon frame */}
+            {/* Trường Sa Marker — Center inside the upper part of the white polygon frame */}
             <motion.div 
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 1.2, type: 'spring' }}
-              style={{ position: 'absolute', top: '92.1%', left: '84.2%', transform: 'translate(-50%, -50%)', display:'flex', flexDirection: 'column', alignItems:'center', zIndex: 2 }}
+              style={{ position: 'absolute', top: '86.4%', left: '87%', transform: 'translate(-50%, -50%)', display:'flex', flexDirection: 'column', alignItems:'center', zIndex: 2 }}
             >
               <div style={{ color:'#fff', fontSize:'0.48rem', fontWeight:'700', textShadow:'0 1px 3px rgba(0,0,0,0.9)', background:'rgba(13,17,23,0.85)', padding:'3px 6px', borderRadius: 4, border: '1px solid rgba(248,113,113,0.3)', lineHeight: 1.3, whiteSpace:'nowrap', textAlign: 'center' }}>
                 QĐ. Trường Sa<br/><span style={{fontSize:'0.4rem', color: '#f87171'}}>(Việt Nam)</span>
