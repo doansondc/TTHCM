@@ -12,7 +12,7 @@ export default function SlideGeoLayout({ data }) {
       display: 'flex', flexDirection: 'column',
       width: '100%', height: '100%',
       padding: '1.2rem 1.8rem 1.1rem',
-      background: 'linear-gradient(160deg, #0d1117 0%, #0f1520 100%)',
+      background: 'transparent',
       position: 'relative', overflow: 'hidden',
     }}>
       {/* Grid bg */}

@@ -12,7 +12,7 @@ export default function SlideLessons({ data }) {
       display: 'flex', flexDirection: 'column',
       width: '100%', height: '100%',
       padding: '1.5rem 2.4rem 1.3rem',
-      background: 'linear-gradient(160deg, #0d1117 0%, #0f1520 100%)',
+      background: 'transparent',
       position: 'relative', overflow: 'hidden',
     }}>
       {/* Bg grid */}

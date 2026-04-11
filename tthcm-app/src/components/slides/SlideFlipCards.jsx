@@ -160,7 +160,7 @@ export default function SlideFlipCards({ data }) {
       display: 'flex', flexDirection: 'column',
       width: '100%', height: '100%',
       padding: '1.5rem 2.2rem 1.3rem',
-      background: 'linear-gradient(160deg, #0d1117 0%, #0f1520 100%)',
+      background: 'transparent',
     }}>
       {/* Header */}
       <div style={{ marginBottom: '0.9rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>

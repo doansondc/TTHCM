@@ -12,7 +12,7 @@ export default function SlideTitle({ data }) {
     <div style={{
       width: '100%', height: '100%',
       display: 'grid', gridTemplateColumns: '56% 44%',
-      background: 'linear-gradient(135deg, #0d1117 0%, #0f1724 100%)',
+      background: 'transparent',
       position: 'relative', overflow: 'hidden',
     }}>
 

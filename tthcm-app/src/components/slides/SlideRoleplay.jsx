@@ -44,7 +44,7 @@ export default function SlideRoleplay({ data }) {
       padding: '1.2rem 2rem 1.3rem',
       gap: '0.5rem',
       boxSizing: 'border-box',
-      background: 'linear-gradient(160deg, #0d1117 0%, #0f1520 100%)',
+      background: 'transparent',
       position: 'relative', overflow: 'hidden',
     }}>
 

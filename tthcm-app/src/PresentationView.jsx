@@ -24,7 +24,7 @@ const ENV_URL = window.location.hostname === 'localhost' ? 'http://localhost:300
 const socket  = io(ENV_URL, { transports: ['websocket', 'polling'] });
 
 const WrapSlide = ({ children, data }) => (
-  <div style={{ display:'flex', flexDirection:'column', alignItems:'center', width:'100%', height:'100%', gap:'0.6rem', padding:'1.2rem 2rem', background:'linear-gradient(160deg, #0d1117 0%, #0f1520 100%)', boxSizing:'border-box' }}>
+  <div style={{ display:'flex', flexDirection:'column', alignItems:'center', width:'100%', height:'100%', gap:'0.6rem', padding:'1.2rem 2rem', background:'transparent', boxSizing:'border-box' }}>
     <div className="label-tag">{data.subtitle}</div>
     <h2 style={{ fontFamily:'var(--font-display)', fontSize:'var(--fs-2xl)', color:'var(--text-primary)', textAlign:'center', lineHeight:1.15, margin:0, flexShrink:0 }}>{data.title}</h2>
     <div style={{ width:'100%', flex:1, display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden' }}>{children}</div>
@@ -516,18 +516,16 @@ export default function PresentationView() {
     <>
       <SplashScreen onStart={() => setStarted(true)} />
 
-      {/* Ambient bg */}
-      <div style={{ position:'fixed', inset:0, zIndex:0, overflow:'hidden' }}>
-        <AnimatePresence mode="wait">
-          {slide?.bg && slide.bg !== 'none' && (
-            <motion.div key={slide.bg}
-              initial={{ opacity:0 }} animate={{ opacity:0.09 }} exit={{ opacity:0 }}
-              transition={{ duration:1.8 }}
-              style={{ position:'absolute', inset:0, backgroundImage:`url(${slide.bg})`, backgroundSize:'cover', backgroundPosition:'center' }}
-            />
-          )}
-        </AnimatePresence>
-        <div style={{ position:'absolute', inset:0, background:'radial-gradient(ellipse at 55% 30%, rgba(245,240,230,0.6) 0%, rgba(237,233,225,0.92) 100%)' }} />
+      {/* Ambient Video Background */}
+      <div style={{ position:'fixed', inset:0, zIndex:0, overflow:'hidden', background:'#000' }}>
+        <video 
+          autoPlay loop muted playsInline 
+          style={{ width: '100vw', height: '100vh', objectFit: 'cover', filter: 'blur(12px) brightness(0.28) contrast(1.1) grayscale(0.2)' }}
+        >
+          <source src="/video/alb_ocen0110_1080p.mp4" type="video/mp4" />
+        </video>
+        {/* CSS Noise Overlay */}
+        <div style={{ position:'absolute', inset:0, background:'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")', opacity:0.18, mixBlendMode:'screen', pointerEvents:'none' }} />
       </div>
 
       <FlyingReactions />

@@ -26,7 +26,7 @@ export default function SlideBamboo({ data }) {
       display: 'flex', flexDirection: 'column',
       width: '100%', height: '100%',
       padding: '1.5rem 2.2rem 1.3rem',
-      background: 'linear-gradient(160deg, #0a1510 0%, #0d1a12 50%, #0a1510 100%)',
+      background: 'transparent',
       position: 'relative', overflow: 'hidden',
     }}>
 

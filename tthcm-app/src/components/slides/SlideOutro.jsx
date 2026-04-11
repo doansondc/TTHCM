@@ -11,7 +11,7 @@ export default function SlideOutro({ data }) {
       width: '100%', height: '100%',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       position: 'relative',
-      background: 'linear-gradient(160deg, #0a0e14 0%, #0d1117 50%, #0a0e14 100%)',
+      background: 'transparent',
       overflow: 'hidden',
     }}>
       {/* Radial gold center glow */}
