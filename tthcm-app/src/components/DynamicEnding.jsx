@@ -115,9 +115,25 @@ export default function DynamicEnding() {
 
   // Get outcome display data — try OUTCOMES map first, else build from poll option
   const getOutcomeData = (optId) => {
-    if (OUTCOMES[optId]) return OUTCOMES[optId];
-    // Dynamic fallback using poll option colors/labels
+    // If we have a custom explanation in the poll option from Admin, we should prioritize it or use fallback
     const opt = activePoll?.options.find(o => o.id === optId);
+
+    // Prefer custom dynamic outcome if provided by Admin
+    if (opt?.explanation) {
+      return {
+        icon: opt?.icon || '🏁',
+        title: opt?.label || optId,
+        color: opt?.color || '#e8b84b',
+        glow: `${opt?.color || '#e8b84b'}66`,
+        accent: `${opt?.color || '#e8b84b'}15`,
+        particles: opt?.icon || '✨',
+        desc: opt.explanation,
+      };
+    }
+
+    if (OUTCOMES[optId]) return OUTCOMES[optId];
+    
+    // Dynamic fallback
     return {
       icon: opt?.icon || '🏁',
       title: opt?.label || optId,
@@ -150,6 +166,13 @@ export default function DynamicEnding() {
             </div>
           ) : (
             <>
+              {/* Poll Title */}
+              <div style={{ marginBottom: '0.2rem', textAlign: 'center' }}>
+                <h2 style={{ fontSize: '1.6rem', fontWeight: 700, color: '#e8eaf0', fontFamily: 'Playfair Display, serif', lineHeight: 1.4, margin: 0, textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
+                  {activePoll.title}
+                </h2>
+              </div>
+
               {/* Vote summary cards */}
               <div style={{
                 display: 'flex', gap: '1rem', justifyContent: 'center',

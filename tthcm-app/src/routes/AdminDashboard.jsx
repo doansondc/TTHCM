@@ -447,7 +447,7 @@ export default function AdminDashboard() {
           {/* ─── POLLS ─── */}
           {tab==='polls' && (() => {
             const COLORS = ['#ff5555','#e8b84b','#3dd68c','#4f86f7','#a855f7','#f97316'];
-            const resetForm = () => { setSNP(false); setEditPoll(null); setNPT(''); setNPO([{id:'A',label:'Lựa chọn A',icon:'',color:'#ff5555'},{id:'B',label:'Lựa chọn B',icon:'',color:'#e8b84b'},{id:'C',label:'Lựa chọn C',icon:'',color:'#3dd68c'}]); };
+            const resetForm = () => { setSNP(false); setEditPoll(null); setNPT(''); setNPO([{id:'A',label:'Lựa chọn A',icon:'',color:'#ff5555',explanation:''},{id:'B',label:'Lựa chọn B',icon:'',color:'#e8b84b',explanation:''},{id:'C',label:'Lựa chọn C',icon:'',color:'#3dd68c',explanation:''}]); };
             const saveAndSend = () => {
               if (!newPollTitle.trim()) return;
               const opts = newPollOpts.filter(o => o.label.trim());
@@ -493,26 +493,31 @@ export default function AdminDashboard() {
                     <div style={{ display:'flex', flexDirection:'column', gap:'0.45rem' }}>
                       <div style={{ fontSize:'0.78rem', fontWeight:600, color:'#78726a' }}>Các lựa chọn:</div>
                       {newPollOpts.map((opt, i) => (
-                        <div key={i} style={{ display:'flex', gap:'0.4rem', alignItems:'center' }}>
-                          <input value={opt.icon} onChange={e => { const n=[...newPollOpts]; n[i]={...n[i],icon:e.target.value}; setNPO(n); }}
-                            placeholder="icon" style={{ width:'44px', padding:'0.5rem', borderRadius:'8px', border:'1px solid rgba(0,0,0,0.1)', background:'rgba(255,255,255,0.9)', fontSize:'1rem', textAlign:'center', outline:'none' }} />
-                          <input value={opt.label} onChange={e => { const n=[...newPollOpts]; n[i]={...n[i],label:e.target.value}; setNPO(n); }}
-                            placeholder={`Lựa chọn ${opt.id}...`}
-                            style={{ flex:1, padding:'0.5rem', borderRadius:'8px', border:'1px solid rgba(0,0,0,0.1)', background:'rgba(255,255,255,0.9)', fontSize:'0.85rem', outline:'none', color:'#1a1714' }} />
-                          <select value={opt.color} onChange={e => { const n=[...newPollOpts]; n[i]={...n[i],color:e.target.value}; setNPO(n); }}
-                            style={{ padding:'0.4rem', borderRadius:'8px', border:'1px solid rgba(0,0,0,0.1)', background:opt.color, color:'#fff', fontSize:'0.72rem', outline:'none', cursor:'pointer' }}>
-                            {COLORS.map(c => <option key={c} value={c} style={{ background:c }}>{c}</option>)}
-                          </select>
-                          {newPollOpts.length > 2 && (
-                            <button onClick={() => setNPO(newPollOpts.filter((_,j) => j!==i))}
-                              style={{ padding:'0.3rem 0.5rem', background:'rgba(220,38,38,0.08)', border:'none', borderRadius:'6px', color:'#dc2626', cursor:'pointer', fontSize:'0.72rem' }}>✕</button>
-                          )}
+                        <div key={i} style={{ display:'flex', flexDirection:'column', gap:'0.3rem', background:'rgba(0,0,0,0.02)', padding:'0.6rem', border:'1px solid rgba(0,0,0,0.05)', borderRadius:'8px' }}>
+                          <div style={{ display:'flex', gap:'0.4rem', alignItems:'center' }}>
+                            <input value={opt.icon} onChange={e => { const n=[...newPollOpts]; n[i]={...n[i],icon:e.target.value}; setNPO(n); }}
+                              placeholder="icon" style={{ width:'44px', padding:'0.5rem', borderRadius:'8px', border:'1px solid rgba(0,0,0,0.1)', background:'rgba(255,255,255,0.9)', fontSize:'1rem', textAlign:'center', outline:'none' }} />
+                            <input value={opt.label} onChange={e => { const n=[...newPollOpts]; n[i]={...n[i],label:e.target.value}; setNPO(n); }}
+                              placeholder={`Lựa chọn ${opt.id}...`}
+                              style={{ flex:1, padding:'0.5rem', borderRadius:'8px', border:'1px solid rgba(0,0,0,0.1)', background:'rgba(255,255,255,0.9)', fontSize:'0.85rem', outline:'none', color:'#1a1714' }} />
+                            <select value={opt.color} onChange={e => { const n=[...newPollOpts]; n[i]={...n[i],color:e.target.value}; setNPO(n); }}
+                              style={{ padding:'0.4rem', borderRadius:'8px', border:'1px solid rgba(0,0,0,0.1)', background:opt.color, color:'#fff', fontSize:'0.72rem', outline:'none', cursor:'pointer' }}>
+                              {COLORS.map(c => <option key={c} value={c} style={{ background:c }}>{c}</option>)}
+                            </select>
+                            {newPollOpts.length > 2 && (
+                              <button onClick={() => setNPO(newPollOpts.filter((_,j) => j!==i))}
+                                style={{ padding:'0.3rem 0.5rem', background:'rgba(220,38,38,0.08)', border:'none', borderRadius:'6px', color:'#dc2626', cursor:'pointer', fontSize:'0.72rem' }}>✕</button>
+                            )}
+                          </div>
+                          <input value={opt.explanation || ''} onChange={e => { const n=[...newPollOpts]; n[i]={...n[i],explanation:e.target.value}; setNPO(n); }}
+                            placeholder="Giải thích thêm cho lựa chọn này (nếu có)..."
+                            style={{ padding:'0.5rem', borderRadius:'8px', border:'1px solid rgba(0,0,0,0.1)', background:'rgba(255,255,255,0.9)', fontSize:'0.8rem', outline:'none', color:'#524d47', fontFamily:'Inter, sans-serif' }} />
                         </div>
                       ))}
                       {newPollOpts.length < 6 && (
                         <button onClick={() => {
                           const id = String.fromCharCode(65 + newPollOpts.length);
-                          setNPO([...newPollOpts, { id, label:`Lựa chọn ${id}`, icon:'', color: COLORS[newPollOpts.length % COLORS.length] }]);
+                          setNPO([...newPollOpts, { id, label:`Lựa chọn ${id}`, icon:'', color: COLORS[newPollOpts.length % COLORS.length], explanation:'' }]);
                         }} style={{ alignSelf:'flex-start', background:'transparent', border:'none', color:'#2563eb', fontWeight:600, cursor:'pointer', fontSize:'0.8rem', padding:'0.2rem 0' }}>+ Thêm lựa chọn</button>
                       )}
                     </div>
@@ -571,6 +576,11 @@ export default function AdminDashboard() {
                                 <motion.div animate={{ width:`${pct}%` }} transition={{ duration:0.5 }}
                                   style={{ height:'100%', background: o.color||'#b5860d', borderRadius:4 }} />
                               </div>
+                              {o.explanation && (
+                                <div style={{ fontSize:'0.75rem', color:'#d97706', marginTop:'4px', lineHeight:1.4 }}>
+                                  💡 {o.explanation}
+                                </div>
+                              )}
                               {cnt > 0 && (
                                 <div style={{ fontSize:'0.64rem', color:'#a89e94', marginTop:'2px', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>
                                   {(p.votes[o.id]||[]).join(' · ')}

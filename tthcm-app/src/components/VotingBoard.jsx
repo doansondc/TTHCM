@@ -58,6 +58,13 @@ export default function VotingBoard() {
         </div>
       </div>
 
+      {/* Poll Title */}
+      <div style={{ marginBottom: '0.5rem' }}>
+        <h2 style={{ fontSize: '1.6rem', fontWeight: 700, color: '#e8eaf0', fontFamily: 'Playfair Display, serif', lineHeight: 1.4, margin: 0, textShadow: '0 2px 8px rgba(0,0,0,0.4)' }}>
+          {activePoll.title}
+        </h2>
+      </div>
+
       {/* Options */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
         {activePoll.options.map((opt, i) => {
