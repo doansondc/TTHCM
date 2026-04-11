@@ -253,11 +253,10 @@ export default function MobileVote() {
     e.preventDefault();
     if (!questionsOn) return flashMsg('🔒 Câu hỏi đang tạm khóa.');
     if (isMuted) return flashMsg('🔇 Bạn đang bị tắt tiếng.');
-    if (!question.trim() || verify !== captchaCode) return flashMsg('Mã xác nhận sai!');
-    socket.emit('send_question', { text: question, verifyCode: verify });
-    setQuestion(''); setVerify(''); 
-    setCaptcha(Math.floor(100 + Math.random() * 900).toString());
-    flashMsg('❓ Câu hỏi đã gửi!');
+    if (!question.trim()) return flashMsg('Vui lòng nhập tin nhắn!');
+    socket.emit('send_question', { text: question });
+    setQuestion('');
+    flashMsg('❓ Đã gửi câu hỏi cho diễn giả!');
   };
 
   const askAI = (e) => {
@@ -684,63 +683,30 @@ export default function MobileVote() {
           </AnimatePresence>
         )}
 
-        {/* QUESTION TAB */}
+        {/* QUESTION TAB (Chatbot UI) */}
         {tab==='question' && (
           <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }}>
-            {myAnswer && (
-              <div style={{ background:'rgba(22,163,74,0.08)', border:'1px solid rgba(22,163,74,0.25)', borderRadius:'14px', padding:'1rem', marginBottom:'1.2rem' }}>
-                <div style={{ fontSize:'0.75rem', color:'#16a34a', fontWeight:700, marginBottom:'0.4rem', textTransform:'uppercase', letterSpacing:'0.05em' }}>🔔 Phản hồi từ Admin</div>
-                <div style={{ fontSize:'0.88rem', color:'#b0b8c8', fontWeight:600, fontStyle:'italic', marginBottom:'0.6rem', paddingLeft:'0.5rem', borderLeft:'2px solid rgba(255,255,255,0.2)' }}>"{myAnswer.questionText}"</div>
-                <div style={{ fontSize:'0.9rem', color:'#ffffff', lineHeight:1.5, fontWeight:500 }}>{myAnswer.answer}</div>
-              </div>
-            )}
-            
             {!questionsOn ? (
               <div style={{ textAlign:'center', padding:'2rem', background:'rgba(0,0,0,0.04)', borderRadius:'18px', border:'1px solid rgba(0,0,0,0.06)' }}>
                 <div style={{ fontSize:'2rem', marginBottom:'0.8rem' }}>🔒</div>
-                <h3 style={{ fontSize:'0.9rem', color:'#78726a', fontWeight:600 }}>Chức năng gửi câu hỏi đang tắt</h3>
+                <h3 style={{ fontSize:'0.9rem', color:'#78726a', fontWeight:600 }}>Cổng trò chuyện đang tạm khóa</h3>
                 <p style={{ fontSize:'0.8rem', color:'#a89e94', marginTop:'0.3rem' }}>Vui lòng đợi quản trị viên mở lại.</p>
               </div>
             ) : (
-              <form onSubmit={sendQuestion} style={{ display:'flex', flexDirection:'column', gap:'0.8rem' }}>
-                <div>
-                  <label style={S.label}>Bạn cần giải đáp gì?</label>
-                  <textarea value={question} onChange={e=>setQuestion(e.target.value)} placeholder="Nhập câu hỏi của bạn (~300 ký tự)..." rows={4}
-                    style={{ ...S.input, resize:'none', lineHeight:1.55 }} required
-                    onFocus={e => e.target.style.borderColor = 'rgba(181,134,13,0.5)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.12)'} />
-                  {question.length > 0 && <div style={{ textAlign:'right', fontSize:'0.68rem', color:'#a89e94', marginTop:'0.2rem' }}>{question.length} ký tự</div>}
-                </div>
-                <div>
-                  <label style={{ ...S.label, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
-                    <span>Mã xác nhận (Captcha)</span>
-                    <span style={{ letterSpacing:'0.25em', background:'rgba(181,134,13,0.08)', border:'1px solid rgba(181,134,13,0.2)', padding:'0.25rem 0.8rem', borderRadius:'8px', color:'#b5860d', fontWeight:800, fontSize:'1.15rem', userSelect:'none' }}>{captchaCode}</span>
-                  </label>
-                  <OTPInput value={verify} onChange={setVerify} length={3} />
-                  {verify.length > 0 && verify.length === 3 && verify !== captchaCode && (
-                    <p style={{ fontSize:'0.72rem', color:'#dc2626', marginTop:'0.3rem' }}>❌ Mã không khớp</p>
-                  )}
-                </div>
-                <div style={{ display:'flex', gap:'0.6rem', marginTop:'0.5rem' }}>
-                  <motion.button type="button" onClick={askAI} disabled={!question.trim() || isAskingAI}
-                    whileHover={{ scale: (!question.trim() || isAskingAI) ? 1 : 1.02 }}
-                    whileTap={{ scale: (!question.trim() || isAskingAI) ? 1 : 0.98 }}
-                    style={{ flex:1, padding:'0.95rem', borderRadius:'14px', background:'linear-gradient(135deg, #10b981, #059669)', color:'#fff', border:'none', fontWeight:700, fontSize:'0.85rem', cursor:(!question.trim() || isAskingAI)?'not-allowed':'pointer', opacity:(!question.trim() || isAskingAI)?0.6:1, display:'flex', alignItems:'center', justifyContent:'center', gap:'0.3rem', boxShadow:'0 4px 12px rgba(16,185,129,0.3)' }}>
-                    🤖 {isAskingAI ? 'Tư duy...' : 'Hỏi nhanh AI'}
-                  </motion.button>
-
-                  <motion.button type="submit" disabled={!question.trim()}
-                    whileHover={{ scale: question.trim() ? 1.02 : 1 }}
-                    whileTap={{ scale: 0.98 }}
-                    style={{ flex:1, padding:'0.95rem', borderRadius:'14px', background:'linear-gradient(135deg,#f0ca6a 0%,#e8b84b 50%,#c89828 100%)', color:'#0d1117', border:'none', fontWeight:700, fontSize:'0.85rem', cursor:!question.trim()?'not-allowed':'pointer', opacity:!question.trim()?0.6:1, display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 4px 12px rgba(232,184,75,0.3)' }}>
-                    Gửi Diễn Giả →
-                  </motion.button>
-                </div>
-
-                {aiChats.length > 0 && (
-                  <div style={{ marginTop:'1.5rem', display:'flex', flexDirection:'column', gap:'0.8rem' }}>
-                    <div style={{ fontSize:'0.75rem', color:'#10b981', fontWeight:800, marginBottom:'0.2rem', textTransform:'uppercase', letterSpacing:'0.05em', display:'flex', alignItems:'center', gap:'6px', justifyContent:'center' }}>
-                      <span className="live-dot" style={{width:6,height:6,boxShadow:'none'}}></span> TRUNG TÂM GIẢI ĐÁP AI
-                    </div>
+              <div style={{ display:'flex', flexDirection:'column', gap:'1.2rem' }}>
+                
+                {/* 1. CHAT HISTORY (Top) */}
+                {(aiChats.length > 0 || myAnswer) && (
+                  <div style={{ display:'flex', flexDirection:'column', gap:'0.8rem', background:'rgba(255,255,255,0.03)', padding:'1rem', borderRadius:'16px', border:'1px solid rgba(255,255,255,0.05)' }}>
+                    
+                    {myAnswer && (
+                      <div style={{ background:'rgba(22,163,74,0.08)', border:'1px solid rgba(22,163,74,0.25)', borderRadius:'14px', padding:'1rem', marginBottom:'0.5rem' }}>
+                        <div style={{ fontSize:'0.75rem', color:'#16a34a', fontWeight:700, marginBottom:'0.4rem', textTransform:'uppercase', letterSpacing:'0.05em' }}>🔔 Phản hồi từ Nhóm Diễn Giả</div>
+                        <div style={{ fontSize:'0.88rem', color:'#b0b8c8', fontWeight:600, fontStyle:'italic', marginBottom:'0.6rem', paddingLeft:'0.5rem', borderLeft:'2px solid rgba(255,255,255,0.2)' }}>"{myAnswer.questionText}"</div>
+                        <div style={{ fontSize:'0.9rem', color:'#ffffff', lineHeight:1.5, fontWeight:500 }}>{myAnswer.answer}</div>
+                      </div>
+                    )}
+                    
                     {aiChats.map(msg => (
                       <motion.div key={msg.id} initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }}
                         style={{ display:'flex', flexDirection:'column', alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
@@ -762,7 +728,31 @@ export default function MobileVote() {
                     ))}
                   </div>
                 )}
-              </form>
+
+                {/* 2. CHAT INPUT (Bottom) */}
+                <form onSubmit={sendQuestion} style={{ display:'flex', flexDirection:'column', gap:'0.8rem', background:'rgba(255,255,255,0.02)', padding:'1rem', borderRadius:'16px', border:'1px solid rgba(255,255,255,0.08)' }}>
+                  <textarea value={question} onChange={e=>setQuestion(e.target.value)} placeholder="Nhắn tin cho Trợ lý AI hoặc gửi câu hỏi trực tiếp cho diễn giả..." rows={3}
+                    style={{ ...S.input, resize:'none', lineHeight:1.55, borderRadius:'12px' }} required
+                    onFocus={e => e.target.style.borderColor = 'rgba(181,134,13,0.5)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.12)'} />
+                  
+                  <div style={{ display:'flex', gap:'0.6rem', marginTop:'0.2rem' }}>
+                    <motion.button type="button" onClick={askAI} disabled={!question.trim() || isAskingAI}
+                      whileHover={{ scale: (!question.trim() || isAskingAI) ? 1 : 1.02 }}
+                      whileTap={{ scale: (!question.trim() || isAskingAI) ? 1 : 0.98 }}
+                      style={{ flex:1, padding:'0.9rem', borderRadius:'12px', background:'linear-gradient(135deg, #10b981, #059669)', color:'#fff', border:'none', fontWeight:700, fontSize:'0.85rem', cursor:(!question.trim() || isAskingAI)?'not-allowed':'pointer', opacity:(!question.trim() || isAskingAI)?0.6:1, display:'flex', alignItems:'center', justifyContent:'center', gap:'0.3rem', boxShadow:'0 4px 12px rgba(16,185,129,0.3)' }}>
+                      🤖 {isAskingAI ? 'Tư duy...' : 'Hỏi AI'}
+                    </motion.button>
+
+                    <motion.button type="submit" disabled={!question.trim()}
+                      whileHover={{ scale: question.trim() ? 1.02 : 1 }}
+                      whileTap={{ scale: 0.98 }}
+                      style={{ flex:1, padding:'0.9rem', borderRadius:'12px', background:'linear-gradient(135deg,#f0ca6a 0%,#e8b84b 50%,#c89828 100%)', color:'#0d1117', border:'none', fontWeight:700, fontSize:'0.85rem', cursor:!question.trim()?'not-allowed':'pointer', opacity:!question.trim()?0.6:1, display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 4px 12px rgba(232,184,75,0.3)' }}>
+                      Gửi Diễn Giả →
+                    </motion.button>
+                  </div>
+                </form>
+
+              </div>
             )}
           </motion.div>
         )}
