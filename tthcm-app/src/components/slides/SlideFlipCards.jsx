@@ -133,7 +133,7 @@ function FlipCard({ card, idx, delay }) {
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: card.accentColor, boxShadow: `0 0 8px ${card.accentColor}`, display: 'inline-block' }} />
               Chi tiết phân tích ↻
             </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'space-around', padding: 0, margin: 0, flex: 1 }}>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.9rem', padding: 0, margin: 0, flex: 1, justifyContent: 'center' }}>
               {card.back.points.map((pt, i) => (
                 <li key={i} style={{
                   display: 'flex', gap: '0.7rem', alignItems: 'flex-start',

@@ -138,7 +138,7 @@ export default function SlideBamboo({ data }) {
                 {s.headline}
               </p>
 
-              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around', flex: 1 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', flex: 1, justifyContent: 'center' }}>
                 {s.points.map((pt, j) => (
                   <motion.div
                     key={j}
