@@ -90,7 +90,7 @@ export default function AdminDashboard() {
   const [commentModeOn, setCommentModeOn] = useState(false);
   const [rateMs,        setRateMs]        = useState({ reaction: 200, message: 2500 });
   const [pinnedItem,    setPinnedItem]    = useState(null);
-  const [commentHistory, setCHist]        = useState([]);
+  const [cHist,         setCHist]         = useState([]);
   const timerRef = useRef(null);
   // Student directory
   const [studentList,   setStudentList]   = useState([]);
