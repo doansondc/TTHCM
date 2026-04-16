@@ -64,11 +64,12 @@ export default function SlideOutro({ data }) {
           transition={{ delay: 0.2, type: 'spring', stiffness: 100 }}
           style={{
             fontFamily: 'var(--font-display)', fontWeight: 700,
-            fontSize: 'var(--fs-4xl)', lineHeight: 1.08, margin: 0,
+            fontSize: 'clamp(1.8rem, 4.5vw, var(--fs-4xl))', lineHeight: 1.08, margin: 0,
             background: 'linear-gradient(135deg, var(--gold) 0%, var(--gold-vivid) 100%)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
             textShadow: 'none',
+            whiteSpace: 'nowrap',
           }}
         >
           {title}
@@ -107,12 +108,15 @@ export default function SlideOutro({ data }) {
             {quote}
           </p>
           <p style={{
-            fontSize: 'var(--fs-sm)', fontWeight: 700, color: 'var(--gold)',
-            letterSpacing: '0.08em', textTransform: 'uppercase',
-            position: 'relative', zIndex: 1, margin: 0,
-          }}>
-            — {author}
-          </p>
+              fontSize: 'var(--fs-sm)', fontWeight: 700, color: 'var(--gold)',
+              letterSpacing: '0.2em', textTransform: 'uppercase',
+              position: 'relative', zIndex: 1, margin: 0,
+              whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem',
+            }}>
+              <span style={{ opacity: 0.6 }}>— —</span>
+              {author}
+              <span style={{ opacity: 0.6 }}>— —</span>
+            </p>
         </motion.div>
 
         {/* Footer credits */}

@@ -5,8 +5,10 @@ import { io } from 'socket.io-client';
 import { QRCodeSVG } from 'qrcode.react';
 
 import SlideTitle    from './components/slides/SlideTitle';
-import SlideFlipCards from './components/slides/SlideFlipCards';
-import SlideRoleplay  from './components/slides/SlideRoleplay';
+import SlideFlipCards   from './components/slides/SlideFlipCards';
+import SlideStaticCards from './components/slides/SlideStaticCards';
+import SlideDetailCard  from './components/slides/SlideDetailCard';
+import SlideRoleplay   from './components/slides/SlideRoleplay';
 import SlideGeoLayout from './components/slides/SlideGeoLayout';
 import SlideOutro     from './components/slides/SlideOutro';
 import SlideBamboo    from './components/slides/SlideBamboo';
@@ -35,6 +37,8 @@ const WrapSlide = ({ children, data }) => (
 const COMPONENTS = {
   'title':            SlideTitle,
   'flip-cards':       SlideFlipCards,
+  'static-cards':     SlideStaticCards,
+  'detail-card':      SlideDetailCard,
   'roleplay':         SlideRoleplay,
   'geo-layout':       SlideGeoLayout,
   'bamboo-diplomacy': SlideBamboo,
@@ -56,7 +60,7 @@ function Fallback({ data }) {
 }
 
 // ── QR Overlay ──────────────────────────────────────────
-function QROverlay({ qrUrl, config }) {
+function QROverlay({ qrUrl, config, authCode }) {
   if (!config?.show) return null;
 
   let posStyle = {};
@@ -86,6 +90,14 @@ function QROverlay({ qrUrl, config }) {
         }}
       >
         <QRCodeSVG value={qrUrl} size={148} level="H" fgColor="#e8b84b" bgColor="transparent" pointerEvents="none" />
+        {authCode && (
+          <div style={{ marginTop:'6px', display:'flex', flexDirection:'column', alignItems:'center' }}>
+            <span style={{ fontSize:'0.7rem', color:'rgba(255,255,255,0.6)', letterSpacing:'0.05em' }}>MÃ MỜI THAM GIA</span>
+            <span style={{ fontSize:'1.25rem', color:'#fff', fontWeight:800, letterSpacing:'0.15em', marginTop:'2px', padding:'0.2rem 0.8rem', border:'1px solid rgba(232,184,75,0.3)', borderRadius:'8px', background:'rgba(232,184,75,0.1)' }}>
+              {authCode}
+            </span>
+          </div>
+        )}
       </motion.div>
     </AnimatePresence>
   );
@@ -459,6 +471,12 @@ export default function PresentationView() {
   const [pickerPool,   setPickerPool]   = useState([]);
   const [pickerActive, setPickerActive] = useState(false);
   const [pinnedItem, setPinnedItem] = useState(null);
+  const [pollPopup,  setPollPopup]  = useState(null); // { poll, visible }
+  const [isAnalyzingAI, setIsAnalyzingAI] = useState(false);
+  const [aiText, setAiText] = useState('');
+  const [authCode, setAuthCode] = useState('');
+  const touchStartX = useRef(null);
+  const touchStartY = useRef(null);
 
   const frameRef = useRef(null);
   const scale    = useSlideScale(frameRef);
@@ -481,7 +499,59 @@ export default function PresentationView() {
     socket.emit('toggle_poll', next);
   };
 
+  const analyzePopupWithAI = (pollData, totalVotesCount) => {
+    if (!pollData) return;
+    setIsAnalyzingAI(true);
+    setAiText('Đang thiết lập kết nối tới Google Deepmind...\nXin vui lòng chờ giây lát...');
+    
+    let winnerOpt = pollData.options[0];
+    let maxVotes = -1;
+    for (const opt of pollData.options) {
+      const count = pollData.votes?.[opt.id]?.length || 0;
+      if (count > maxVotes) { maxVotes = count; winnerOpt = opt; }
+    }
+
+    const payload = {
+      title: pollData.title,
+      totalVotes: totalVotesCount,
+      resultTitle: winnerOpt?.label || winnerOpt?.id || 'Không rõ',
+      options: pollData.options.map(o => ({
+        id: o.id,
+        label: o.label || o.id,
+        votes: pollData.votes?.[o.id]?.length || 0
+      }))
+    };
+
+    socket.emit('analyze_poll_ai', payload, (res) => {
+      setAiText('');
+      let textToStream = '';
+      if (res.ok && res.text) {
+        textToStream = "**Google Gemini 2.5 Flash**\n\n" + res.text;
+      } else {
+        const errMsg = res.text || 'Không rõ nguyên nhân';
+        textToStream = `⚠️ **Không thể kết nối Gemini AI**\n\n${errMsg}\n\nHướng dẫn khắc phục:\n• Kiểm tra API Key tại Admin Dashboard → tab Cài Đặt\n• Lấy key mới miễn phí tại aistudio.google.com/apikey`;
+      }
+
+      setAiText('');
+      let currentText = '';
+      let i = 0;
+      if (window.aiInterval) clearInterval(window.aiInterval);
+
+      window.aiInterval = setInterval(() => {
+        currentText += textToStream.charAt(i);
+        setAiText(currentText);
+        i++;
+        if (i >= textToStream.length) clearInterval(window.aiInterval);
+      }, 15);
+    });
+  };
+
   useEffect(() => {
+    fetch('/api/config')
+      .then(r => r.json())
+      .then(d => { if (d.authCode) setAuthCode(d.authCode); })
+      .catch(() => {});
+      
     socket.emit('get_qr_config');
     socket.emit('get_pinned_item');
     socket.on('qr_config_update', setQrConfig);
@@ -502,6 +572,11 @@ export default function PresentationView() {
       setTimeout(() => setPickerWinner(null), 500);
     });
     socket.on('pinned_item_update', setPinnedItem);
+    socket.on('poll_popup_state',   (s) => {
+      setPollPopup(s);
+      setIsAnalyzingAI(false);
+      setAiText('');
+    });
     return () => {
       socket.off('qr_config_update');
       socket.off('poll_status');
@@ -509,6 +584,7 @@ export default function PresentationView() {
       socket.off('global_picker_winner');
       socket.off('global_picker_close');
       socket.off('pinned_item_update');
+      socket.off('poll_popup_state');
     };
   }, []);
 
@@ -521,6 +597,24 @@ export default function PresentationView() {
     window.addEventListener('keydown', fn);
     return () => window.removeEventListener('keydown', fn);
   }, [currentSlide, started]);
+
+  // Touch swipe handlers
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    // Only trigger if horizontal swipe dominates (>40px) and not mostly vertical
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+      if (dx < 0) goTo(currentSlide + 1); // swipe left → next
+      else        goTo(currentSlide - 1); // swipe right → prev
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
 
   useEffect(() => {
     if (!started) return;
@@ -569,7 +663,7 @@ export default function PresentationView() {
       <LiveToast />
 
       {/* 4:3 frame */}
-      <div className="slide-container" style={{ zIndex:1 }}>
+      <div className="slide-container" style={{ zIndex:1 }} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         <div className="slide-frame" ref={frameRef}>
           {/* Scale wrapper: renders at DESIGN_W×DESIGN_H then scales to fit */}
           <div style={{
@@ -601,7 +695,7 @@ export default function PresentationView() {
         </div>
       </div>
 
-      <QROverlay qrUrl={qrUrl} config={qrConfig} />
+      <QROverlay qrUrl={qrUrl} config={qrConfig} authCode={authCode} />
 
       {/* Pinned Discussion Overlay */}
       <AnimatePresence>
@@ -613,33 +707,33 @@ export default function PresentationView() {
             transition={{ type:'spring', damping:25, stiffness:200 }}
             style={{
               position:'absolute', bottom:'5%', left:'50%', transform:'translateX(-50%)',
-              zIndex:500, width:'85%', maxWidth:'52rem',
+              zIndex:500, width:'80%', maxWidth:'42rem',
               background:'rgba(13,17,23,0.95)',
               border:'1.5px solid rgba(232,184,75,0.4)',
-              borderRadius:'24px', padding:'2.5rem 3rem',
+              borderRadius:'20px', padding:'1.5rem 2rem',
               boxShadow:'0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(232,184,75,0.15)'
             }}
           >
-            <div style={{ display:'flex', gap:'1rem', alignItems:'center', marginBottom:'1.2rem' }}>
-              <span style={{ fontSize:'2.5rem', filter:'drop-shadow(0 4px 10px rgba(232,184,75,0.4))' }}>
+            <div style={{ display:'flex', gap:'1rem', alignItems:'center', marginBottom:'1rem' }}>
+              <span style={{ fontSize:'2rem', filter:'drop-shadow(0 4px 10px rgba(232,184,75,0.4))' }}>
                 {pinnedItem.type === 'question' ? '❓' : '💬'}
               </span>
               <div style={{ display:'flex', flexDirection:'column' }}>
-                <span style={{ fontSize:'1rem', color:'var(--gold)', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.1em' }}>
+                <span style={{ fontSize:'0.85rem', color:'var(--gold)', fontWeight:800, textTransform:'uppercase', letterSpacing:'0.1em' }}>
                   {pinnedItem.type === 'question' ? 'Câu Hỏi' : 'Bình Luận'} Tương Tác
                 </span>
-                <span style={{ fontSize:'1.4rem', color:'var(--text-primary)', fontWeight:800, fontFamily:'var(--font-display)' }}>
-                  {pinnedItem.name} <span style={{ fontSize:'1rem', color:'var(--text-tertiary)', fontWeight:600 }}>({pinnedItem.mssv})</span>
+                <span style={{ fontSize:'1.15rem', color:'var(--text-primary)', fontWeight:800, fontFamily:'var(--font-display)' }}>
+                  {pinnedItem.name} <span style={{ fontSize:'0.85rem', color:'var(--text-tertiary)', fontWeight:600 }}>({pinnedItem.mssv})</span>
                 </span>
               </div>
             </div>
             
-            <div style={{ fontSize:'1.75rem', color:'var(--text-secondary)', lineHeight:1.5, fontWeight:600, fontFamily:'var(--font-sans)' }}>
+            <div style={{ fontSize:'1.35rem', color:'var(--text-secondary)', lineHeight:1.5, fontWeight:600, fontFamily:'var(--font-sans)' }}>
               "{pinnedItem.text}"
             </div>
 
             {pinnedItem.type === 'question' && pinnedItem.answer && (
-              <motion.div initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} style={{ marginTop:'1.5rem', background:'rgba(61,214,140,0.1)', border:'1px solid rgba(61,214,140,0.3)', padding:'1rem 1.5rem', borderRadius:'12px', color:'#3dd68c', fontSize:'1.2rem', lineHeight:1.5 }}>
+              <motion.div initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }} style={{ marginTop:'1.2rem', background:'rgba(61,214,140,0.1)', border:'1px solid rgba(61,214,140,0.3)', padding:'0.8rem 1.2rem', borderRadius:'10px', color:'#3dd68c', fontSize:'1rem', lineHeight:1.5 }}>
                 <strong style={{ color:'#fff', fontWeight:700 }}>👨‍💼 Phản hồi:</strong> {pinnedItem.answer}
               </motion.div>
             )}
@@ -647,8 +741,133 @@ export default function PresentationView() {
         )}
       </AnimatePresence>
 
+      {/* ── Poll Popup Overlay ── */}
+      <AnimatePresence>
+        {pollPopup?.visible && pollPopup.poll && (() => {
+          const p = pollPopup.poll;
+          const totalVotes = p.options.reduce((s, o) => s + (p.votes?.[o.id]?.length || 0), 0);
+          const maxCount   = Math.max(...p.options.map(o => p.votes?.[o.id]?.length || 0), 1);
+          const BARS = [
+            'linear-gradient(90deg,#e05c5c88,#ff5555)',
+            'linear-gradient(90deg,#e8b84b88,#f0ca6a)',
+            'linear-gradient(90deg,#3dd68c88,#52e09c)',
+            'linear-gradient(90deg,#4f86f788,#6a9eff)',
+            'linear-gradient(90deg,#9b72e888,#b090f5)',
+          ];
+          return (
+            <motion.div key="poll-popup"
+              initial={{ opacity: 0, scale: 0.93, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.93, y: 20 }}
+              transition={{ type: 'spring', damping: 28, stiffness: 220 }}
+              style={{
+                position: 'absolute', inset: 0, zIndex: 600,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'rgba(5,8,14,0.88)', backdropFilter: 'blur(18px)',
+              }}
+            >
+              <div style={{
+                width: '82%', maxWidth: '860px',
+                maxHeight: '88vh', overflowY: 'auto',
+                background: 'rgba(13,17,23,0.97)',
+                border: '1.5px solid rgba(232,184,75,0.3)',
+                borderRadius: '28px', padding: '2.8rem 3.2rem',
+                boxShadow: '0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(232,184,75,0.1)',
+              }}>
+                {/* Live badge */}
+                <div style={{ display:'flex', alignItems:'center', gap:'0.8rem', marginBottom:'1.8rem' }}>
+                  <span style={{ fontSize:'0.68rem', color:'var(--green)', fontWeight:800, letterSpacing:'0.15em', fontFamily:'var(--font-mono)', padding:'0.25rem 0.7rem', background:'rgba(61,214,140,0.1)', border:'1px solid rgba(61,214,140,0.3)', borderRadius:20 }}>
+                    ● LIVE · {totalVotes} PHIẾU
+                  </span>
+                  <span style={{ fontSize:'0.65rem', color:'rgba(255,255,255,0.25)', fontFamily:'var(--font-mono)' }}>📊 POPUP POLL</span>
+                </div>
+                <h2 style={{ fontSize:'2rem', fontWeight:800, color:'#e8eaf0', fontFamily:'Playfair Display, serif', lineHeight:1.35, margin:'0 0 2rem 0' }}>
+                  {p.title}
+                </h2>
+                <div style={{ display:'flex', flexDirection:'column', gap:'1rem' }}>
+                  {p.options.map((opt, i) => {
+                    const count = p.votes?.[opt.id]?.length || 0;
+                    const pct   = totalVotes ? Math.round(count / totalVotes * 100) : 0;
+                    const isLeading = count > 0 && count === maxCount;
+                    const barColor  = opt.color ? `linear-gradient(90deg,${opt.color}66,${opt.color})` : BARS[i % 5];
+                    return (
+                      <motion.div key={opt.id}
+                        initial={{ opacity:0, x:-16 }} animate={{ opacity:1, x:0 }}
+                        transition={{ delay: i * 0.07 }}
+                        style={{
+                          background:'rgba(255,255,255,0.03)',
+                          border:`1px solid ${isLeading ? 'rgba(232,184,75,0.35)' : 'rgba(255,255,255,0.07)'}`,
+                          borderRadius:14, padding:'1rem 1.4rem',
+                          position:'relative', overflow:'hidden',
+                          boxShadow: isLeading ? `0 0 28px ${opt.color ? opt.color+'33' : 'rgba(232,184,75,0.2)'}` : 'none',
+                        }}
+                      >
+                        <motion.div animate={{ width:`${pct}%` }} transition={{ duration:0.8, ease:'easeOut' }}
+                          style={{ position:'absolute', inset:0, right:'auto', background:barColor, opacity:0.18, borderRadius:'inherit' }} />
+                        <div style={{ position:'relative', zIndex:1, display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                          <div style={{ display:'flex', alignItems:'center', gap:'0.9rem' }}>
+                            {opt.icon && <span style={{ fontSize:'1.8rem' }}>{opt.icon}</span>}
+                            <span style={{ fontSize:'1.1rem', fontWeight:600, color:'var(--text-primary)', fontFamily:'var(--font-sans)' }}>{opt.label}</span>
+                            {isLeading && totalVotes > 0 && (
+                              <span style={{ fontSize:'0.58rem', fontWeight:800, letterSpacing:'0.12em', color:'var(--gold)', border:'1px solid rgba(232,184,75,0.4)', padding:'0.12rem 0.5rem', borderRadius:100, fontFamily:'var(--font-mono)' }}>DẪN ĐẦU</span>
+                            )}
+                          </div>
+                          <div style={{ display:'flex', alignItems:'baseline', gap:'0.4rem' }}>
+                            <span style={{ fontSize:'2rem', fontWeight:800, fontFamily:'var(--font-display)', color: isLeading && totalVotes > 0 ? 'var(--gold)' : 'var(--text-primary)' }}>{count}</span>
+                            <span style={{ fontSize:'1rem', color:'var(--text-tertiary)', fontFamily:'var(--font-mono)' }}>{pct}%</span>
+                          </div>
+                        </div>
+                        <div style={{ height:5, background:'rgba(255,255,255,0.06)', borderRadius:3, overflow:'hidden', marginTop:'0.65rem' }}>
+                          <motion.div animate={{ width:`${pct}%` }} transition={{ duration:0.8, ease:'easeOut' }}
+                            style={{ height:'100%', background:barColor, borderRadius:3 }} />
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+
+                {/* AI Analysis Section in Popup */}
+                <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {!aiText && !isAnalyzingAI ? (
+                    <button 
+                      onClick={() => analyzePopupWithAI(p, totalVotes)}
+                      style={{
+                        background: 'rgba(61, 214, 140, 0.1)', border: '1px solid var(--green)', color: 'var(--green)',
+                        padding: '0.8rem 1.5rem', borderRadius: '12px', fontSize: '1rem', fontWeight: 600, 
+                        cursor: 'pointer', fontFamily: 'var(--font-sans)', transition: 'all 0.2s', alignSelf: 'flex-start',
+                        display: 'flex', alignItems: 'center', gap: '0.5rem'
+                      }}
+                    >
+                      <span>✨</span> TỔNG HỢP & PHÂN TÍCH VỚI AI
+                    </button>
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      style={{
+                        background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)',
+                        padding: '1.5rem', borderRadius: '14px',
+                      }}
+                    >
+                      <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', marginBottom:'0.8rem', flexShrink: 0 }}>
+                        <span style={{ fontSize:'1.2rem', filter:'drop-shadow(0 0 6px #60a5fa)' }}>🤖</span>
+                        <span style={{ fontSize:'0.9rem', color:'#60a5fa', fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase' }}>AI Analysis</span>
+                      </div>
+                      <div style={{ fontSize: '1.05rem', lineHeight: 1.6, color: '#e8eaf0', fontFamily: 'var(--font-sans)', whiteSpace: 'pre-wrap' }}>
+                        {aiText}
+                        {aiText.length > 0 && <motion.span animate={{ opacity:[1,0] }} transition={{ repeat:Infinity, duration:0.8 }} style={{ display:'inline-block', width:'6px', height:'1.05rem', background:'#60a5fa', marginLeft:'4px', verticalAlign:'text-bottom' }}/>}
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          );
+        })()}
+      </AnimatePresence>
+
       {/* Auto-hide centered toolbar */}
-      <DirectorToolbar currentSlide={currentSlide} total={total} pollOn={pollOn} togglePoll={togglePoll} slideData={slideData} goTo={goTo} />
+      <DirectorToolbar currentSlide={currentSlide} total={total} pollOn={pollOn} togglePoll={togglePoll} slideData={slideData} goTo={goTo} authCode={authCode} qrConfig={qrConfig} />
     </>
   );
 }

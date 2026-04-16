@@ -94,6 +94,17 @@ export default function QABoard() {
                     fontFamily: 'var(--font-mono)',
                   }}>✓ TL</span>
                 )}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if(window.confirm('Xóa câu hỏi này khỏi hệ thống (và loại khỏi bốc thăm)?')) socket.emit('delete_question', q.id);
+                  }}
+                  style={{
+                    fontSize: '0.60rem', color: '#ff5555', fontWeight: 700, flexShrink: 0,
+                    padding: '2px 7px', background: 'rgba(255,85,85,0.10)', border: '1px solid rgba(255,85,85,0.25)',
+                    borderRadius: 100, cursor: 'pointer', fontFamily: 'var(--font-mono)', display: 'block', marginLeft: 'auto'
+                  }}
+                >✕ Xóa</button>
               </div>
             </motion.div>
           ))}

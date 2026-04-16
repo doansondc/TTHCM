@@ -49,7 +49,8 @@ let State = loadDB({
   mutedMSSV: [],
   blockedFP: [],
   adminCode: '654321',
-  slidePassword: 'SSH1151',
+  slidePassword: '115168',
+  authCode: '1234',
   aiChats: {},
 });
 
@@ -60,6 +61,7 @@ const commitDB = () => {
   State.blockedFP = [...blockedFP];
   State.adminCode = adminCode;
   State.slidePassword = slidePassword;
+  State.authCode = authCode;
   State.aiChats = aiChats;
   State.reactionHistory = reactionHistory;
   saveDB(State);
@@ -69,6 +71,8 @@ let users        = {};
 let currentSlide = 0;
 let pollActive   = true;
 let activeRoleplay = null;
+let pollPopup      = null; // { poll, visible } — for fullscreen popup overlay on slide
+let roleplayQuestions = {}; // { [cardIdx]: [{ id, text, askerName, mssv, ts }] }
 let logs         = [];
 
 let blockedIPs       = new Set(State.blockedIPs);
@@ -92,11 +96,51 @@ let quizBank     = State.quizBank;
 let questions    = State.questions;
 let voterProfiles = State.voterProfiles;
 let adminCode    = State.adminCode    || '654321';
-let slidePassword = State.slidePassword || 'SSH1151';
+let slidePassword = State.slidePassword || '115168';
+let authCode      = State.authCode || '1234';
 let commentHistory = State.commentHistory || [];
 let reactionHistory = State.reactionHistory || [];
 let pinnedItem     = State.pinnedItem || null;
-let geminiApiKey   = State.geminiApiKey || '';
+let geminiApiKey   = State.geminiApiKey || ''; // kept for backward compat
+let openaiApiKey   = State.openaiApiKey  || '';
+
+// ── Poll Bank Migration (idempotent) ─────────────────
+const SEED_POLLS = [
+  {
+    id: 'lanh-dao-sang-suot',
+    title: 'Ai là người có quyết định sáng suốt nhất?',
+    active: false,
+    options: [
+      { id: 'trump',     label: 'Donald Trump',        icon: '🇺🇸', color: '#3b82f6' },
+      { id: 'netanyahu', label: 'Benjamin Netanyahu',  icon: '🇮🇱', color: '#60a5fa' },
+      { id: 'khamenei', label: 'Ali Khamenei',         icon: '🇮🇷', color: '#f97316' },
+      { id: 'mbs',       label: 'Mohammed bin Salman', icon: '🇸🇦', color: '#22c55e' },
+      { id: 'abbas',     label: 'Mahmoud Abbas',       icon: '🇵🇸', color: '#a855f7' },
+    ],
+    votes: {}
+  },
+  {
+    id: 'lanh-dao-leo-thang',
+    title: 'Ai gây leo thang nguy hiểm nhất?',
+    active: false,
+    options: [
+      { id: 'trump',     label: 'Donald Trump',        icon: '🇺🇸', color: '#3b82f6' },
+      { id: 'netanyahu', label: 'Benjamin Netanyahu',  icon: '🇮🇱', color: '#60a5fa' },
+      { id: 'khamenei', label: 'Ali Khamenei',         icon: '🇮🇷', color: '#f97316' },
+      { id: 'mbs',       label: 'Mohammed bin Salman', icon: '🇸🇦', color: '#22c55e' },
+      { id: 'abbas',     label: 'Mahmoud Abbas',       icon: '🇵🇸', color: '#a855f7' },
+    ],
+    votes: {}
+  }
+];
+SEED_POLLS.forEach(seed => {
+  if (!polls.find(p => p.id === seed.id)) {
+    polls.push(seed);
+    console.log(`[seed] Added poll: "${seed.title}"`);
+  }
+});
+State.polls = polls;
+saveDB(State);
 
 const lastAction = {};
 const RATE_MS    = { reaction:200, message:2500, ai:60000 };
@@ -122,6 +166,57 @@ const logAction = (type, data) => {
 };
 
 // ── Socket Events ────────────────────────────────────
+
+const aiCooldowns = new Map();
+
+// ── Universal AI call helper (auto-selects Gemini or OpenAI) ──
+const callAI = async (prompt, conversationHistory = null) => {
+  if (geminiApiKey) {
+    // Build Gemini request
+    const body = conversationHistory
+      ? {
+          system_instruction: { parts: [{ text: prompt }] },
+          contents: conversationHistory,
+          safetySettings: [
+            { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+            { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+            { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+          ]
+        }
+      : { contents: [{ parts: [{ text: prompt }] }] };
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`,
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
+    );
+    const json = await res.json();
+    if (json.error) throw new Error(json.error.message);
+    const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) throw new Error('Gemini trả về kết quả rỗng');
+    return { text, provider: 'Gemini 2.5 Flash' };
+
+  } else if (openaiApiKey) {
+    const messages = conversationHistory
+      ? [{ role: 'system', content: prompt }, ...conversationHistory]
+      : [{ role: 'user', content: prompt }];
+
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${openaiApiKey}` },
+      body: JSON.stringify({ model: 'gpt-4o-mini', messages, max_tokens: 600, temperature: 0.75 })
+    });
+    const json = await res.json();
+    if (json.error) throw new Error(json.error.message);
+    const text = json.choices?.[0]?.message?.content;
+    if (!text) throw new Error('OpenAI trả về kết quả rỗng');
+    return { text, provider: 'OpenAI GPT-4o Mini' };
+
+  } else {
+    throw new Error('Chưa cấu hình AI API Key');
+  }
+};
+
 io.on('connection', (socket) => {
   const ip = socket.handshake.headers['x-forwarded-for']?.split(',')[0]?.trim() || socket.handshake.headers['x-real-ip'] || socket.handshake.address;
 
@@ -151,6 +246,7 @@ io.on('connection', (socket) => {
     io.emit('user_joined',        { name: user.name, mssv: user.mssv, total: Object.keys(users).length });
     io.emit('update_users',       Object.values(users));
     socket.emit('update_polls',   polls);
+    socket.emit('poll_popup_state', pollPopup);
     socket.emit('quiz_bank_update', quizBank);
     socket.emit('update_questions', questions);
     socket.emit('slide_change',   currentSlide);
@@ -160,7 +256,7 @@ io.on('connection', (socket) => {
     socket.emit('reactions_status', reactionsEnabled);
     if (mutedMSSV.has(cleanMssv)) socket.emit('muted', { message: 'Bạn đang bị tắt tiếng trong phiên này.' });
     if (activeQuiz) { broadcastQuizState(); }
-    io.emit('toast_notification', { message: `${user.name} vừa tham gia!` });
+    // toast_notification removed — user_joined already shows a toast in LiveToast
   });
 
   socket.on('request_users', () => {
@@ -180,19 +276,24 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Verify MSSV + password against students.json
-  socket.on('check_credentials', ({ mssv, password }, callback) => {
+  // Verify event access using global Auth Code
+  socket.on('check_credentials', ({ mssv, password, name }, callback) => {
     if (typeof callback !== 'function') return;
+    
+    if (password !== authCode) {
+      callback({ ok: false, reason: 'Mã xác minh BTC không chính xác.' });
+      return;
+    }
+
     const student = STUDENTS.find(s => s.mssv === mssv);
-    if (!student) {
-      callback({ ok: false, reason: 'Không tìm thấy MSSV trong danh sách lớp học.' });
+    let resolvedName = student?.name || voterProfiles[mssv]?.name || name;
+
+    if (!resolvedName) {
+      callback({ ok: false, reason: 'Vui lòng cung cấp họ tên của bạn.' });
       return;
     }
-    if (student.password !== password.toLowerCase().trim()) {
-      callback({ ok: false, reason: 'Mật khẩu không đúng. (Gợi ý: tên cuối viết thường không dấu)' });
-      return;
-    }
-    callback({ ok: true, name: student.name, mssv: student.mssv });
+
+    callback({ ok: true, name: resolvedName, mssv: mssv });
   });
 
   // Change password
@@ -216,7 +317,17 @@ io.on('connection', (socket) => {
     callback({ ok: true });
   });
 
-  const broadcastPolls = () => { io.emit('update_polls', polls); };
+  const broadcastPolls = () => {
+    io.emit('update_polls', polls);
+    // Keep popup in sync with live vote counts
+    if (pollPopup?.visible) {
+      const freshPoll = polls.find(p => p.id === pollPopup.poll.id);
+      if (freshPoll) {
+        pollPopup.poll = freshPoll;
+        io.emit('poll_popup_state', pollPopup);
+      }
+    }
+  };
 
   socket.on('vote', ({ pollId, option }) => {
     if (!pollActive) return;
@@ -232,8 +343,9 @@ io.on('connection', (socket) => {
     if (!poll.votes[option]) poll.votes[option] = [];
     poll.votes[option].push(user.name);
     
-    logAction('vote', { name: user.name, mssv: user.mssv, pollId: poll.id, option, ip });
-    io.emit('toast_notification', { message: `${user.name} biểu quyết: ${option}` });
+    const optLabel = poll.options.find(o => o.id === option)?.label || option;
+    logAction('vote', { name: user.name, mssv: user.mssv, pollId: poll.id, option, text: `${option} — ${optLabel}`, ip });
+    io.emit('toast_notification', { message: `${user.name} biểu quyết: ${option} — ${optLabel}` });
     commitDB();
     broadcastPolls();
   });
@@ -322,6 +434,13 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('delete_question', (id) => {
+    questions = questions.filter(q => q.id !== id);
+    State.questions = questions;
+    commitDB();
+    io.emit('update_questions', questions);
+  });
+
   socket.on('spin_wheel', () => {
     // Pick from Q&A participants (unique by mssv), fallback to all users
     const qaSet = new Map();
@@ -399,6 +518,27 @@ io.on('connection', (socket) => {
     if (p) { p.votes = {}; commitDB(); broadcastPolls(); }
   });
 
+  socket.on('toggle_poll_popup', ({ pollId, visible }) => {
+    if (!visible) {
+      pollPopup = null;
+      polls.forEach(p => p.active = false);
+      pollActive = false;
+    } else {
+      const p = polls.find(x => x.id === pollId);
+      if (!p) return;
+      pollPopup = { poll: p, visible: true };
+      polls.forEach(x => x.active = (x.id === pollId));
+      pollActive = true;
+    }
+    io.emit('poll_popup_state', pollPopup);
+    io.emit('poll_status', pollActive);
+    commitDB();
+    broadcastPolls();
+  });
+
+  // Sync live poll votes into active popup
+  const origBroadcastPolls = broadcastPolls;
+
   // ── QuizBank CRUD ─────────────────────────────
   const broadcastQuizBank = () => { io.emit('quiz_bank_update', quizBank); };
 
@@ -473,6 +613,29 @@ io.on('connection', (socket) => {
   socket.on('get_ai_history', (mssv, callback) => {
     const history = aiChats[mssv] || [];
     callback?.({ ok: true, history });
+  });
+
+  socket.on('get_ai_chat_users', (callback) => {
+    // Return list of users who have AI chat history
+    const userList = Object.keys(aiChats).filter(k => aiChats[k].length > 0).map(mssv => {
+      const profile = voterProfiles[mssv] || {};
+      const msgs = aiChats[mssv];
+      const userMsgs = msgs.filter(m => m.role === 'user');
+      return {
+        mssv,
+        name: profile.name || mssv,
+        messageCount: msgs.length,
+        questionCount: userMsgs.length,
+        lastMessage: msgs[msgs.length - 1]?.text?.substring(0, 60) || '',
+      };
+    });
+    callback?.({ ok: true, users: userList });
+  });
+
+  socket.on('get_ai_chat_detail', (mssv, callback) => {
+    const history = aiChats[mssv] || [];
+    const profile = voterProfiles[mssv] || {};
+    callback?.({ ok: true, name: profile.name || mssv, mssv, history });
   });
 
   socket.on('get_student_history', (mssv, callback) => {
@@ -596,66 +759,87 @@ io.on('connection', (socket) => {
     socket.emit('toast_notification', { message: `🔑 Mật khẩu slide đã đổi thành: ${cleaned}` });
   });
 
+  socket.on('change_auth_code', ({ currentAdminCode, newAuthCode }, callback) => {
+    if (!currentAdminCode || !newAuthCode) { callback?.({ ok: false, msg: 'Thiếu thông tin.' }); return; }
+    if (currentAdminCode !== adminCode) { callback?.({ ok: false, msg: 'Mã admin không đúng.' }); return; }
+    const cleaned = newAuthCode.trim();
+    if (cleaned.length !== 4) { callback?.({ ok: false, msg: 'Mã mời phải có đúng 4 số.' }); return; }
+    authCode = cleaned;
+    commitDB();
+    logAction('security', { name: `Cập nhật mã xác minh khán giả`, ip: 'admin' });
+    io.emit('config_update', { adminCode, slidePassword, authCode, hasGeminiKey: !!geminiApiKey });
+    callback?.({ ok: true });
+  });
+
   socket.on('get_config', () => {
-    socket.emit('config_update', { adminCode, slidePassword, hasGeminiKey: !!geminiApiKey });
+    socket.emit('config_update', { adminCode, slidePassword, authCode, hasGeminiKey: !!geminiApiKey });
   });
 
   // ── AI Integration ────────────────────────────────
-  socket.on('change_gemini_key', ({ key }, callback) => {
-    geminiApiKey = key.trim();
-    State.geminiApiKey = geminiApiKey;
+  // Universal AI key handler — auto-detects Gemini (AIzaSy...) vs OpenAI (sk-...)
+  const saveAiKey = (key, callback) => {
+    const k = key.trim();
+    if (!k) { callback?.({ ok: false, txt: 'Key rỗng' }); return; }
+    if (k.startsWith('sk-')) {
+      openaiApiKey = k;
+      State.openaiApiKey = k;
+      // Clear gemini key to avoid confusion
+      geminiApiKey = '';
+      State.geminiApiKey = '';
+      logAction('ai_status', { name: 'System', txt: `Lưu OpenAI key: ${k.substring(0,12)}***` });
+    } else {
+      geminiApiKey = k;
+      State.geminiApiKey = k;
+      // Clear openai key to avoid confusion
+      openaiApiKey = '';
+      State.openaiApiKey = '';
+      logAction('ai_status', { name: 'System', txt: `Lưu Gemini key: ${k.substring(0,12)}***` });
+    }
     commitDB();
-    logAction('ai_status', { name: 'System', txt: `Lưu mã API Key mới: ${key ? key.substring(0,8)+'***' : 'RỖNG'}` });
     callback?.({ ok: true });
-    io.emit('config_update', { hasGeminiKey: !!geminiApiKey });
-  });
+    io.emit('config_update', { hasGeminiKey: !!geminiApiKey, hasOpenAIKey: !!openaiApiKey });
+  };
 
+  socket.on('change_gemini_key', ({ key }, callback) => saveAiKey(key, callback));
+  socket.on('change_openai_key', ({ key }, callback) => saveAiKey(key, callback));
+  socket.on('change_ai_key',     ({ key }, callback) => saveAiKey(key, callback));
   socket.on('analyze_poll_ai', async (data, callback) => {
-    if (!geminiApiKey) {
-      callback?.({ ok: false, text: "Chưa cấu hình Gemini API Key." });
+    if (!geminiApiKey && !openaiApiKey) {
+      callback?.({ ok: false, text: "Chưa cấu hình AI API Key." });
       return;
     }
-    logAction('ai_status', { name: 'Slide Presenter', txt: `Yêu cầu phân tích tổng quan biểu quyết "${data.title}"` });
+    logAction('ai_status', { name: 'Presenter', txt: `Phân tích biểu quyết: "${data.title}"` });
     try {
-      const others = (data.options || []).filter(o => o.label !== data.resultTitle).map(o => o.label).join(', ');
-      const prompt = `Đây là Chương trình Hội Thảo thuộc môn học Tư tưởng Hồ Chí Minh tại Đại học Bách Khoa Hà Nội, do Nhóm 11 trình bày. Giảng viên phụ trách là TS. Bùi Trọng Vinh. Chủ đề báo cáo: Phân tích đường lối ngoại giao linh hoạt của một số quốc gia ở Thế kỷ 21, đặc biệt là các cuộc xung đột chiến sự đang diễn ra ở Trung Đông và đường lối đối ngoại trung lập, "ngọai giao cây tre" của Việt Nam trong tư tưởng Hồ Chí Minh.
-Hội trường vừa tiến hành biểu quyết với ${data.totalVotes} phiếu.
-Chủ đề mổ xẻ: "${data.title}".
-Đám đông đã chọn kịch bản chiến thắng: "${data.resultTitle}" (đã bị lu mờ đi các phương án: "${others}").
-YÊU CẦU: Viết một đoạn nhận định thật CHUYÊN MÔN nhưng SỬ DỤNG NGÔN TỪ DỄ HIỂU ĐỂ CÁC BẠN SINH VIÊN ĐẠI TRÀ VÀ NGƯỜI KHÔNG CÓ CHUYÊN MÔN CHÍNH TRỊ CŨNG CÓ THỂ HIỂU ĐƯỢC. Trình bày tách bạch các ý rõ ràng. Tuyệt đối GIỚI HẠN DƯỚI 550 KÝ TỰ chữ cái. Hệ thống hóa lựa chọn trên theo lăng kính ngoại giao, đường lối chính trị học và cục diện thay đổi qua lời giải thích hùng biện.`;
+      // Build full vote distribution string
+      const voteBreakdown = (data.options || [])
+        .sort((a, b) => (b.votes || 0) - (a.votes || 0))
+        .map(o => `  • ${o.label}: ${o.votes || 0} phiếu (${data.totalVotes > 0 ? Math.round(((o.votes||0)/data.totalVotes)*100) : 0}%)`)
+        .join('\n');
 
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-      });
-      const json = await res.json();
-      
-      if (json.error) {
-        logAction('ai_status', { name: 'Google Gemini', txt: `❌ Từ chối / Lỗi: ${json.error.message}` });
-        callback?.({ ok: false, text: "API từ chối: " + json.error.message });
-        return;
-      }
-      
-      const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (text) {
-        logAction('ai_status', { name: 'Google Gemini', txt: `✅ Phân tích xong biểu quyết (${text.length} ký tự)` });
-        callback?.({ ok: true, text: text.trim() });
-      } else {
-        logAction('ai_status', { name: 'Google Gemini', txt: `⚠️ Vi phạm an toàn nội dung / lỗi trống` });
-        callback?.({ ok: false, text: "API trả về kết quả rỗng." });
-      }
+      const prompt = `BỐI CẢNH SỰ KIỆN: Đây là buổi Hội Thảo học thuật môn Tư Tưởng Hồ Chí Minh (SSH1151) tại Đại học Bách Khoa Hà Nội. Giảng viên hướng dẫn: Phạm Thị Mai Duyên. Nhóm 5 — Lớp LT 170263 / BT 170265 — trình bày. Thành viên: Nguyễn Thị Trà My, Nguyễn Duy Thái, Đoàn Ngọc Sơn, Tống Thái Sơn, Cao Xuân Nam, Nguyễn Viết Tuấn Minh, Nguyễn Đăng Minh, Đinh Thị Trang Nhung, Hoàng Thị Bé Nhi.
+Chủ đề báo cáo: "Bức tranh địa chính trị Trung Đông và Bài học cho Việt Nam" — phân tích các cuộc xung đột Israel-Palestine, Iran-Mỹ, văn hóa ngoại giao đa phương, và đường lối đối ngoại "Ngoại giao Cây Tre" của Việt Nam dưới ánh sáng Tư tưởng Hồ Chí Minh.
+
+CÂU HỎI BIỂU QUYẾT: "${data.title}"
+TỔNG PHIẾU: ${data.totalVotes}
+
+KẾT QUẢ ĐẦY ĐỦ (xếp theo số phiếu):
+${voteBreakdown}
+
+ĐÁP ÁN CHIẾN THẮNG: "${data.resultTitle}"
+
+NHIỆM VỤ: Vai trò chuyên gia phân tích chính trị. Viết một đoạn nhận định chuyên sâu (khoảng 500-600 ký tự), ngôn từ dễ hiểu với sinh viên không chuyên. Phân tích ý nghĩa của kết quả vote, tại sao đáp án này được chọn nhiều nhất, đáp án nào thú vị, và rút ra bài học liên quan đến Việt Nam và Tư tưởng Hồ Chí Minh.`;
+      const { text, provider } = await callAI(prompt);
+      logAction('ai_status', { name: provider, txt: `✅ Phân tích xong (${text.length} ký tự)` });
+      callback?.({ ok: true, text: text.trim(), provider });
     } catch (e) {
-      logAction('ai_status', { name: 'Google Gemini', txt: `⚠️ Crash phía máy chủ: ${e.message}` });
-      callback?.({ ok: false, text: "Lỗi phía máy chủ: " + e.message });
+      logAction('ai_status', { name: 'AI', txt: `⚠️ Lỗi: ${e.message}` });
+      callback?.({ ok: false, text: e.message });
     }
   });
 
-const aiCooldowns = new Map();
-
   socket.on('ask_ai_direct', async (data, callback) => {
-    if (!geminiApiKey) {
-      callback?.({ ok: false, text: "Chưa cấu hình Gemini API Key." });
+    if (!geminiApiKey && !openaiApiKey) {
+      callback?.({ ok: false, text: "Chưa cấu hình AI API Key (Gemini hoặc OpenAI)." });
       return;
     }
     
@@ -673,49 +857,43 @@ const aiCooldowns = new Map();
 
     try {
       const history = aiChats[userId] || [];
-      const recentHistory = history.map(m => ({
-         role: m.role === 'user' ? 'user' : 'model',
-         parts: [{ text: m.text }]
-      })).slice(-15); // keep last 15 messages max
+      const systemPrompt = `Bạn là chuyên gia phân tích chính trị quốc tế, đang hỗ trợ một buổi hội thảo sinh viên học thuật.
 
-      recentHistory.push({ role: 'user', parts: [{ text: data.question }] });
+THÔNG TIN SỰ KIỆN:
+- Môn học: Tư Tưởng Hồ Chí Minh (SSH1151) — Đại học Bách Khoa Hà Nội
+- Giảng viên: Phạm Thị Mai Duyên
+- Nhóm 5 (Lớp LT 170263 / BT 170265): Nguyễn Thị Trà My, Nguyễn Duy Thái, Đoàn Ngọc Sơn, Tống Thái Sơn, Cao Xuân Nam, Nguyễn Viết Tuấn Minh, Nguyễn Đăng Minh, Đinh Thị Trang Nhung, Hoàng Thị Bé Nhi
+- Chủ đề: "Bức tranh Địa Chính Trị Trung Đông và Bài học cho Việt Nam"
+- Nội dung: Các cuộc xung đột Israel-Palestine, Iran-Mỹ, Gaza; vai trò quốc tế của Nga, Trung Quốc, Mỹ; Đường lối Ngoại giao Cây Tre của Việt Nam (kiên định mục tiêu Ngoại giao Kinh tế, độc lập-tự chủ, đa phương hóa).
+- Khán giả đang hỏi: ${data.name || 'Sinh viên'}
 
-      const systemPrompt = `BỐI CẢNH: Đây là Chương trình Hội Thảo thuộc môn học Tư tưởng Hồ Chí Minh tại Đại học Bách Khoa Hà Nội, Nhóm 11 trình bày. Báo cáo phân tích đường lối ngoại giao linh hoạt của Trung Đông và ngoại giao cây tre của Việt Nam. Khán giả đang hỏi tên là: ${data.name}.
-YÊU CẦU: Nhập vai là chuyên gia để trò chuyện, hỏi đáp. Trình bày lịch sự, chuyên nghiệp, NHƯNG LỜI VĂN PHẢI DỄ HIỂU ĐỂ SINH VIÊN ĐẠI TRÀ KHÔNG CÓ CHUYÊN MÔN CHÍNH TRỊ CŨNG HIỂU ĐƯỢC. Tách bạch các ý (gạch đầu dòng) rõ ràng nếu cần. Bám sát chủ đề sự kiện. TUYỆT ĐỐI GIỚI HẠN DƯỚI 550 KÝ TỰ.`;
+NGUYÊN TẮC THẢO LUẬN:
+- Ngôn từ: dễ hiểu với sinh viên không chuyên chính trị, tránh thuật ngữ quá hàn lâm
+- Tóm gọn rõ ràng, tách ý mạch lạc, bám sát chủ đề sự kiện
+- GIỚI HẠN TỐI ĐA 600 KÝ TỰ mỗi câu trả lời
+- Không nhắc lại tên thành viên nhóm trong câu trả lời`;
 
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          system_instruction: { parts: [{ text: systemPrompt }] },
-          contents: recentHistory 
-        })
-      });
-      const json = await res.json();
-      
-      if (json.error) {
-        logAction('ai_status', { name: 'Google Gemini', txt: `❌ Từ chối / Lỗi: ${json.error.message}` });
-        callback?.({ ok: false, text: "Lỗi kết nối AI: " + json.error.message });
-        return;
+      // Build provider-agnostic history for callAI
+      const historyForAI = geminiApiKey
+        ? history.slice(-14).map(m => ({ role: m.role === 'user' ? 'user' : 'model', parts: [{ text: m.text }] }))
+        : history.slice(-14).map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.text }));
+
+      if (geminiApiKey) {
+        historyForAI.push({ role: 'user', parts: [{ text: data.question }] });
       }
-      
-      const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (text) {
-        const cleanText = text.trim();
-        history.push({ id: Date.now().toString(), role: 'user', text: data.question });
-        history.push({ id: (Date.now()+1).toString(), role: 'ai', text: cleanText });
-        aiChats[userId] = history;
-        commitDB();
 
-        logAction('ai_status', { name: 'Google Gemini', txt: `✅ Chat phản hồi (${cleanText.length} ký tự)` });
-        callback?.({ ok: true, history: aiChats[userId] });
-      } else {
-        logAction('ai_status', { name: 'Google Gemini', txt: `⚠️ Vi phạm an toàn nội dung (Safety Blocked)` });
-        callback?.({ ok: false, text: "Câu hỏi nhạy cảm hoặc vi phạm chính sách nội dung (Safety Blocked), AI từ chối trả lời." });
-      }
+      const { text: cleanText, provider } = await callAI(systemPrompt, geminiApiKey ? historyForAI : null);
+
+      // For OpenAI, add question manually to messages
+      history.push({ id: Date.now().toString(), role: 'user', text: data.question });
+      history.push({ id: (Date.now()+1).toString(), role: 'ai', text: cleanText });
+      aiChats[userId] = history;
+      commitDB();
+      logAction('ai_status', { name: provider, txt: `✅ Phản hồi (${cleanText.length} ký tự)` });
+      callback?.({ ok: true, history: aiChats[userId] });
     } catch (e) {
-      logAction('ai_status', { name: 'Google Gemini', txt: `⚠️ Crash: ${e.message}` });
-      callback?.({ ok: false, text: "Máy chủ đang quá tải: " + e.message });
+      logAction('ai_status', { name: 'AI', txt: `⚠️ Lỗi: ${e.message}` });
+      callback?.({ ok: false, text: e.message });
     }
   });
 
@@ -767,7 +945,7 @@ YÊU CẦU: Nhập vai là chuyên gia để trò chuyện, hỏi đáp. Trình 
       const total   = Object.keys(quizVotes).length;
       const correct = correctVoters.length;
       io.emit('toast_notification', {
-        message: `🏆 Chốt! ${correct}/${total} chịn đúng${correctVoters[0] ? ' · Nhanh nhất: ' + correctVoters[0].name : ''}`
+        message: `🏆 Chốt! ${correct}/${total} chọn đúng${correctVoters[0] ? ' · Nhanh nhất: ' + correctVoters[0].name : ''}`
       });
     } else {
       activeQuiz = null;
@@ -840,6 +1018,37 @@ YÊU CẦU: Nhập vai là chuyên gia để trò chuyện, hỏi đáp. Trình 
     io.emit('roleplay_state', activeRoleplay);
   });
 
+  // ── Roleplay Questions (from audience via /vote) ──
+  socket.on('roleplay_ask', ({ cardIdx, text }) => {
+    const user = users[socket.id];
+    if (!user || !text || typeof cardIdx !== 'number') return;
+    const clean = text.trim().slice(0, 300);
+    if (!clean) return;
+    if (!roleplayQuestions[cardIdx]) roleplayQuestions[cardIdx] = [];
+    roleplayQuestions[cardIdx].push({
+      id: Date.now() + Math.random(),
+      text: clean,
+      askerName: user.name,
+      mssv: user.mssv || '',
+      ts: Date.now(),
+    });
+    io.emit('roleplay_questions_update', roleplayQuestions);
+  });
+
+  socket.on('roleplay_questions_clear', ({ cardIdx }) => {
+    if (cardIdx === undefined) {
+      roleplayQuestions = {};
+    } else {
+      roleplayQuestions[cardIdx] = [];
+    }
+    io.emit('roleplay_questions_update', roleplayQuestions);
+  });
+
+  // Send current questions to newly connected clients
+  socket.on('request_roleplay_questions', () => {
+    socket.emit('roleplay_questions_update', roleplayQuestions);
+  });
+
   socket.on('disconnect', () => {
     delete users[socket.id];
     delete lastAction[socket.id];
@@ -850,9 +1059,9 @@ YÊU CẦU: Nhập vai là chuyên gia để trò chuyện, hỏi đáp. Trình 
 // ── REST API ──────────────────────────────────────
 app.use(express.json());
 
-// GET /api/config — public config (slide password, admin code hash)
+// GET /api/config — public config (slide password, admin code hash, auth invite code)
 app.get('/api/config', (req, res) => {
-  res.json({ slidePassword, adminCode });
+  res.json({ slidePassword, adminCode, authCode });
 });
 // GET /api/students — for admin student list panel
 app.get('/api/students', (req, res) => {
@@ -885,8 +1094,11 @@ app.get('/api/students/credentials', (req, res) => {
   res.json(STUDENTS.map((s, i) => ({ stt: i + 1, name: s.name, mssv: s.mssv, password: s.password })));
 });
 
-app.use(express.static(path.join(__dirname, 'dist')));
-app.use((req, res) => res.sendFile(path.join(__dirname, 'dist', 'index.html')));
+app.use(express.static(path.join(__dirname, 'dist'), { setHeaders: (res, path) => { if (path.endsWith('.html')) res.setHeader('Cache-Control', 'no-cache'); } }));
+app.use((req, res) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => console.log(`Server on :${PORT}`));

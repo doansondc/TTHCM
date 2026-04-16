@@ -24,21 +24,23 @@ function generateFingerprint() {
 const DEVICE_FP = generateFingerprint();
 
 const SLIDE_SUMMARIES = {
-  0: 'Slide mở đầu — Giới thiệu chủ đề và nhóm thực hiện.',
-  1: 'Phần 1 — 3 nguyên nhân cốt lõi: Tài nguyên, Tôn giáo, Lịch sử.',
-  2: 'Phần 2 — Hai phía: Israel (bảo vệ tồn vong) và Palestine (giành độc lập).',
-  3: 'Phần 3 — Siêu cường: Iran (ủy nhiệm) và Mỹ (bảo lãnh trật tự).',
-  4: 'Phần 4 — Nhập vai 4 lãnh đạo: Mỹ, Israel, Iran, Ả Rập.',
-  5: 'Phần 5 — 3 kịch bản tương lai: Tổng lực, Giới hạn, Hạ nhiệt.',
-  6: 'POLL — Bạn nghĩ Trung Đông đi về đâu? Hãy bỏ phiếu!',
-  7: 'Phần 6 — Vị trí địa lý Việt Nam và tác động Trung Đông.',
-  8: 'Phần 7 — Ngoại giao Cây Tre: Gốc vững, Cành uyển chuyển, Bốn Không.',
-  9: 'Phần 8 — Bài học 1-3: Không chọn phe, hòa bình, nội lực.',
-  10: 'Phần 9 — Bài học 4-5: Đoàn kết nội bộ, biến địa lý thành lợi thế.',
-  11: 'Tổng kết — Kịch bản dựa trên biểu quyết của khán phòng.',
-  12: 'Q&A — Đặt câu hỏi để nhóm trả lời.',
-  13: 'Vòng Quay May Mắn — Theo dõi màn hình lớn!',
-  14: 'Cảm ơn bạn đã tham gia Hội Nghị Trung Đông 2026.',
+  0:  'Slide mở đầu — Giới thiệu chủ đề và nhóm thực hiện.',
+  1:  'Nguyên nhân 1/3 — Địa chính trị: Dầu mỏ, Kênh Suez và Eo biển Hormuz.',
+  2:  'Nguyên nhân 2/3 — Tôn giáo: 1300 năm chia rẽ Sunni–Shia.',
+  3:  'Nguyên nhân 3/3 — Lịch sử: Sykes-Picot 1916 và phân chia LHQ 1947.',
+  4:  'Phần 2 — Hai phía xung đột: Israel (bảo vệ tồn vong) và Palestine (giành độc lập).',
+  5:  'Phần 3 — Mâu thuẫn Iran & Arab Saudi: cạnh tranh quyền lực khu vực và proxy war.',
+  6:  'Phần 4 — Siêu cường: Iran (phòng thủ chủ động) và Mỹ (bảo lãnh trật tự).',
+  7:  'Phần 5 — Nhập vai 5 lãnh đạo: Trump, Netanyahu, Khamenei, MBS, Abbas.',
+  8:  'Phần 6 — 3 kịch bản tương lai: Tổng lực (20%), Giới hạn (55%), Hạ nhiệt (25%).',
+  9:  'POLL — Bạn nghĩ Trung Đông đi về đâu? Hãy bỏ phiếu!',
+  10: 'Phần 7 — Vị trí địa lý Việt Nam vs Trung Đông.',
+  11: 'Phần 8 — Ngoại giao Cây Tre: Gốc vững, Cành uyển chuyển, Bốn Không.',
+  12: 'Phần 9 — 5 bài học xương máu từ thảm kịch Trung Đông cho Việt Nam.',
+  13: 'Tổng kết — Kịch bản dựa trên biểu quyết của khán phòng.',
+  14: 'Q&A — Đặt câu hỏi để nhóm trả lời.',
+  15: 'Vòng Quay May Mắn — Theo dõi màn hình lớn!',
+  16: 'Cảm ơn bạn đã tham gia Hội Nghị Trung Đông 2026.',
 };
 
 // Replaced by dynamic server polls
@@ -87,6 +89,9 @@ export default function MobileVote() {
   const [activeQuiz,    setActiveQuiz] = useState(null);
   const [activeRoleplay,setActiveRoleplay] = useState(null);
   const [roleplayVoted, setRoleplayVoted] = useState(null);
+  const [rpAskLeader,   setRpAskLeader]   = useState(null); // cardIdx selected to ask
+  const [rpAskText,     setRpAskText]     = useState('');
+  const [rpAskSent,     setRpAskSent]     = useState(false);
   const [quizVoted,     setQuizVoted]  = useState(null);
   const [selectedQuizOpt, setSelectedQuizOpt] = useState('');
   const [timeLeft,        setTimeLeft]      = useState(0);
@@ -103,6 +108,13 @@ export default function MobileVote() {
   const [loginLoading,  setLoginLoading] = useState(false);
   const [aiChats,       setAiChats]      = useState([]);
   const [isAskingAI,    setIsAskingAI]   = useState(false);
+  const [qaVisible,     setQaVisible]    = useState(5); // paginated Q&A
+  // Auto-select active leader when roleplay session changes
+  useEffect(() => {
+    if (activeRoleplay?.cardIdx !== undefined) {
+      setRpAskLeader(activeRoleplay.cardIdx);
+    }
+  }, [activeRoleplay?.cardIdx]);
   // Change password
   const [showChangePw,  setShowChangePw]  = useState(false);
   const [cpOldPw,       setCpOld]         = useState('');
@@ -123,6 +135,7 @@ export default function MobileVote() {
       setActiveRoleplay(state);
       if (!state) setRoleplayVoted(null);
     });
+    socket.emit('request_roleplay_questions'); // pull existing on connect
     socket.on('your_answer',     data => { setMyAnswer(data); setTab('question'); });
     socket.on('comment_queued',  () => { setCQueued(true); setTimeout(() => setCQueued(false), 3000); });
     socket.on('feature_disabled',() => flashMsg('Chức năng này đang tạm khóa.'));
@@ -143,7 +156,7 @@ export default function MobileVote() {
       socket.emit('join', { name: savedName, mssv: savedMssv, fingerprint: DEVICE_FP });
     }
 
-    return () => ['slide_change','poll_status','update_polls','comments_status','questions_status','reactions_status','your_answer','quiz_state','comment_queued','feature_disabled','muted','unmuted','blocked'].forEach(e => socket.off(e));
+    return () => ['slide_change','poll_status','update_polls','comments_status','questions_status','reactions_status','your_answer','quiz_state','comment_queued','feature_disabled','muted','unmuted','blocked','roleplay_questions_update'].forEach(e => socket.off(e));
   }, []);
   // Timer logic for active quiz
   useEffect(() => {
@@ -166,20 +179,9 @@ export default function MobileVote() {
     if (cleanMssv.length < 8) return setLoginError('MSSV phải đủ 8-9 chữ số!');
     const paddedMssv = cleanMssv.padStart(9, '0');
 
-    // If no password provided: allow free login (fallback for unlisted students)
-    if (!cleanPass) {
-      if (!name.trim()) return setLoginError('Vui lòng nhập tên của bạn!');
-      sessionStorage.setItem('voterName', name.trim());
-      sessionStorage.setItem('voterMssv', paddedMssv);
-      socket.emit('join', { name: name.trim(), mssv: paddedMssv, fingerprint: DEVICE_FP });
-      socket.emit('get_ai_history', paddedMssv, (res) => { if (res?.ok) setAiChats(res.history); });
-      setStep('main');
-      return;
-    }
-
     setLoginLoading(true);
     setLoginError('');
-    socket.emit('check_credentials', { mssv: paddedMssv, password: cleanPass }, (res) => {
+    socket.emit('check_credentials', { mssv: paddedMssv, password: cleanPass, name: name.trim() }, (res) => {
       setLoginLoading(false);
       if (!res || !res.ok) {
         setLoginError(res?.reason || 'Thông tin không hợp lệ.');
@@ -354,16 +356,45 @@ export default function MobileVote() {
                 />
               </div>
               <div>
-                <label style={S.label}>Mật Khẩu</label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={e=>{ setPassword(e.target.value); setLoginError(''); }}
-                  placeholder="Nhập mật khẩu..."
-                  style={S.input}
-                  onFocus={e => e.target.style.borderColor = 'rgba(181,134,13,0.5)'}
-                  onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.12)'}
-                />
+              <label style={S.label}>Mã Mời Tham Gia (4 ký tự) *</label>
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '4px' }}>
+                  {[0, 1, 2, 3].map(i => (
+                    <input
+                      key={i}
+                      id={`invite-input-${i}`}
+                      type="text"
+                      maxLength={1}
+                      value={password[i] || ''}
+                      autoComplete="off"
+                      style={{
+                        width: '3.5rem', height: '3.8rem',
+                        textAlign: 'center', fontSize: '1.4rem', fontWeight: 800,
+                        borderRadius: '12px',
+                        border: '1.5px solid rgba(0,0,0,0.15)',
+                        background: 'rgba(0,0,0,0.02)',
+                        textTransform: 'uppercase',
+                        color: 'var(--gold)',
+                        ...S.input,
+                        padding: 0
+                      }}
+                      onFocus={e => { e.target.style.borderColor = 'rgba(181,134,13,0.5)'; e.target.style.background = '#fff'; }}
+                      onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.15)'; e.target.style.background = 'rgba(0,0,0,0.02)'; }}
+                      onChange={e => {
+                        const val = e.target.value.toUpperCase();
+                        let newPass = password.split('');
+                        newPass[i] = val;
+                        setPassword(newPass.join('').slice(0,4));
+                        setLoginError('');
+                        if (val && i < 3) document.getElementById(`invite-input-${i+1}`)?.focus();
+                      }}
+                      onKeyDown={e => {
+                        if (e.key === 'Backspace' && !password[i] && i > 0) {
+                          document.getElementById(`invite-input-${i-1}`)?.focus();
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
               </div>
               {loginError && (
                 <div style={{ background:'rgba(220,38,38,0.10)', border:'1px solid rgba(220,38,38,0.30)', borderRadius:'10px', padding:'0.6rem 0.9rem', fontSize:'0.83rem', color:'#ff6b6b', fontWeight:500 }}>
@@ -500,36 +531,150 @@ export default function MobileVote() {
             <motion.div initial={{ opacity:0, scale:0.95, y:-10 }} animate={{ opacity:1, scale:1, y:0 }} exit={{ opacity:0, scale:0.95, y:-10 }}
               style={{ background:'rgba(255,255,255,0.95)', border:`1.5px solid ${activeRoleplay.accentColor || '#b5860d'}`, borderRadius:'18px', padding:'1.2rem', marginBottom:'0.8rem', boxShadow:'0 10px 30px rgba(0,0,0,0.08)', backdropFilter:'blur(20px)' }}>
               <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', marginBottom:'0.5rem' }}>
-                <span style={{ fontSize:'1.4rem' }}>🤝</span>
-                <div style={{ fontSize:'0.7rem', color:activeRoleplay.accentColor || '#b5860d', fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase' }}>Roleplay đang mở</div>
+                <span style={{ fontSize:'1.4rem' }}>🎭</span>
+                <div>
+                  <div style={{ fontSize:'0.7rem', color:activeRoleplay.accentColor || '#b5860d', fontWeight:700, letterSpacing:'0.05em', textTransform:'uppercase' }}>
+                    Phiên nhập vai đang diễn ra
+                  </div>
+                  <div style={{ fontSize:'0.82rem', color:'#1a1714', fontWeight:600, marginTop:2 }}>
+                    {activeRoleplay.flag && <span style={{ marginRight:5 }}>{activeRoleplay.flag}</span>}
+                    {activeRoleplay.leader}
+                  </div>
+                </div>
               </div>
-              <h3 style={{ fontSize:'0.95rem', color:'#1a1714', margin:'0 0 1rem 0', lineHeight:1.4, fontWeight:700, fontStyle:'italic' }}>
-                "{activeRoleplay.question}"
-              </h3>
-              
-              <div style={{ display:'flex', flexDirection:'column', gap:'0.6rem' }}>
-                {activeRoleplay.options.map((opt, idx) => {
-                  const isSelected = roleplayVoted === idx;
-                  let btnBg = isSelected ? `${activeRoleplay.accentColor}20` : 'rgba(0,0,0,0.04)';
-                  let btnBorder = isSelected ? activeRoleplay.accentColor : 'rgba(0,0,0,0.1)';
-                  return (
-                    <button key={idx} onClick={() => {
-                        window.navigator.vibrate?.(20);
-                        setRoleplayVoted(idx);
-                        socket.emit('roleplay_vote', idx);
-                      }}
-                      style={{ padding:'0.8rem', background:btnBg, border:`1.5px solid ${btnBorder}`, borderRadius:'12px', textAlign:'left', color:isSelected ? '#1a1714' : '#4a4440', fontSize:'0.9rem', fontWeight:isSelected?700:500, cursor:'pointer', transition:'all 0.2s', display:'flex', alignItems:'flex-start', gap:'0.6rem' }}>
-                      <div style={{ width:18, height:18, borderRadius:'50%', border:`2px solid ${isSelected ? activeRoleplay.accentColor : '#a89e94'}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, marginTop:1 }}>
-                        {isSelected && <div style={{ width:10, height:10, borderRadius:'50%', background:activeRoleplay.accentColor }} />}
-                      </div>
-                      <div style={{ flex: 1, lineHeight: 1.4 }}>{opt.text}</div>
-                    </button>
-                  );
-                })}
-              </div>
+
+              {activeRoleplay.visible ? (
+                // Only show debate question + voting when presenter reveals it
+                <>
+                  <h3 style={{ fontSize:'0.95rem', color:'#1a1714', margin:'0 0 1rem 0', lineHeight:1.4, fontWeight:700, fontStyle:'italic' }}>
+                    "{activeRoleplay.question}"
+                  </h3>
+                  <div style={{ display:'flex', flexDirection:'column', gap:'0.6rem' }}>
+                    {activeRoleplay.options.map((opt, idx) => {
+                      const isSelected = roleplayVoted === idx;
+                      let btnBg = isSelected ? `${activeRoleplay.accentColor}20` : 'rgba(0,0,0,0.04)';
+                      let btnBorder = isSelected ? activeRoleplay.accentColor : 'rgba(0,0,0,0.1)';
+                      return (
+                        <button key={idx} onClick={() => {
+                            window.navigator.vibrate?.(20);
+                            setRoleplayVoted(idx);
+                            socket.emit('roleplay_vote', idx);
+                          }}
+                          style={{ padding:'0.8rem', background:btnBg, border:`1.5px solid ${btnBorder}`, borderRadius:'12px', textAlign:'left', color:isSelected ? '#1a1714' : '#4a4440', fontSize:'0.9rem', fontWeight:isSelected?700:500, cursor:'pointer', transition:'all 0.2s', display:'flex', alignItems:'flex-start', gap:'0.6rem' }}>
+                          <div style={{ width:18, height:18, borderRadius:'50%', border:`2px solid ${isSelected ? activeRoleplay.accentColor : '#a89e94'}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, marginTop:1 }}>
+                            {isSelected && <div style={{ width:10, height:10, borderRadius:'50%', background:activeRoleplay.accentColor }} />}
+                          </div>
+                          <div style={{ flex: 1, lineHeight: 1.4 }}>{opt.text}</div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              ) : (
+                // Question hidden — show teaser
+                <div style={{ textAlign:'center', padding:'0.6rem 0', color:'#a89e94', fontSize:'0.82rem', fontStyle:'italic' }}>
+                  🔒 Câu hỏi tranh luận chưa được công bố...
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* ASK A LEADER — shown whenever a roleplay session is active */}
+        {activeRoleplay && name && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            style={{
+              background: 'rgba(255,255,255,0.06)',
+              border: `1.5px solid ${activeRoleplay.accentColor || 'rgba(232,184,75,0.4)'}44`,
+              borderRadius: '18px', padding: '1.1rem',
+              marginBottom: '0.8rem',
+              boxShadow: '0 6px 24px rgba(0,0,0,0.2)',
+              backdropFilter: 'blur(16px)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
+              <span style={{ fontSize: '1.2rem' }}>🎤</span>
+              <div>
+                <div style={{ fontSize: '0.72rem', color: activeRoleplay.accentColor || '#e8b84b', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Đặt câu hỏi chất vấn</div>
+                <div style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.45)', marginTop: 1 }}>Câu hỏi sẽ hiện trên màn hình chính</div>
+              </div>
+            </div>
+
+            {/* Leader selector — auto highlight active */}
+            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '0.6rem' }}>
+              {[
+                { idx: 0, flag: '🇺🇸', name: 'Trump' },
+                { idx: 1, flag: '🇮🇱', name: 'Netanyahu' },
+                { idx: 2, flag: '🇮🇷', name: 'Khamenei' },
+                { idx: 3, flag: '🇸🇦', name: 'MBS' },
+                { idx: 4, flag: '🇵🇸', name: 'Abbas' },
+              ].map(l => {
+                const isActive = activeRoleplay.cardIdx === l.idx;
+                const isSelected = rpAskLeader === l.idx;
+                return (
+                  <button key={l.idx}
+                    onClick={() => { setRpAskLeader(l.idx); setRpAskSent(false); }}
+                    style={{
+                      padding: '0.32rem 0.65rem', borderRadius: '20px',
+                      border: `1.5px solid ${isSelected ? (activeRoleplay.accentColor || '#e8b84b') : isActive ? 'rgba(255,255,255,0.25)' : 'rgba(255,255,255,0.10)'}`,
+                      background: isSelected ? `${activeRoleplay.accentColor || '#e8b84b'}25` : isActive ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.04)',
+                      color: isSelected ? (activeRoleplay.accentColor || '#e8b84b') : isActive ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.4)',
+                      fontSize: '0.78rem', fontWeight: isSelected || isActive ? 700 : 400,
+                      cursor: 'pointer', transition: 'all 0.18s',
+                      display: 'flex', alignItems: 'center', gap: '0.3rem',
+                    }}
+                  >
+                    {l.flag} {l.name}
+                    {isActive && !isSelected && <span style={{ fontSize: '0.55rem', opacity: 0.7 }}>●</span>}
+                  </button>
+                );
+              })}
+            </div>
+
+            {rpAskSent ? (
+              <div style={{ textAlign: 'center', color: '#3dd68c', fontWeight: 600, fontSize: '0.85rem', padding: '0.5rem' }}>
+                ✅ Câu hỏi đã gửi!
+              </div>
+            ) : (
+              <form
+                onSubmit={e => {
+                  e.preventDefault();
+                  const txt = rpAskText.trim();
+                  if (!txt || rpAskLeader === null) return;
+                  socket.emit('roleplay_ask', { cardIdx: rpAskLeader, text: txt });
+                  setRpAskText('');
+                  setRpAskSent(true);
+                  setTimeout(() => setRpAskSent(false), 4000);
+                }}
+                style={{ display: 'flex', gap: '0.4rem' }}
+              >
+                <input
+                  type="text"
+                  value={rpAskText}
+                  onChange={e => setRpAskText(e.target.value.slice(0, 300))}
+                  placeholder={rpAskLeader === null ? 'Chọn lãnh đạo phía trên trước...' : 'Nhập câu hỏi chất vấn...'}
+                  style={{
+                    flex: 1, padding: '0.55rem 0.75rem', borderRadius: '10px',
+                    border: '1.5px solid rgba(255,255,255,0.12)',
+                    background: 'rgba(255,255,255,0.06)',
+                    fontSize: '0.88rem', color: '#e8eaf0', outline: 'none',
+                    fontFamily: 'inherit',
+                  }}
+                />
+                <button type="submit" disabled={!rpAskText.trim() || rpAskLeader === null}
+                  style={{
+                    padding: '0.55rem 1rem', borderRadius: '10px',
+                    background: (rpAskText.trim() && rpAskLeader !== null) ? (activeRoleplay.accentColor || '#b5860d') : 'rgba(255,255,255,0.06)',
+                    border: 'none', color: (rpAskText.trim() && rpAskLeader !== null) ? '#fff' : 'rgba(255,255,255,0.3)',
+                    fontWeight: 700, fontSize: '0.82rem', cursor: (rpAskText.trim() && rpAskLeader !== null) ? 'pointer' : 'default',
+                    transition: 'all 0.2s', whiteSpace: 'nowrap',
+                  }}
+                >Gửi 📤</button>
+              </form>
+            )}
+          </motion.div>
+        )}
 
         {/* ACTIVE QUIZ OVERLAY */}
         <AnimatePresence>
@@ -631,15 +776,17 @@ export default function MobileVote() {
           )}
         </AnimatePresence>
 
-        {/* Tab Bar */}
-        <div style={{ display:'flex', background:'rgba(255,255,255,0.75)', backdropFilter:'blur(20px)', borderRadius:'14px', padding:'4px', border:'1px solid rgba(0,0,0,0.07)', marginBottom:'0.9rem', boxShadow:'0 2px 8px rgba(0,0,0,0.05)' }}>
-          {[['vote','🗳️','Bỏ phiếu'],['question','❓','Câu hỏi'],['comment','💬','Bình luận']].map(([id,icon,label]) => (
-            <motion.button key={id} onClick={()=>setTab(id)}
-              whileTap={{ scale: 0.97 }}
-              style={{ flex:1, padding:'0.6rem 0', borderRadius:'10px', border:'none', background:tab===id?'#b5860d':'transparent', color:tab===id?'#fff':'#78726a', cursor:'pointer', fontSize:'0.82rem', fontWeight:tab===id?600:400, fontFamily:'Inter,sans-serif', transition:'all 0.2s', display:'flex', alignItems:'center', justifyContent:'center', gap:'5px', boxShadow: tab===id ? '0 2px 8px rgba(181,134,13,0.25)' : 'none' }}>
-              <span>{icon}</span><span>{label}</span>
-            </motion.button>
-          ))}
+        {/* Tab Bar — pinned just above reaction bar */}
+        <div style={{ position:'fixed', bottom:60, left:0, right:0, padding:'0 0.75rem 0.4rem', zIndex:49 }}>
+          <div style={{ display:'flex', background:'rgba(13,17,23,0.96)', backdropFilter:'blur(24px)', borderRadius:'14px', padding:'4px', border:'1px solid rgba(255,255,255,0.09)', boxShadow:'0 -2px 16px rgba(0,0,0,0.4)', maxWidth:480, margin:'0 auto' }}>
+            {[['vote','🗳️','Bỏ phiếu'],['question','❓','Câu hỏi'],['comment','💬','Bình luận']].map(([id,icon,label]) => (
+              <motion.button key={id} onClick={()=>setTab(id)}
+                whileTap={{ scale: 0.97 }}
+                style={{ flex:1, padding:'0.55rem 0', borderRadius:'10px', border:'none', background:tab===id?'#b5860d':'transparent', color:tab===id?'#fff':'rgba(255,255,255,0.45)', cursor:'pointer', fontSize:'0.80rem', fontWeight:tab===id?700:400, fontFamily:'Inter,sans-serif', transition:'all 0.2s', display:'flex', alignItems:'center', justifyContent:'center', gap:'5px', boxShadow: tab===id ? '0 2px 8px rgba(181,134,13,0.35)' : 'none' }}>
+                <span>{icon}</span><span>{label}</span>
+              </motion.button>
+            ))}
+          </div>
         </div>
 
         {/* VOTE TAB */}
@@ -683,7 +830,7 @@ export default function MobileVote() {
           </AnimatePresence>
         )}
 
-        {/* QUESTION TAB (Chatbot UI) */}
+        {/* QUESTION TAB */}
         {tab==='question' && (
           <motion.div initial={{ opacity:0 }} animate={{ opacity:1 }}>
             {!questionsOn ? (
@@ -693,12 +840,40 @@ export default function MobileVote() {
                 <p style={{ fontSize:'0.8rem', color:'#a89e94', marginTop:'0.3rem' }}>Vui lòng đợi quản trị viên mở lại.</p>
               </div>
             ) : (
-              <div style={{ display:'flex', flexDirection:'column', gap:'1.2rem' }}>
-                
-                {/* 1. CHAT HISTORY (Top) */}
+              <div style={{ display:'flex', flexDirection:'column-reverse', gap:'1.2rem' }}>
+
+                {/* 1. CHAT INPUT — at bottom (first in DOM, pushed to bottom by column-reverse) */}
+                <form onSubmit={sendQuestion} style={{ display:'flex', flexDirection:'column', gap:'0.8rem', background:'rgba(255,255,255,0.02)', padding:'1rem', borderRadius:'16px', border:'1px solid rgba(255,255,255,0.08)' }}>
+                  <textarea value={question} onChange={e=>setQuestion(e.target.value)} placeholder="Nhắn tin cho Trợ lý AI hoặc gửi câu hỏi trực tiếp cho diễn giả..." rows={2}
+                    style={{ ...S.input, resize:'none', lineHeight:1.55, borderRadius:'12px' }} required
+                    onFocus={e => e.target.style.borderColor = 'rgba(181,134,13,0.5)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.12)'} />
+                  <div style={{ display:'flex', gap:'0.6rem', marginTop:'0.2rem' }}>
+                    <motion.button type="button" onClick={askAI} disabled={!question.trim() || isAskingAI}
+                      whileHover={{ scale: (!question.trim() || isAskingAI) ? 1 : 1.02 }}
+                      whileTap={{ scale: (!question.trim() || isAskingAI) ? 1 : 0.98 }}
+                      style={{ flex:1, padding:'0.75rem', borderRadius:'12px', background:'linear-gradient(135deg, #10b981, #059669)', color:'#fff', border:'none', fontWeight:700, fontSize:'0.82rem', cursor:(!question.trim() || isAskingAI)?'not-allowed':'pointer', opacity:(!question.trim() || isAskingAI)?0.6:1, display:'flex', alignItems:'center', justifyContent:'center', gap:'0.3rem', boxShadow:'0 4px 12px rgba(16,185,129,0.3)' }}>
+                      🤖 {isAskingAI ? 'Tư duy...' : 'Hỏi AI'}
+                    </motion.button>
+                    <motion.button type="submit" disabled={!question.trim()}
+                      whileHover={{ scale: question.trim() ? 1.02 : 1 }}
+                      whileTap={{ scale: 0.98 }}
+                      style={{ flex:1, padding:'0.75rem', borderRadius:'12px', background:'linear-gradient(135deg,#f0ca6a 0%,#e8b84b 50%,#c89828 100%)', color:'#0d1117', border:'none', fontWeight:700, fontSize:'0.82rem', cursor:!question.trim()?'not-allowed':'pointer', opacity:!question.trim()?0.6:1, display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 4px 12px rgba(232,184,75,0.3)' }}>
+                      Gửi Diễn Giả →
+                    </motion.button>
+                  </div>
+                </form>
+
+                {/* 2. CHAT HISTORY — reversed order (newest at bottom) */}
                 {(aiChats.length > 0 || myAnswer) && (
                   <div style={{ display:'flex', flexDirection:'column', gap:'0.8rem', background:'rgba(255,255,255,0.03)', padding:'1rem', borderRadius:'16px', border:'1px solid rgba(255,255,255,0.05)' }}>
-                    
+                    {/* Load more button */}
+                    {aiChats.length > qaVisible && (
+                      <button onClick={() => setQaVisible(v => v + 5)}
+                        style={{ alignSelf:'center', padding:'0.35rem 1.2rem', borderRadius:'20px', border:'1px solid rgba(255,255,255,0.12)', background:'rgba(255,255,255,0.04)', color:'rgba(255,255,255,0.5)', fontSize:'0.72rem', cursor:'pointer', fontFamily:'inherit', marginBottom:'0.4rem' }}>
+                        ↑ Tải thêm tin nhắn cũ hơn
+                      </button>
+                    )}
+
                     {myAnswer && (
                       <div style={{ background:'rgba(22,163,74,0.08)', border:'1px solid rgba(22,163,74,0.25)', borderRadius:'14px', padding:'1rem', marginBottom:'0.5rem' }}>
                         <div style={{ fontSize:'0.75rem', color:'#16a34a', fontWeight:700, marginBottom:'0.4rem', textTransform:'uppercase', letterSpacing:'0.05em' }}>🔔 Phản hồi từ Nhóm Diễn Giả</div>
@@ -706,52 +881,29 @@ export default function MobileVote() {
                         <div style={{ fontSize:'0.9rem', color:'#ffffff', lineHeight:1.5, fontWeight:500 }}>{myAnswer.answer}</div>
                       </div>
                     )}
-                    
-                    {aiChats.map(msg => (
-                      <motion.div key={msg.id} initial={{ opacity:0, y:10 }} animate={{ opacity:1, y:0 }}
+
+                    {/* Show only last qaVisible messages, newest at bottom */}
+                    {aiChats.slice(-qaVisible).map(msg => (
+                      <motion.div key={msg.id} initial={{ opacity:0, y:6 }} animate={{ opacity:1, y:0 }}
                         style={{ display:'flex', flexDirection:'column', alignItems: msg.role === 'user' ? 'flex-end' : 'flex-start' }}>
                         <div style={{ fontSize:'0.65rem', color:'#7a8494', marginBottom:'0.25rem', padding:'0 5px' }}>
                           {msg.role === 'user' ? (name || 'Bạn') : '🤖 Chuyên gia AI Gemini'}
                         </div>
-                        <div style={{ 
-                          maxWidth:'92%', padding:'0.8rem 1rem', borderRadius:'14px', 
+                        <div style={{
+                          maxWidth:'92%', padding:'0.8rem 1rem', borderRadius:'14px',
                           background: msg.role === 'user' ? 'linear-gradient(135deg, #10b981, #059669)' : msg.error ? 'rgba(220,38,38,0.1)' : 'rgba(255,255,255,0.06)',
                           color: msg.role === 'user' ? '#fff' : msg.error ? '#ffb3b3' : '#e8eaf0',
                           border: msg.role === 'user' ? 'none' : msg.error ? '1px solid rgba(220,38,38,0.3)' : '1px solid rgba(255,255,255,0.15)',
-                          fontSize:'0.88rem', lineHeight:1.55, whiteSpace:'pre-line', textAlign: msg.role === 'user' ? 'right' : 'justify'
+                          fontSize:'0.88rem', lineHeight:1.55, whiteSpace:'pre-line',
                         }}>
                           {msg.loading ? (
-                            <span style={{ display:'flex', alignItems:'center', gap:'5px', fontStyle:'italic' }}><span className="live-dot" style={{width:6,height:6,background:'#e8b84b',boxShadow:'none',animation:'blink-cursor 0.9s infinite'}}></span> Đang nghĩ...</span>
+                            <span style={{ display:'flex', alignItems:'center', gap:'5px', fontStyle:'italic' }}><span style={{width:6,height:6,background:'#e8b84b',borderRadius:'50%',display:'inline-block'}}></span> Đang nghĩ...</span>
                           ) : msg.text.replace(/\*\*/g, '')}
                         </div>
                       </motion.div>
                     ))}
                   </div>
                 )}
-
-                {/* 2. CHAT INPUT (Bottom) */}
-                <form onSubmit={sendQuestion} style={{ display:'flex', flexDirection:'column', gap:'0.8rem', background:'rgba(255,255,255,0.02)', padding:'1rem', borderRadius:'16px', border:'1px solid rgba(255,255,255,0.08)' }}>
-                  <textarea value={question} onChange={e=>setQuestion(e.target.value)} placeholder="Nhắn tin cho Trợ lý AI hoặc gửi câu hỏi trực tiếp cho diễn giả..." rows={3}
-                    style={{ ...S.input, resize:'none', lineHeight:1.55, borderRadius:'12px' }} required
-                    onFocus={e => e.target.style.borderColor = 'rgba(181,134,13,0.5)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.12)'} />
-                  
-                  <div style={{ display:'flex', gap:'0.6rem', marginTop:'0.2rem' }}>
-                    <motion.button type="button" onClick={askAI} disabled={!question.trim() || isAskingAI}
-                      whileHover={{ scale: (!question.trim() || isAskingAI) ? 1 : 1.02 }}
-                      whileTap={{ scale: (!question.trim() || isAskingAI) ? 1 : 0.98 }}
-                      style={{ flex:1, padding:'0.9rem', borderRadius:'12px', background:'linear-gradient(135deg, #10b981, #059669)', color:'#fff', border:'none', fontWeight:700, fontSize:'0.85rem', cursor:(!question.trim() || isAskingAI)?'not-allowed':'pointer', opacity:(!question.trim() || isAskingAI)?0.6:1, display:'flex', alignItems:'center', justifyContent:'center', gap:'0.3rem', boxShadow:'0 4px 12px rgba(16,185,129,0.3)' }}>
-                      🤖 {isAskingAI ? 'Tư duy...' : 'Hỏi AI'}
-                    </motion.button>
-
-                    <motion.button type="submit" disabled={!question.trim()}
-                      whileHover={{ scale: question.trim() ? 1.02 : 1 }}
-                      whileTap={{ scale: 0.98 }}
-                      style={{ flex:1, padding:'0.9rem', borderRadius:'12px', background:'linear-gradient(135deg,#f0ca6a 0%,#e8b84b 50%,#c89828 100%)', color:'#0d1117', border:'none', fontWeight:700, fontSize:'0.85rem', cursor:!question.trim()?'not-allowed':'pointer', opacity:!question.trim()?0.6:1, display:'flex', alignItems:'center', justifyContent:'center', boxShadow:'0 4px 12px rgba(232,184,75,0.3)' }}>
-                      Gửi Diễn Giả →
-                    </motion.button>
-                  </div>
-                </form>
-
               </div>
             )}
           </motion.div>
@@ -814,7 +966,7 @@ export default function MobileVote() {
 
 const S = {
   page: { height:'100%', overflowY:'auto', position:'relative', fontFamily:'Inter,sans-serif', WebkitFontSmoothing:'antialiased', color:'#e8eaf0' },
-  content: { position:'relative', zIndex:1, maxWidth:'480px', margin:'0 auto', padding:'1.2rem 1rem 90px' },
+  content: { position:'relative', zIndex:1, maxWidth:'480px', margin:'0 auto', padding:'1.2rem 1rem 140px' },
   label: { display:'block', fontSize:'0.78rem', fontWeight:600, color:'#7a8494', marginBottom:'0.4rem', letterSpacing:'0.03em' },
   input: { width:'100%', padding:'0.85rem 1rem', borderRadius:'12px', border:'1px solid rgba(255,255,255,0.10)', background:'rgba(255,255,255,0.05)', color:'#e8eaf0', fontSize:'0.9rem', outline:'none', fontFamily:'Inter,sans-serif', backdropFilter:'blur(10px)', transition:'border-color 0.2s', boxShadow:'0 2px 8px rgba(0,0,0,0.2)' },
   primaryBtn: { padding:'0.95rem', borderRadius:'14px', background:'linear-gradient(135deg,#f0ca6a 0%,#e8b84b 50%,#c89828 100%)', color:'#0d1117', border:'none', fontWeight:700, fontSize:'1rem', cursor:'pointer', width:'100%', fontFamily:'Inter,sans-serif', boxShadow:'0 4px 16px rgba(232,184,75,0.35)', letterSpacing:'0.01em' },

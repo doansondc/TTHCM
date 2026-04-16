@@ -20,7 +20,7 @@ function BambooJoint({ color }) {
 }
 
 export default function SlideBamboo({ data }) {
-  const { subtitle, title, sections } = data;
+  const { subtitle, title, desc, sections } = data;
   return (
     <div style={{
       display: 'flex', flexDirection: 'column',
@@ -77,6 +77,21 @@ export default function SlideBamboo({ data }) {
         >
           {title}
         </motion.h2>
+
+        {/* Optional description of bamboo diplomacy */}
+        {desc && (
+          <motion.p
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+            style={{
+              fontSize: '0.82rem', color: 'rgba(61,214,140,0.80)', fontStyle: 'italic',
+              lineHeight: 1.6, maxWidth: '90%', margin: 0, fontWeight: 500,
+              borderLeft: '2px solid rgba(61,214,140,0.35)',
+              paddingLeft: '0.75rem',
+            }}
+          >
+            {desc}
+          </motion.p>
+        )}
       </div>
 
       {/* 3-column bamboo grid */}
@@ -131,7 +146,7 @@ export default function SlideBamboo({ data }) {
             {/* Content */}
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1, gap: '0.7rem', padding: '0 1rem 1rem' }}>
               <p style={{
-                fontSize: '1.55rem', fontStyle: 'italic', fontWeight: 600,
+                fontSize: '1.08rem', fontStyle: 'italic', fontWeight: 600,
                 color: s.color, textShadow: `0 0 12px ${s.color}50`,
                 margin: 0,
               }}>
@@ -155,7 +170,7 @@ export default function SlideBamboo({ data }) {
                       background: s.color, boxShadow: `0 0 6px ${s.color}`,
                       flexShrink: 0, marginTop: '0.5rem',
                     }} />
-                    <span style={{ fontSize: '1.3rem', color: 'var(--text-secondary)', lineHeight: 1.65, fontWeight: 500 }}>
+                    <span style={{ fontSize: '0.96rem', color: 'var(--text-secondary)', lineHeight: 1.65, fontWeight: 500 }}>
                       {pt}
                     </span>
                   </motion.div>

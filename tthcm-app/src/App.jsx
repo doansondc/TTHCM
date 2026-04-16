@@ -16,16 +16,19 @@ function ProtectedPresentation() {
   if (!unlocked) return <LockScreen onUnlock={handleUnlock} />;
   return <PresentationView />;
 }
+import { ErrorBoundary } from './ErrorBoundary';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/"      element={<ProtectedPresentation />} />
-        <Route path="/vote"  element={<MobileVote />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-      </Routes>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <Routes>
+          <Route path="/"      element={<ProtectedPresentation />} />
+          <Route path="/vote"  element={<MobileVote />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+        </Routes>
+      </Router>
+    </ErrorBoundary>
   );
 }
 

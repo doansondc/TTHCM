@@ -33,67 +33,104 @@ export const slideData = [
   },
 
   // ─────────────────────────────────────────────
-  // S2 — Nguyên nhân xung đột → 3 Flip Cards
+  // S2a — Địa Chính Trị & Tài Nguyên
   // ─────────────────────────────────────────────
   {
-    id: 's2',
+    id: 's2a',
     bg: 'https://images.unsplash.com/photo-1569012871812-f38ee64cd54c?auto=format&fit=crop&w=1920&q=80',
-    type: 'flip-cards',
+    type: 'detail-card',
     data: {
-      subtitle: 'Nguồn Gốc Căng Thẳng',
-      title: 'Nguyên Nhân Lõi Của Xung Đột',
-      cards: [
-        {
-          title: 'Địa Chính Trị & Tài Nguyên',
-          icon: '🛢️',
-          accentColor: '#f0c040',
-          front: {
-            headline: 'Tài sản chiến lược quan trọng nhất thế giới',
-            image: 'https://images.pexels.com/photos/1427541/pexels-photo-1427541.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=1',
-          },
-          back: {
-            points: [
-              'Sở hữu trữ lượng dầu mỏ & khí đốt khổng lồ, quyết định an ninh năng lượng toàn cầu.',
-              'Các tuyến hàng hải huyết mạch: Kênh đào Suez, eo biển Hormuz — cổng họng kinh tế thế giới.',
-              'Ai kiểm soát Trung Đông, người đó nắm chìa khóa giá năng lượng toàn hành tinh.',
-            ],
-          },
+      subtitle: 'Nguyên Nhân Lõi — 1/3',
+      title: 'Địa Chính Trị & Tài Nguyên',
+      card: {
+        title: 'Địa Chính Trị & Tài Nguyên',
+        icon: '🛢️',
+        accentColor: '#f0c040',
+        layout: 'energy',
+        front: {
+          headline: 'Tài sản chiến lược quan trọng nhất thế giới',
+          renderChart: 'pie',
         },
-        {
-          title: 'Xung Đột Tôn Giáo',
-          icon: '☪️',
-          accentColor: '#60a5fa',
-          front: {
-            headline: '1300 năm phân chia Sunni — Shia',
-            image: '/images/mosque.jpg',
-          },
-          back: {
-            points: [
-              'Hệ phái Sunni (Ả Rập Xê-út) vs Shia (Iran) — cuộc chiến quyền lực tôn giáo hơn 13 thế kỷ.',
-              'Thánh địa Jerusalem — giao điểm thiêng liêng của Do Thái giáo, Hồi giáo và Kitô giáo.',
-              'Mỗi cuộc bầu cử, mỗi cuộc xung đột đều bị bóng ma tôn giáo chi phối.',
-            ],
-          },
+        subImages: [
+          { src: '/images/Kenh_dao_Suez.webp', caption: 'Kênh đào Suez — giảm chi phí lưu thông đường biển' },
+          { src: '/images/Eo_bien_Hormuz.jpg', caption: 'Eo biển Hormuz — cửa ngõ xuất khẩu dầu mỏ' },
+        ],
+        back: {
+          points: [
+            'Sở hữu trữ lượng dầu mỏ & khí đốt khổng lồ, quyết định an ninh năng lượng toàn cầu.',
+            'Kênh đào Suez: tạo nên để giảm chi phí lưu thông đường biển, rút ngắn hàng nghìn km.',
+            'Eo biển Hormuz: cửa ngõ vận chuyển dầu mỏ từ Vịnh Ba Tư ra bên ngoài.',
+          ],
         },
-        {
-          title: 'Vết Cắt Lịch Sử',
-          icon: '🗺️',
-          accentColor: '#f87171',
-          front: {
-            headline: 'Thoả ước Sykes-Picot 1916',
-            image: '/images/sykes-picot.jpg',
-          },
-          back: {
-            points: [
-              'Anh và Pháp sau Thế chiến I dùng thước kẻ phân chia Trung Đông theo lợi ích thực dân.',
-              'Đường biên giới thẳng tắp phớt lờ ranh giới dân tộc — nhét các sắc tộc thù địch vào chung 1 quốc gia.',
-              'Iraq, Syria, Lebanon ngày nay vẫn đang trả giá cho sai lầm địa chính trị 100 năm trước.',
-            ],
-          },
-        },
-      ],
+      },
     },
-    mobileSummary: 'Phần 1 — 3 nguyên nhân cốt lõi dẫn đến xung đột tại Trung Đông: Tài nguyên, Tôn giáo, Lịch sử.',
+    mobileSummary: 'Nguyên nhân 1/3 — Địa chính trị: Dầu mỏ, Kênh Suez và Eo biển Hormuz.',
+  },
+
+  // ─────────────────────────────────────────────
+  // S2b — Xung Đột Tôn Giáo Sunni-Shia
+  // ─────────────────────────────────────────────
+  {
+    id: 's2b',
+    bg: 'https://images.unsplash.com/photo-1569012871812-f38ee64cd54c?auto=format&fit=crop&w=1920&q=80',
+    type: 'detail-card',
+    data: {
+      subtitle: 'Nguyên Nhân Lõi — 2/3',
+      title: 'Xung Đột Tôn Giáo',
+      card: {
+        title: 'Xung Đột Tôn Giáo',
+        icon: '☪️',
+        accentColor: '#60a5fa',
+        layout: 'religion',
+        front: {
+          headline: '1300 năm phân chia Sunni — Shia',
+          image: '/images/Shunni_Shia.avif',
+        },
+        subImages: [
+          { src: '/images/Shunn_Shia_2.avif', caption: 'Phân bố Sunni và Shia chi tiết tại Trung Đông' },
+        ],
+        back: {
+          points: [
+            'Phái Sunni ưu tiên chọn lãnh đạo bằng sự đồng thuận của cộng đồng.',
+            'Phái Shia khẳng định lãnh đạo phải thuộc huyết thống trực hệ của Thiên sứ Muhammad.',
+            'Thánh địa Jerusalem — giao điểm thiêng liêng của Do Thái giáo, Hồi giáo và Kitô giáo.',
+            'Mỗi cuộc bầu cử, mỗi cuộc xung đột đều bị bóng ma tôn giáo 13 thế kỷ chi phối.',
+          ],
+        },
+      },
+    },
+    mobileSummary: 'Nguyên nhân 2/3 — Tôn giáo: 1300 năm chia rẽ Sunni–Shia và Jerusalem.',
+  },
+
+  // ─────────────────────────────────────────────
+  // S2c — Vết Cắt Lịch Sử
+  // ─────────────────────────────────────────────
+  {
+    id: 's2c',
+    bg: 'https://images.unsplash.com/photo-1569012871812-f38ee64cd54c?auto=format&fit=crop&w=1920&q=80',
+    type: 'detail-card',
+    data: {
+      subtitle: 'Nguyên Nhân Lõi — 3/3',
+      title: 'Vết Cắt Lịch Sử',
+      card: {
+        title: 'Vết Cắt Lịch Sử',
+        icon: '🗺️',
+        accentColor: '#f87171',
+        layout: 'history',
+        front: {
+          headline: 'Thoả ước Sykes-Picot 1916 & Kế hoạch phân chia LHQ 1947',
+          image: '/images/UN_chia_cat_Palestine.webp',
+        },
+        back: {
+          points: [
+            'Anh và Pháp sau Thế chiến I dùng thước kẻ phân chia Trung Đông theo lợi ích thực dân.',
+            'Đường biên giới thẳng tắp phớt lờ ranh giới dân tộc — nhét các sắc tộc thù địch vào chung 1 quốc gia.',
+            'Iraq, Syria, Lebanon ngày nay vẫn đang trả giá cho sai lầm địa chính trị 100 năm trước.',
+          ],
+        },
+      },
+    },
+    mobileSummary: 'Nguyên nhân 3/3 — Lịch sử: Sykes-Picot 1916 và kế hoạch phân chia LHQ 1947.',
   },
 
   // ─────────────────────────────────────────────
@@ -102,10 +139,11 @@ export const slideData = [
   {
     id: 's3',
     bg: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1920&q=80',
-    type: 'flip-cards',
+    type: 'static-cards',
     data: {
       subtitle: 'Mặt Trận Khốc Liệt',
       title: 'Động Cơ Của Israel & Palestine',
+      intro: 'Nguyên nhân cốt lõi của xung đột là tranh chấp lãnh thổ và quyền tự quyết giữa người Do Thái và Ả Rập trên cùng một vùng đất. Sau World War II, United Nations đưa ra kế hoạch chia vùng năm 1947 nhưng bị phía Ả Rập bác bỏ, dẫn đến chiến tranh và sự ra đời của Israel năm 1948, khiến nhiều người Palestine mất đất và trở thành tị nạn. Xung đột kéo dài đến nay do các tranh chấp chưa được giải quyết về lãnh thổ, quy chế Jerusalem, người tị nạn và các vòng bạo lực trả đũa liên tục.',
       cards: [
         {
           title: 'Israel 🇮🇱',
@@ -113,7 +151,7 @@ export const slideData = [
           accentColor: '#60a5fa',
           front: {
             headline: 'Bảo vệ Nhà nước Do Thái duy nhất',
-            image: 'https://images.unsplash.com/photo-1559598467-f8b76c8155d0?auto=format&fit=crop&w=600&q=80',
+            image: '/images/Slide5_The1_Israel.jpg',
           },
           back: {
             points: [
@@ -129,7 +167,7 @@ export const slideData = [
           accentColor: '#34d97b',
           front: {
             headline: 'Đấu tranh cho quyền tự quyết dân tộc',
-            image: 'https://images.unsplash.com/photo-1489824904134-891ab64532f1?auto=format&fit=crop&w=600&q=80',
+            image: '/images/Slide5_The_2_Palestine.jpg',
           },
           back: {
             points: [
@@ -145,15 +183,79 @@ export const slideData = [
   },
 
   // ─────────────────────────────────────────────
-  // S4 — Iran & Mỹ → 2 Flip Cards
+  // S3b — Mâu Thuẫn Iran & Arab Saudi (Mới)
   // ─────────────────────────────────────────────
+  {
+    id: 's3b',
+    bg: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80',
+    type: 'static-cards',
+    data: {
+      subtitle: 'Cạnh Tranh Khu Vực',
+      title: 'Mâu Thuẫn Iran & Arab Saudi',
+      intro: 'Xung đột giữa Iran và Saudi Arabia chủ yếu là cạnh tranh quyền lực khu vực (ai lãnh đạo Trung Đông), kết hợp với mâu thuẫn tôn giáo (Shia vs Sunni) và lợi ích chính trị–kinh tế. Hai bên hiếm khi đánh trực tiếp mà thường đối đầu gián tiếp (proxy war) ở Syria, Yemen — mỗi bên ủng hộ phe khác nhau để mở rộng ảnh hưởng.',
+      cards: [
+        {
+          title: 'Nguyên nhân chung',
+          icon: '⚔️',
+          accentColor: '#f0c040',
+          front: {
+            headline: 'Proxy war kéo dài hàng thập kỷ',
+            image: '/images/slide6_the1_war.jpg',
+          },
+          back: {
+            points: [
+              'Cạnh tranh vị thế "lãnh đạo Trung Đông" kết hợp xung đột Shia (Iran) vs Sunni (Saudi).',
+              'Proxy war tại Syria và Yemen: mỗi bên hậu thuẫn phe đối lập để giành ảnh hưởng.',
+              'Căng thẳng leo thang do tấn công quân sự và tranh chấp năng lượng quanh eo biển Hormuz.',
+            ],
+          },
+        },
+        {
+          title: 'Động cơ của Iran 🇯🇷',
+          icon: '⚛️',
+          accentColor: '#34d97b',
+          front: {
+            headline: '"Trăng lưỡi liềm Shia" — vươn tới các nước láng giềng',
+            image: '/images/Slide6_The2_Iran.webp',
+          },
+          back: {
+            points: [
+              'Muốn phá vỡ sự cô lập của phương Tây, xuất khẩu cách mạng Hồi giáo Shia.',
+              'Gia tăng ảnh hưởng qua "Trục Kháng chiến": Iraq, Syria, Lebanon (Hezbollah), Yemen (Houthi).',
+              'Chương trình hạt nhân là đòn bẩy ngoại giao tối thượng với phương Tây.',
+            ],
+          },
+        },
+        {
+          title: 'Động cơ của Arab Saudi 🇸🇦',
+          icon: '👑',
+          accentColor: '#f0c040',
+          front: {
+            headline: 'Bảo vệ vị thế lãnh đạo thế giới Hồi giáo',
+            image: '/images/Slide6_The3_Arab.jpg',
+          },
+          back: {
+            points: [
+              'Bảo vệ vị thế là lãnh đạo thế giới Hồi giáo (Sunni) trước sự bành trướng của Iran.',
+              'Ngăn chặn "Trăng lưỡi liềm Shia" lan sang vùng Vịnh Ba Tư.',
+              'Bảo vệ an ninh các mỏ dầu khổng lồ — nguồn sống của nền kinh tế 1.000 tỷ USD.',
+            ],
+          },
+        },
+      ],
+    },
+    mobileSummary: 'Phần 2b — Mâu thuẫn Iran & Arab Saudi: proxy war Syria, Yemen và cạnh tranh quyền lực khu vực.',
+  },
+
+
   {
     id: 's4',
     bg: 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=1920&q=80',
-    type: 'flip-cards',
+    type: 'static-cards',
     data: {
       subtitle: 'Cán Cân Siêu Cường',
       title: 'Động Cơ Của Iran & Mỹ — Cuộc Chiến Ủy Nhiệm',
+      intro: 'Xung đột giữa Iran và United States bắt nguồn từ mất lòng tin lịch sử và đối đầu chính trị: Mỹ từng can thiệp vào Iran (đặc biệt là đảo chính 1953), còn sau Iranian Revolution, Iran trở thành chế độ chống Mỹ mạnh mẽ. Căng thẳng leo thang do chương trình hạt nhân của Iran, các lệnh trừng phạt của Mỹ và cạnh tranh ảnh hưởng ở Trung Đông. Xung đột còn bị đẩy cao bởi đối đầu quân sự trực tiếp và nguy cơ chiến tranh, đặc biệt liên quan đến hạt nhân và kiểm soát eo biển Hormuz.',
       cards: [
         {
           title: 'Iran 🇮🇷',
@@ -161,7 +263,7 @@ export const slideData = [
           accentColor: '#34d97b',
           front: {
             headline: '"Phòng thủ chủ động" — chiến đấu ngoài biên giới',
-            image: 'https://images.unsplash.com/photo-1564625235187-2e97e2acf7c0?auto=format&fit=crop&w=600&q=80',
+            image: '/images/Slide7_The1_Iran.webp',
           },
           back: {
             points: [
@@ -177,7 +279,7 @@ export const slideData = [
           accentColor: '#60a5fa',
           front: {
             headline: '"Bảo lãnh" cho trật tự Trung Đông',
-            image: 'https://images.unsplash.com/photo-1541417904950-b855846fe074?auto=format&fit=crop&w=600&q=80',
+            image: '/images/Slide7_The2_US.avif',
           },
           back: {
             points: [
@@ -202,62 +304,140 @@ export const slideData = [
     data: {
       subtitle: 'Hoạt Động Tương Tác',
       title: 'Nhập Vai Lãnh Đạo Quốc Gia',
-      desc: 'Bấm vào thẻ để nhập vai và đưa ra quyết định lịch sử.',
+      desc: 'Bối cảnh: Xung đột Iran–Mỹ–Israel vừa bùng phát. Chọn lãnh đạo để bắt đầu — bốc thăm thành viên nhập vai.',
       cards: [
         {
-          country: 'Hoa Kỳ', flag: '🇺🇸', leader: 'Tổng thống Mỹ',
-          image: 'https://images.pexels.com/photos/1202723/pexels-photo-1202723.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=1',
+          country: 'Hoa Kỳ', flag: '🇺🇸',
+          leader: 'Tổng thống Mỹ — Donald Trump',
+          leaderName: 'Donald Trump',
+          leaderImage: '/images/Donald_Trump.webp',
           accentColor: '#60a5fa',
-          question: 'Iran vừa phóng tên lửa vào căn cứ Mỹ, 100 binh sĩ bị thương. Lệnh của ông?',
+          question: 'Tại sao Mỹ tấn công Iran trong lúc đang đàm phán hạt nhân?',
           options: [
-            { text: 'Phóng Tomahawk san phẳng radar Tây Iran', result: '📌 Phỏng đoán 🤔 — Iran phản kích Tel Aviv, bùng nổ Thế chiến III.' },
-            { text: 'Phủ nhận thiệt hại + tăng cấm vận + không kích mạng', result: '📚 Lịch sử! Trump chọn xuống thang sau vụ ám sát Soleimani (01/2020).' },
+            {
+              label: '"Chúng ta đã cho Iran đủ cơ hội — 5 vòng đàm phán thất bại, đã đến lúc dùng sức mạnh."',
+              type: 'hypo',
+              result: '🔮 Hệ quả: Nếu Trump chọn lý do này, ông sẽ mất ưu thế đạo đức vì tự thừa nhận phá vỡ đàm phán đang tiến triển. Áp lực nội địa và quốc tế sẽ lớn hơn nhiều.',
+            },
+            {
+              label: '"Iran đang đàm phán để câu giờ — tôi có bằng chứng tình báo họ sắp tấn công trước. Chúng ta không thể chờ."',
+              type: 'fact',
+              result: '🔮 Hệ quả: Đây là lập trường thực tế của Trump. Ông tuyên bố Iran "sẽ tấn công trước" và CIA xác nhận vị trí họp của Khamenei. Chiến tranh nổ ra. Tuy nhiên, Lầu Năm Góc sau đó nói với Quốc hội rằng không có bằng chứng Iran chuẩn bị tấn công trước.',
+            },
+            {
+              label: '"Netanyahu (Israel) thuyết phục tôi — ông ấy có thông tin tình báo quan trọng mà tôi không thể bỏ qua."',
+              type: 'hypo',
+              result: '🔮 Hệ quả: Trump thực tế phủ nhận điều này, nói "Tôi có thể đã kéo Israel vào chứ không phải ngược lại." Việc thừa nhận bị Netanyahu dẫn dắt sẽ làm suy yếu hình ảnh "lãnh đạo mạnh mẽ" của ông.',
+            },
           ],
         },
         {
-          country: 'Israel', flag: '🇮🇱', leader: 'Thủ tướng Israel',
-          image: 'https://images.pexels.com/photos/2169011/pexels-photo-2169011.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=1',
+          country: 'Israel', flag: '🇮🇱',
+          leader: 'Thủ tướng Israel — Benjamin Netanyahu',
+          leaderName: 'Benjamin Netanyahu',
+          leaderImage: '/images/Netanyahu.jpg',
           accentColor: '#a78bfa',
-          question: '5000 quả rocket Hamas khai hỏa lúc 6:30 sáng. Phản ứng thế nào?',
+          question: 'Israel và Mỹ tấn công Iran trong lúc đàm phán. Netanyahu giải thích thế nào?',
           options: [
-            { text: 'Phản kích phủ đầu diện rộng — chiến dịch Thanh sắt', result: '📚 Lịch sử! Chiến dịch Cây gậy Sắt (10/2023), Israel thề tiêu diệt Hamas.' },
-            { text: 'Kêu gọi LHQ, nhượng bộ đàm phán', result: '📌 Phỏng đoán 🤔 — Nội các lật đổ ngay. Israel mất toàn bộ sức răn đe.' },
+            {
+              label: '"Chúng tôi có bằng chứng Iran chuẩn bị tấn công Israel trước trong vòng 48 giờ."',
+              type: 'hypo',
+              result: '🔮 Hệ quả: Không có tuyên bố này từ Netanyahu. IAEA và nhiều chuyên gia cũng không xác nhận Iran có kế hoạch tấn công trước. Tuyên bố này nếu sai sẽ là thảm họa ngoại giao cho Israel.',
+            },
+            {
+              label: '"Tôi đã thuyết phục Trump — đây là quyết định chung và hoàn toàn đúng đắn."',
+              type: 'hypo',
+              result: '🔮 Hệ quả: Netanyahu thực tế không thừa nhận "thuyết phục Trump" mà nhấn mạnh "phối hợp sâu". Trump cũng phủ nhận bị Netanyahu kéo vào chiến tranh. Cả hai đều cố giữ hình ảnh "chủ động".',
+            },
+            {
+              label: '"Đây là tự vệ phòng ngừa — Iran đang tích lũy đủ uranium để làm bom trong vài tháng. Chúng tôi không thể chờ."',
+              type: 'fact',
+              result: '🔮 Hệ quả: Đúng với thực tế. Netanyahu gọi đây là "tấn công phòng ngừa" nhằm loại bỏ "hai mối đe dọa sinh tồn" — hạt nhân và tên lửa. Ông tuyên bố Iran đã bị "tàn phá hoàn toàn" về năng lực hạt nhân.',
+            },
           ],
         },
         {
-          country: 'Iran', flag: '🇮🇷', leader: 'Lãnh tụ Tối cao',
-          image: 'https://images.pexels.com/photos/3560044/pexels-photo-3560044.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=1',
+          country: 'Iran', flag: '🇮🇷',
+          leader: 'Lãnh tụ Tối cao — Ali Khamenei',
+          leaderName: 'Ali Khamenei',
+          leaderImage: '/images/Ali_Khamenei_Iran.webp',
           accentColor: '#34d97b',
-          question: 'Israel không kích Lãnh sự quán Iran tại Syria, 7 tướng thiệt mạng. Phản đòn?',
+          context: 'Gaza bị tàn phá sau 2+ năm chiến tranh, hơn 75.000 người thiệt mạng, Hamas suy yếu nghiêm trọng.',
+          question: 'Iran tấn công Saudi Arabia dù vừa bình thường hóa quan hệ. Tehran giải thích thế nào?',
           options: [
-            { text: 'Cảnh báo 72h trước, phóng 300 UAV & tên lửa "biểu diễn"', result: '📚 Lịch sử! Giữ thể diện mà không cần leo thang — Iran 04/2024.' },
-            { text: 'Phóng tên lửa siêu thanh tiêu diệt hệ thống phòng không Israel', result: '📌 Phỏng đoán 🤔 — Mỹ + Israel phản kích phá hủy toàn bộ cơ sở hạt nhân Iran.' },
+            {
+              label: '"Saudi Arabia là kẻ thù — họ đã để Mỹ dùng lãnh thổ tấn công chúng tôi, xứng đáng bị trừng phạt."',
+              type: 'hypo',
+              result: '🔮 Hệ quả: Iran thực tế tránh tuyên bố này vì cần giữ kênh ngoại giao với Saudi. Nếu coi Saudi là kẻ thù, Iran sẽ cô lập hoàn toàn trong khu vực và mất mọi khả năng đàm phán thoát khỏi chiến tranh.',
+            },
+            {
+              label: '"Chúng tôi chỉ nhắm vào căn cứ Mỹ — thiệt hại dân sự Saudi là ngoài ý muốn và chúng tôi xin lỗi."',
+              type: 'fact',
+              result: '🔮 Hệ quả: Đúng với thực tế. Pezeshkian xin lỗi các nước vùng Vịnh về thiệt hại dân sự — bước đi hiếm có. Iran liên tục nhấn mạnh mục tiêu là "căn cứ Mỹ và Israel" chứ không phải Saudi.',
+            },
+            {
+              label: '"Chúng tôi không tấn công Saudi Arabia — đây là tin giả của Mỹ và Israel."',
+              type: 'hypo',
+              result: '🔮 Hệ quả: Không thể phủ nhận vì có quá nhiều bằng chứng. Iran thực tế xác nhận đã tấn công "các căn cứ kẻ thù trong khu vực" — chỉ cố phân biệt mục tiêu quân sự vs dân sự.',
+            },
           ],
         },
         {
-          country: 'Ả Rập Xê-út', flag: '🇸🇦', leader: 'Thái tử MBS',
-          image: 'https://images.pexels.com/photos/3225529/pexels-photo-3225529.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=1',
+          country: 'Arab Saudi', flag: '🇸🇦',
+          leader: 'Thái tử — Mohammed bin Salman (MBS)',
+          leaderName: 'Mohammed bin Salman',
+          leaderImage: '/images/Slide8-the4-arabsaudi.jpg',
           accentColor: '#f0c040',
-          question: 'Căng thẳng Vịnh Ba Tư khiến giá dầu lên xuống điên cuồng. Chiến lược dầu mỏ?',
+          question: 'Báo cáo cho thấy MBS đã vận động Trump tấn công Iran. MBS phản hồi thế nào?',
           options: [
-            { text: 'Hạ giá dầu tối đa để giúp Mỹ kìm hãm Nga & Iran', result: '📌 Phỏng đoán 🤔 — Ngân sách rỗng, siêu dự án NEOM sụp đổ. Bạo loạn nội địa.' },
-            { text: 'Bắt tay OPEC+ cắt giảm sản lượng, bất chấp Mỹ', result: '📚 Lịch sử! Dầu duy trì $80-90, tối đa hóa doanh thu Ả Rập.' },
+            {
+              label: '"Đúng, tôi đã thuyết phục Trump vì đây là cơ hội lịch sử để loại bỏ Iran."',
+              type: 'hypo',
+              result: '🔮 Hệ quả: Thú nhận này sẽ là thảm họa ngoại giao cho Saudi. Sẽ khiến Saudi trở thành mục tiêu trực tiếp của Iran và mất uy tín với các nước Hồi giáo đang ủng hộ Palestine.',
+            },
+            {
+              label: '"Tôi không bình luận về thông tin chưa xác nhận. Saudi Arabia ủng hộ loại trừ đe dọa hạt nhân nhưng không tham chiến."',
+              type: 'fact',
+              result: '🔮 Hệ quả: Đây là cách MBS thực tế xử lý — không xác nhận, không phủ nhận. Saudi tiếp tục khẳng định không để lãnh thổ dùng để tấn công Iran, dù nhiều báo cáo nói ngược lại.',
+            },
+            {
+              label: '"Israel đã lừa cả tôi và Trump — chúng tôi đều là nạn nhân của Netanyahu."',
+              type: 'hypo',
+              result: '🔮 Hệ quả: Không xảy ra. Saudi Arabia và Israel đang trong tiến trình xích lại gần nhau. Đổ lỗi cho Israel sẽ phá vỡ hoàn toàn tiến trình bình thường hóa mà MBS đã đầu tư nhiều năm.',
+            },
           ],
         },
         {
-          country: 'Palestine', flag: '🇵🇸', leader: 'Chủ tịch Palestine',
-          image: 'https://images.unsplash.com/photo-1489824904134-891ab64532f1?auto=format&fit=crop&w=600&q=80',
+          country: 'Palestine', flag: '🇵🇸',
+          leader: 'Chủ tịch Palestine — Mahmoud Abbas',
+          leaderName: 'Mahmoud Abbas',
+          leaderImage: '/images/Abbas_Palestine.jpg',
           accentColor: '#34d97b',
-          question: 'Gaza bị phong tỏa hoàn toàn, người dân thiếu lương thực. Lãnh đạo Hamas đưa ra quyết định?',
+          context: 'Gaza bị tàn phá sau 2+ năm chiến tranh, hơn 75.000 người thiệt mạng, Hamas suy yếu nghiêm trọng.',
+          question: 'Iran — nhà tài trợ chính của Hamas — đang bị tấn công nặng nề. Hamas phản ứng thế nào?',
           options: [
-            { text: 'Tiếp tục kháng chiến vũ trang, từ chối đàm phán vô điều kiện', result: '📚 Lịch sử! Hamas kiên trì lập trường, đổi lại là áp lực quốc tế ngày càng tăng.' },
-            { text: 'Đơn phương ngừng bắn, chấp nhận giải pháp 2 nhà nước ngay lập tức', result: '📌 Phỏng đoán 🤔 — Mang lại viện trợ nhưng chia rẽ nội bộ phong trào kháng chiến.' },
+            {
+              label: '"Hamas sẽ mở mặt trận thứ hai tấn công Israel để giúp Iran giảm áp lực."',
+              type: 'hypo',
+              result: '🔮 Hệ quả: Hamas không còn khả năng quân sự để mở chiến dịch lớn. Hầu hết cơ sở hạ tầng quân sự bị phá hủy. Hành động này sẽ chỉ dẫn đến thêm thiệt hại cho người dân Gaza.',
+            },
+            {
+              label: '"Đây là cơ hội — trong khi Mỹ và Israel bận với Iran, Hamas có thể đàm phán vị thế tốt hơn ở Gaza."',
+              type: 'hypo',
+              result: '🔮 Hệ quả: Thực tế ngược lại: cuộc chiến Iran làm giảm áp lực quốc tế lên Israel ở Gaza vì sự chú ý chuyển hướng. Hamas mất đi nhà tài trợ và đồng minh quan trọng nhất.',
+            },
+            {
+              label: '"Chúng tôi đoàn kết với Iran. Cuộc đấu tranh Palestine không phụ thuộc vào một nhà tài trợ — ý chí của người Palestine không thể bị đánh bại."',
+              type: 'fact',
+              result: '🔮 Hệ quả: Đúng với lập trường Hamas: bày tỏ đoàn kết với Iran nhưng nhấn mạnh tính độc lập của phong trào. Thực tế Hamas đang trong tình trạng rất suy yếu sau 2 năm chiến tranh với Israel.',
+            },
           ],
         },
       ],
     },
-    mobileSummary: 'Phần 4 — Nhập vai 5 lãnh đạo: Mỹ, Israel, Iran, Ả Rập, Palestine. Chọn quyết định đúng!',
+    mobileSummary: 'Phần 4 — Nhập vai 5 lãnh đạo: Trump, Netanyahu, Khamenei, MBS, Abbas. Chọn lập trường đúng!',
   },
+
 
   // ─────────────────────────────────────────────
   // S6 — 3 Kịch bản tương lai
@@ -265,7 +445,7 @@ export const slideData = [
   {
     id: 's6',
     bg: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80',
-    type: 'flip-cards',
+    type: 'static-cards',
     data: {
       subtitle: 'Phân Tích Chuyên Sâu',
       title: 'Ba Kịch Bản Tương Lai Của Trung Đông',
@@ -276,11 +456,11 @@ export const slideData = [
           accentColor: '#f87171',
           front: {
             headline: 'Chiến tranh toàn diện bùng nổ',
-            image: 'https://images.unsplash.com/photo-1575997028963-3b7d17c56e18?auto=format&fit=crop&w=600&q=80',
+            image: '/images/slide9_the1.webp',
           },
           back: {
             points: [
-              'Xác suất xảy ra: THẤP. Iran tấn công Israel trực tiếp, Mỹ can thiệp quân sự.',
+              'Iran tấn công Israel trực tiếp, Mỹ can thiệp quân sự toàn lực.',
               'Hệ thống phòng thủ kiệt quệ, giá dầu vọt 200$/thùng, kinh tế toàn cầu sụp đổ.',
               'Nguy cơ leo thang hạt nhân nếu Israel cảm thấy sự tồn vong bị đe dọa.',
             ],
@@ -292,11 +472,11 @@ export const slideData = [
           accentColor: '#f0c040',
           front: {
             headline: 'Xung đột có kiểm soát kéo dài',
-            image: 'https://images.unsplash.com/photo-1580130037679-48cff30c23a4?auto=format&fit=crop&w=600&q=80',
+            image: '/images/slide9_the2.jpg',
           },
           back: {
             points: [
-              'Xác suất xảy ra: CAO. Kịch bản thực tế nhất — các bên "đánh để dằn mặt".',
+              'Các bên "đánh để dằn mặt", không leo thang toàn diện.',
               'Chiến tranh mạng, không kích có chọn lọc, proxy wars kéo dài vô thời hạn.',
               'Chuỗi cung ứng gián đoạn, lạm phát toàn cầu tăng nhưng tránh được thảm họa hạt nhân.',
             ],
@@ -308,11 +488,11 @@ export const slideData = [
           accentColor: '#34d97b',
           front: {
             headline: 'Ngoại giao thành công, ngừng bắn',
-            image: 'https://images.unsplash.com/photo-1532375810709-75b1da00537c?auto=format&fit=crop&w=600&q=80',
+            image: '/images/slide9_the3.png',
           },
           back: {
             points: [
-              'Xác suất xảy ra: TRUNG BÌNH. Sức ép quốc tế buộc toàn bộ các bên xuống thang.',
+              'Sức ép quốc tế buộc toàn bộ các bên xuống thang và ngồi vào bàn đàm phán.',
               'Thỏa thuận Abraham mở rộng, bình thường hóa quan hệ Ả Rập - Israel.',
               'Giải pháp 2 nhà nước được tái khởi động dưới sự trung gian quốc tế.',
             ],
@@ -347,6 +527,20 @@ export const slideData = [
     data: {
       subtitle: 'Quay Về Việt Nam',
       title: 'Đặc Điểm Địa Chính Trị Nước Ta',
+      contextBlocks: [
+        {
+          flag: '🕌',
+          label: 'Trung Đông',
+          color: '#f87171',
+          text: 'Vị trí ngã ba châu lục (Á – Âu – Phi) và là "rốn dầu" của thế giới, khiến nơi đây trở thành bàn cờ cạnh tranh lợi ích khốc liệt của các cường quốc, dẫn đến xung đột dai dẳng.',
+        },
+        {
+          flag: '🇻🇳',
+          label: 'Việt Nam',
+          color: '#f0c040',
+          text: 'Nằm ở rìa phía Đông của bán đảo Đông Dương, án ngữ các tuyến đường hàng hải huyết mạch trên Biển Đông nối liền Thái Bình Dương và Ấn Độ Dương. Đây là vị trí "ngã tư đường" của Đông Nam Á.',
+        },
+      ],
       topBlock: {
         icon: '📍',
         title: 'Vị Trí Địa Lý',
@@ -386,17 +580,18 @@ export const slideData = [
     data: {
       subtitle: 'Chiến Lược Đảng & Nhà Nước',
       title: 'Đường Lối "Ngoại Giao Cây Tre"',
+      desc: 'Đường lối "ngoại giao cây tre" của Hồ Chí Minh: mềm dẻo, linh hoạt về sách lược nhưng kiên định nguyên tắc độc lập, chủ quyền và lợi ích dân tộc. Kết hợp khéo léo giữa hòa hiếu và kiên quyết, "dĩ bất biến ứng vạn biến" để giữ thế cân bằng trong môi trường quốc tế phức tạp.',
       sections: [
         {
           title: 'Gốc Vững',
           icon: '🌱',
           color: '#34d97b',
           headline: 'Mục tiêu trường tồn: Độc lập — Tự chủ',
-          image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=600&q=80',
+          image: '/images/slide12_the1.jpg',
           points: [
             'Kiên định mục tiêu độc lập dân tộc và chủ nghĩa xã hội.',
             'Lợi ích quốc gia — dân tộc luôn trên hết và trước hết.',
-            '"Dĩ bất biến, ứng vạn biến" — Kim chỉ nam của Cụ Hồ.'
+            '"Dĩ bất biến, ứng vạn biến" — Kim chỉ nam của Hồ Chí Minh.'
           ]
         },
         {
@@ -416,7 +611,7 @@ export const slideData = [
           icon: '🛡️',
           color: '#f0c040',
           headline: 'Quốc phòng độc lập tuyệt đối',
-          image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=600&q=80',
+          image: '/images/slide12_the3.jpg',
           points: [
             'Không tham gia liên minh quân sự chống nước khác.',
             'Không cho nước ngoài đặt căn cứ quân sự.',
@@ -527,7 +722,7 @@ export const slideData = [
       subtitle: 'Kết Thúc Buổi Thảo Luận',
       title: 'Xin Chân Thành Cảm Ơn!',
       quote: '"Không có gì quý hơn Độc lập — Tự do"',
-      author: '— Hồ Chí Minh',
+      author: 'HỒ CHÍ MINH',
       group: 'Nhóm 5 · Lớp 170263 · SSH1151',
       teacher: 'Giảng viên: Phạm Thị Mai Duyên',
     },

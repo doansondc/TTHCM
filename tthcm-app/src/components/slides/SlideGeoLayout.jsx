@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
  * Layout: HERO top card + 2-column content + Vietnam map on right
  */
 export default function SlideGeoLayout({ data }) {
-  const { subtitle, title, topBlock, bottomLeft, bottomRight } = data;
+  const { subtitle, title, topBlock, bottomLeft, bottomRight, contextBlocks } = data;
   return (
     <div style={{
       display: 'flex', flexDirection: 'column',
@@ -34,7 +34,44 @@ export default function SlideGeoLayout({ data }) {
         </motion.h2>
       </div>
 
-      {/* Main body: left content + right map */}
+      {/* Optional context comparison (Trung Đông vs Việt Nam) */}
+      {contextBlocks && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.16 }}
+          style={{
+            display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem',
+            marginBottom: '0.7rem', flexShrink: 0,
+          }}
+        >
+          {contextBlocks.map((block, i) => (
+            <div key={i} style={{
+              display: 'flex', gap: '0.7rem', alignItems: 'flex-start',
+              background: `${block.color}08`,
+              border: `1px solid ${block.color}22`,
+              borderRadius: 10, padding: '0.6rem 0.9rem',
+            }}>
+              <span style={{
+                fontSize: '1.26rem', flexShrink: 0,
+                filter: `drop-shadow(0 0 8px ${block.color}50)`,
+              }}>{block.flag}</span>
+              <div>
+                <div style={{
+                  fontSize: '0.62rem', fontWeight: 700, color: block.color,
+                  letterSpacing: '0.1em', textTransform: 'uppercase',
+                  marginBottom: '0.18rem', fontFamily: 'var(--font-mono)',
+                }}>{block.label}</div>
+                <p style={{
+                  fontSize: '0.65rem', color: 'var(--text-secondary)',
+                  lineHeight: 1.6, margin: 0, fontWeight: 500,
+                }}>{block.text}</p>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      )}
+
+
       <div style={{ display: 'flex', gap: '1.4rem', flex: 1, overflow: 'hidden' }}>
 
         {/* ── LEFT: content ── */}
@@ -52,7 +89,7 @@ export default function SlideGeoLayout({ data }) {
             }}
           >
             <span style={{
-              fontSize: '2.6rem',
+              fontSize: '2.1rem',
               filter: 'drop-shadow(0 4px 14px rgba(232,184,75,0.5))',
               flexShrink: 0, lineHeight: 1,
             }}>
@@ -66,7 +103,7 @@ export default function SlideGeoLayout({ data }) {
               }}>
                 {topBlock.title}
               </div>
-              <p style={{ fontSize: '1.25rem', color: 'var(--text-primary)', lineHeight: 1.65, fontWeight: 500, maxWidth: '95%', margin: 0 }}>
+              <p style={{ fontSize: '1.0rem', color: 'var(--text-primary)', lineHeight: 1.65, fontWeight: 500, maxWidth: '95%', margin: 0 }}>
                 {topBlock.text}
               </p>
             </div>
@@ -82,11 +119,11 @@ export default function SlideGeoLayout({ data }) {
                 style={{ display: 'flex', flexDirection: 'column' }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.75rem' }}>
-                  <span style={{ fontSize: '1.5rem', lineHeight: 1, filter: `drop-shadow(0 0 10px ${block.color}60)` }}>
+                  <span style={{ fontSize: '1.2rem', lineHeight: 1, filter: `drop-shadow(0 0 10px ${block.color}60)` }}>
                     {block.icon}
                   </span>
                   <span style={{
-                    fontSize: '1.15rem', fontWeight: 700, color: block.color,
+                    fontSize: '0.94rem', fontWeight: 700, color: block.color,
                     textShadow: `0 0 20px ${block.color}40`,
                   }}>
                     {block.title}
@@ -108,7 +145,7 @@ export default function SlideGeoLayout({ data }) {
                         background: block.color, boxShadow: `0 0 6px ${block.color}`,
                         flexShrink: 0, marginTop: '0.55rem',
                       }} />
-                      <span style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', lineHeight: 1.7, fontWeight: 500 }}>
+                      <span style={{ fontSize: '1.0rem', color: 'var(--text-secondary)', lineHeight: 1.7, fontWeight: 500 }}>
                         {pt}
                       </span>
                     </motion.li>

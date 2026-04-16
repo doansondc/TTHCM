@@ -22,6 +22,32 @@ const G = (extra = {}) => ({
   ...extra,
 });
 
+const AdminOTPInput = ({ value, onChange, length }) => {
+  const handleChange = (e) => {
+    let val = e.target.value.replace(/\D/g, '').slice(0, length);
+    onChange(val);
+  };
+  return (
+    <div style={{ position:'relative', width:'100%', height:'52px' }}>
+      <input type="tel" value={value} onChange={handleChange} style={{ position:'absolute', inset:0, opacity:0, cursor:'text', zIndex:10 }} />
+      <div style={{ display:'flex', gap:'0.5rem', height:'100%' }}>
+        {Array.from({length}).map((_, i) => (
+          <div key={i} style={{
+            flex:1, border:`2px solid ${value.length===i ? '#16a34a' : (value.length>i ? 'rgba(22,163,74,0.55)' : 'rgba(0,0,0,0.10)')}`,
+            borderRadius:'12px', display:'flex', alignItems:'center', justifyContent:'center',
+            fontSize:'1.3rem', fontWeight:800, color:'#1a1714',
+            background: value.length>i ? 'rgba(22,163,74,0.10)' : 'rgba(255,255,255,0.9)',
+            transition:'all 0.2s',
+            boxShadow: value.length===i ? '0 0 0 3px rgba(22,163,74,0.18)' : 'none',
+          }}>
+            {value[i] || ''}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 function StatCard({ label, value, icon, color }) {
   return (
     <motion.div initial={{ opacity:0, y:16 }} animate={{ opacity:1, y:0 }} style={G({ padding:'1.4rem' })}>
@@ -100,6 +126,7 @@ export default function AdminDashboard() {
   // Security / password management
   const [adminCodeState,   setAdminCodeState]   = useState('654321');
   const [slidePassState,   setSlidePassState]   = useState('SSH1151');
+  const [authCodeState,    setAuthCodeState]    = useState('1234');
   const [oldAdminCode,     setOldAdminCode]     = useState('');
   const [newAdminCode,     setNewAdminCode]     = useState('');
   const [adminCodeMsg,     setAdminCodeMsg]     = useState(null);
@@ -108,12 +135,19 @@ export default function AdminDashboard() {
   const [hasGeminiKey,     setHasGeminiKey]     = useState(false);
   const [geminiApiKeyInput, setGeminiApiKeyInput] = useState('');
   const [geminiKeyMsg,     setGeminiKeyMsg]     = useState(null);
+  const [hasOpenAIKey,     setHasOpenAIKey]      = useState(false);
   const [adminCodeForSlide, setAdminCodeForSlide] = useState('');
   const [unlockSlidePassCode, setUnlockSlidePassCode] = useState('');
   const [isSlidePassUnlocked, setIsSlidePassUnlocked] = useState(false);
+  const [newAuthCode, setNewAuthCode] = useState('');
+  const [authCodeMsg, setAuthCodeMsg] = useState(null);
+  const [adminCodeForAuth, setAdminCodeForAuth] = useState('');
   const [showAILogs, setShowAILogs] = useState(false);
   const [viewingHistoryUser, setViewingHistoryUser] = useState(null);
   const [userHistoryData, setUserHistoryData] = useState(null);
+  // AI Chatbot admin
+  const [aiChatUsers, setAiChatUsers] = useState([]);
+  const [aiChatDetail, setAiChatDetail] = useState(null);
 
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 1000);
@@ -123,12 +157,9 @@ export default function AdminDashboard() {
   // Fetch config (admin code + slide password) from server on mount
   useEffect(() => {
     fetch('/api/config').then(r => r.json()).then(d => {
-      let adminCode    = d.adminCode    || '654321';
-      let slidePassword = d.slidePassword || 'SSH1151';
-      let commentHistory = d.commentHistory || [];
-      
       if (d.adminCode)      setAdminCodeState(d.adminCode);
       if (d.slidePassword)  setSlidePassState(d.slidePassword);
+      if (d.authCode)       setAuthCodeState(d.authCode);
     }).catch(() => {});
   }, []);
 
@@ -147,24 +178,13 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (!authed) return;
-    socket.emit('get_logs');
-    socket.emit('get_blocked_ips');
-    socket.emit('get_blocked_mssv');
-    socket.emit('get_muted_mssv');
-    socket.emit('get_comment_queue');
-    socket.emit('get_polls');
-    socket.emit('get_quiz_bank');
-    socket.emit('get_config');
-    socket.emit('get_qr_config');
-    socket.emit('get_rate_ms');
-    socket.emit('get_comment_history');
-    socket.emit('get_pinned_item');
     socket.on('admin_logs',          setLogs);
     socket.on('update_users',        setUsers);
     socket.on('update_votes',        setVotes);
     socket.on('update_polls',        setPolls);
     socket.on('qr_config_update',    setQrConfig);
     socket.on('quiz_bank_update',    setQuizBank);
+    socket.on('poll_popup_state',    (s) => setPollPopupId(s?.visible ? s.poll?.id : null));
     socket.on('update_questions',    setQs);
     socket.on('new_question',        q => setQs(p => [q,...p]));
     socket.on('question_answered',   d => setQs(p => p.map(q => q.id===d.id ? {...q,answer:d.answer} : q)));
@@ -183,8 +203,25 @@ export default function AdminDashboard() {
     socket.on('config_update',       d => { 
       if (d.adminCode) setAdminCodeState(d.adminCode); 
       if (d.slidePassword) setSlidePassState(d.slidePassword); 
+      if (d.authCode) setAuthCodeState(d.authCode);
       if (d.hasGeminiKey !== undefined) setHasGeminiKey(d.hasGeminiKey);
+      if (d.hasOpenAIKey !== undefined) setHasOpenAIKey(d.hasOpenAIKey);
     });
+    socket.on('slide_password_updated', d => { if (d.slidePassword) setSlidePassState(d.slidePassword); });
+
+    socket.emit('get_logs');
+    socket.emit('get_blocked_ips');
+    socket.emit('get_blocked_mssv');
+    socket.emit('get_muted_mssv');
+    socket.emit('get_comment_queue');
+    socket.emit('get_polls');
+    socket.emit('get_quiz_bank');
+    socket.emit('get_config');
+    socket.emit('get_qr_config');
+    socket.emit('get_rate_ms');
+    socket.emit('get_comment_history');
+    socket.emit('get_pinned_item');
+    socket.emit('get_questions');
     socket.on('slide_password_updated', d => { if (d.slidePassword) setSlidePassState(d.slidePassword); });
     return () => ['admin_logs','update_users','update_votes','update_polls','quiz_bank_update','update_questions','new_question','question_answered','poll_status','blocked_ips','quiz_state','blocked_mssv_update','muted_mssv_update','comment_queue_update','comments_status','questions_status','reactions_status','comment_mode_status','rate_ms_updated','comment_history','pinned_item_update','config_update','slide_password_updated','qr_config_update'].forEach(e => socket.off(e));
   }, [authed]);
@@ -195,6 +232,15 @@ export default function AdminDashboard() {
     } else { clearInterval(timerRef.current); if (timerSecs === 0) setTimerOn(false); }
     return () => clearInterval(timerRef.current);
   }, [timerOn, timerSecs]);
+
+  useEffect(() => {
+    if (activeQuiz && !activeQuiz.isFinished) {
+      if (activeQuiz.correctId) setCorrectOpt(activeQuiz.correctId);
+      else setCorrectOpt('');
+      if (activeQuiz.explanation) setQuizExplanation(activeQuiz.explanation);
+      else setQuizExplanation('');
+    }
+  }, [activeQuiz?.id]);
 
   const startTimer = () => { setTimerSecs(timerMins * 60); setTimerOn(true); };
   const fmtTime = s => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
@@ -221,8 +267,14 @@ export default function AdminDashboard() {
   const rejectComment  = id   => socket.emit('reject_comment', id);
   const blockFP        = fp   => { if (window.confirm(`Chặn thiết bị này?`)) socket.emit('block_fingerprint', fp); };
   const togglePoll     = ()   => socket.emit('toggle_poll', !pollOn);
+  const loadUserHistory = (s) => {
+    setViewingHistoryUser(s);
+    setUserHistoryData(null);
+    socket.emit('get_student_history', s.mssv, (res) => setUserHistoryData(res));
+  };
 
   const activePoll = polls.find(p => p.active) || polls[0];
+  const [pollPopupId, setPollPopupId] = useState(null); // id of the poll currently shown as popup
   const TV = activePoll ? Object.values(activePoll.votes || {}).reduce((s,a) => s+(a?.length||0), 0) : 0;
   const filteredLogs = logFilter==='all' ? logs : logs.filter(l=>l.type===logFilter);
   const pendingQs = questions.filter(q=>!q.answer).length;
@@ -309,9 +361,10 @@ export default function AdminDashboard() {
             ['users','👥','Đang Trực Tuyến', users.length > 0 ? users.length : null],
             ['moderation','🛡️','Kiểm Duyệt', moderationCount > 0 ? moderationCount : null],
             ['logs','📋','Nhật Ký', null],
+            ['aichat','🤖','AI Chatbot', null],
             ['security','🔐','Bảo Mật', null],
           ].map(([id,icon,label,badge]) => (
-            <button key={id} onClick={() => setTab(id)}
+            <button key={id} onClick={() => { setTab(id); if(id === 'aichat') socket.emit('get_ai_chat_users', (res) => { if(res.ok) setAiChatUsers(res.users); }); }}
               style={{ width:'100%', display:'flex', alignItems:'center', gap:'0.6rem', padding:'0.75rem 1.2rem', background:tab===id?'rgba(181,134,13,0.1)':'transparent', border:'none', borderLeft:tab===id?'3px solid #b5860d':'3px solid transparent', color:tab===id?'#b5860d':'#78726a', cursor:'pointer', fontSize:'0.85rem', fontFamily:'Inter,sans-serif', textAlign:'left', transition:'all 0.18s', position:'relative' }}>
               <span style={{ fontSize:'1rem' }}>{icon}</span>
               <span style={{ flex:1 }}>{label}</span>
@@ -573,6 +626,24 @@ export default function AdminDashboard() {
                           <span style={{ fontWeight:700, fontSize:'0.9rem', color:'#1a1714', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{p.title}</span>
                         </div>
                         <div style={{ display:'flex', gap:'0.35rem', flexShrink:0 }}>
+                          {/* Popup toggle button */}
+                          <button
+                            onClick={() => {
+                              const isPopupOn = pollPopupId === p.id;
+                              socket.emit('toggle_poll_popup', { pollId: p.id, visible: !isPopupOn });
+                            }}
+                            title="Hiện popup kết quả poll trên slide"
+                            style={{
+                              padding:'0.25rem 0.6rem', borderRadius:'6px',
+                              background: pollPopupId === p.id ? 'rgba(232,184,75,0.18)' : 'rgba(232,184,75,0.06)',
+                              border: `1px solid ${pollPopupId === p.id ? 'rgba(232,184,75,0.6)' : 'rgba(232,184,75,0.2)'}`,
+                              color: pollPopupId === p.id ? '#b5860d' : '#a89e94',
+                              cursor:'pointer', fontSize:'0.72rem', fontWeight: pollPopupId === p.id ? 700 : 400,
+                              transition:'all 0.18s',
+                            }}
+                          >
+                            {pollPopupId === p.id ? '📊 Ẩn' : '📊 Popup'}
+                          </button>
                           {!isActive && (
                             <button onClick={() => socket.emit('activate_poll', p.id)}
                               style={{ padding:'0.25rem 0.6rem', borderRadius:'6px', background:'rgba(22,163,74,0.08)', border:'1px solid rgba(22,163,74,0.25)', color:'#16a34a', cursor:'pointer', fontSize:'0.72rem', fontWeight:600 }}>▶ Chiếu</button>
@@ -755,7 +826,7 @@ export default function AdminDashboard() {
                     <div style={{ display:'flex', flexDirection:'column', gap:'0.6rem' }}>
                       <div style={{ display:'flex', gap:'0.7rem' }}>
                         <select value={correctOpt} onChange={e=>setCorrectOpt(e.target.value)}
-                          style={{ flex:1, padding:'0.6rem', borderRadius:'7px', border:'1px solid rgba(0,0,0,0.12)', background:'rgba(255,255,255,0.9)', outline:'none', fontSize:'0.82rem', color:'#3a3530' }}>
+                          style={{ flex:1, padding:'0.6rem', borderRadius:'7px', border:'1px solid rgba(0,0,0,0.12)', background:'rgba(255,255,255,0.9)', outline:'none', fontSize:'0.82rem', color:'#3a3530', minWidth:0, textOverflow:'ellipsis' }}>
                           <option value="">-- Khảo sát (không xếp hạng) --</option>
                           {activeQuiz.options.map(o => <option key={o.id} value={o.id}>{o.id}. {o.text}</option>)}
                         </select>
@@ -860,6 +931,7 @@ export default function AdminDashboard() {
                           ? <span style={{ fontSize:'0.65rem', color:'#16a34a', fontWeight:700, padding:'0.1rem 0.4rem', background:'rgba(22,163,74,0.1)', borderRadius:'6px' }}>✓ TL</span>
                           : <span style={{ fontSize:'0.65rem', color:'#dc2626', fontWeight:600, padding:'0.1rem 0.4rem', background:'rgba(220,38,38,0.08)', borderRadius:'6px' }}>Chờ</span>
                         }
+                        <button onClick={(e) => { e.stopPropagation(); if(window.confirm('Xoá câu hỏi này? Nếu xoá, sinh viên cũng sẽ bị loại khỏi danh sách Bốc Thăm dựa trên câu hỏi này.')) socket.emit('delete_question', q.id); }} style={{ padding: '0.15rem 0.4rem', fontSize: '0.65rem', borderRadius: '4px', border: '1px solid rgba(220,38,38,0.25)', background: 'rgba(220,38,38,0.05)', color: '#dc2626', cursor: 'pointer', marginLeft:'5px' }} title="Xoá câu hỏi">✕ Xoá</button>
                       </div>
                     </div>
                     <p style={{ fontSize:'0.85rem', color:'#3a3530', lineHeight:1.5 }}>{q.text}</p>
@@ -1247,6 +1319,75 @@ export default function AdminDashboard() {
               </div>
             </div>
           )}
+          {/* AI CHATBOT TAB */}
+          {tab==='aichat' && (
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h3 style={{ fontSize: '1.2rem', margin: 0, color: '#1a1714', fontWeight: 800 }}>🤖 Lịch Sử Trò Chuyện AI</h3>
+                <button onClick={() => socket.emit('get_ai_chat_users', (res) => { if(res.ok) setAiChatUsers(res.users); })}
+                  style={{ padding: '0.4rem 0.8rem', borderRadius: '8px', background: 'rgba(37,99,235,0.1)', color: '#2563eb', border: 'none', fontWeight: 600, cursor: 'pointer', fontSize: '0.8rem' }}>
+                  🔄 Làm Mới
+                </button>
+              </div>
+
+              {!aiChatDetail ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  {aiChatUsers.length === 0 && <p style={{ color: '#a89e94', fontSize: '0.9rem', textAlign: 'center', padding: '2rem' }}>Chưa có sinh viên nào tương tác với AI.</p>}
+                  {aiChatUsers.map((u, idx) => (
+                    <div key={idx} onClick={() => socket.emit('get_ai_chat_detail', u.mssv, (res) => { if(res.ok) setAiChatDetail(res); })}
+                      style={{ ...G({ padding: '0.8rem 1.2rem', cursor: 'pointer', transition: 'all 0.2s' }), display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                      <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, rgba(37,99,235,0.1), rgba(37,99,235,0.05))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem' }}>👤</div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                          <span style={{ fontSize: '1rem', fontWeight: 700, color: '#1a1714' }}>{u.name}</span>
+                          <span style={{ fontSize: '0.75rem', color: '#7a8494', fontFamily: 'monospace', padding: '2px 6px', background: 'rgba(0,0,0,0.04)', borderRadius: 4 }}>{u.mssv}</span>
+                        </div>
+                        <div style={{ fontSize: '0.85rem', color: '#78726a', marginTop: 6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          💬 {u.lastMessage}...
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'right', background: 'rgba(232,184,75,0.1)', padding: '0.5rem 0.8rem', borderRadius: 8 }}>
+                        <div style={{ fontSize: '0.85rem', color: '#b5860d', fontWeight: 700 }}>{u.questionCount} vòng</div>
+                        <div style={{ fontSize: '0.7rem', color: '#a89e94', marginTop: 2 }}>{u.messageCount} messages</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <button onClick={() => setAiChatDetail(null)}
+                      style={{ padding: '0.5rem 1rem', borderRadius: '8px', background: 'rgba(0,0,0,0.05)', color: '#444', border: 'none', fontWeight: 600, cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      ⬅ Quay Lại
+                    </button>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1a1714' }}>
+                      Phiên Chat của: <span style={{ color: '#2563eb' }}>{aiChatDetail.name} ({aiChatDetail.mssv})</span>
+                    </div>
+                  </div>
+                  <div style={{ ...G({ padding: '1rem' }), display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: 'calc(100vh - 250px)', overflowY: 'auto', background: 'rgba(255,255,255,0.6)' }}>
+                    {aiChatDetail.history.length === 0 && <p style={{ color: '#a89e94' }}>Không có lịch sử nhắn tin.</p>}
+                    {aiChatDetail.history.map((msg, idx) => (
+                      <div key={idx} style={{ 
+                        alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
+                        maxWidth: '85%', padding: '0.9rem 1.2rem', borderRadius: '16px',
+                        background: msg.role === 'user' ? 'linear-gradient(135deg, #10b981, #059669)' : (msg.error ? 'rgba(220,38,38,0.1)' : 'rgba(255,255,255,0.95)'),
+                        color: msg.role === 'user' ? '#fff' : (msg.error ? '#dc2626' : '#1f2937'),
+                        border: msg.role !== 'user' ? '1px solid rgba(0,0,0,0.06)' : 'none',
+                        boxShadow: msg.role === 'user' ? '0 4px 12px rgba(16,185,129,0.2)' : '0 2px 8px rgba(0,0,0,0.03)',
+                        fontSize: '0.9rem', lineHeight: 1.6, whiteSpace: 'pre-line' 
+                      }}>
+                        <div style={{ fontSize: '0.65rem', marginBottom: '0.4rem', opacity: 0.8, textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700, display: 'flex', justifyContent: 'space-between' }}>
+                          <span>{msg.role === 'user' ? aiChatDetail.name : '🤖 Chuyên Gia AI'}</span>
+                          {msg.id && <span style={{ textTransform: 'none', fontWeight: 400 }}>{new Date(parseInt(msg.id)).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</span>}
+                        </div>
+                        {msg.text}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* SECURITY */}
           {tab==='security' && (() => {
@@ -1279,12 +1420,25 @@ export default function AdminDashboard() {
               if (!geminiApiKeyInput) return;
               socket.emit('change_gemini_key', { key: geminiApiKeyInput }, (res) => {
                 if (res?.ok) {
-                  setGeminiKeyMsg({ ok: true, txt: `✅ Đã lưu Google Gemini API Key!` });
+                  setGeminiKeyMsg({ ok: true, txt: `✅ Đã lưu Gemini API Key mới!` });
                   setGeminiApiKeyInput('');
                 } else {
                   setGeminiKeyMsg({ ok: false, txt: `❌ Lỗi khi lưu API Key` });
                 }
                 setTimeout(() => setGeminiKeyMsg(null), 3500);
+              });
+            };
+            const handleChangeAuthCode = () => {
+              if (!adminCodeForAuth || !newAuthCode) return;
+              socket.emit('change_auth_code', { currentAdminCode: adminCodeForAuth, newAuthCode: newAuthCode }, (res) => {
+                if (res.ok) {
+                  setAuthCodeMsg({ ok: true, txt: `✅ Mã mời đã đổi thành: ${newAuthCode}` });
+                  setAuthCodeState(newAuthCode);
+                  setNewAuthCode(''); setAdminCodeForAuth('');
+                } else {
+                  setAuthCodeMsg({ ok: false, txt: `❌ ${res.msg}` });
+                }
+                setTimeout(() => setAuthCodeMsg(null), 3500);
               });
             };
             return (
@@ -1373,12 +1527,41 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
+                {/* Change App Verification Code */}
+                <div style={G({ padding: '1.4rem' })}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: '1rem' }}>
+                    <span style={{ fontSize: '1.1rem' }}>🔐</span>
+                    <span style={{ fontWeight: 700, color: '#1a1714', fontSize: '0.95rem' }}>Đổi Mã Mời Tương Tác Khán Giả</span>
+                    <span style={{ fontSize: '0.72rem', color: '#16a34a', background: 'rgba(22,163,74,0.1)', padding: '2px 8px', borderRadius: 20, fontWeight:700 }}>
+                      HIỆN TẠI: {authCodeState}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <div>
+                      <label style={{ fontSize: '0.75rem', color: '#78726a', fontWeight: 600, display: 'block', marginBottom: 4 }}>Xác Nhận Bằng Mã Admin</label>
+                      <input type="password" value={adminCodeForAuth} onChange={e => setAdminCodeForAuth(e.target.value)}
+                        placeholder="Nhập mã admin để xác nhận..."
+                        style={{ width: '100%', padding: '0.75rem', borderRadius: 10, border: '1.5px solid rgba(0,0,0,0.1)', background: 'rgba(255,255,255,0.9)', color: '#1a1714', fontSize: '1rem', fontFamily: 'monospace', letterSpacing: '0.1em', boxSizing: 'border-box', outline: 'none' }} />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '0.75rem', color: '#78726a', fontWeight: 600, display: 'block', marginBottom: 6 }}>Mã Mời Tương Tác Số (4 chữ số)</label>
+                      <AdminOTPInput value={newAuthCode} onChange={setNewAuthCode} length={4} />
+                    </div>
+                    {authCodeMsg && <div style={{ fontSize: '0.82rem', padding: '0.5rem 0.8rem', borderRadius: 8, background: authCodeMsg.ok ? 'rgba(37,99,235,0.07)' : 'rgba(220,38,38,0.08)', color: authCodeMsg.ok ? '#2563eb' : '#dc2626', border: `1px solid ${authCodeMsg.ok ? 'rgba(37,99,235,0.2)' : 'rgba(220,38,38,0.2)'}` }}>{authCodeMsg.txt}</div>}
+                    <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={handleChangeAuthCode}
+                      disabled={!adminCodeForAuth || !newAuthCode}
+                      style={{ padding: '0.75rem', borderRadius: 10, background: (!adminCodeForAuth || !newAuthCode) ? 'rgba(0,0,0,0.06)' : 'linear-gradient(135deg,#16a34a,#15803d)', color: (!adminCodeForAuth || !newAuthCode) ? '#a89e94' : '#fff', border: 'none', fontWeight: 700, cursor: (!adminCodeForAuth || !newAuthCode) ? 'not-allowed' : 'pointer', fontSize: '0.88rem', transition: 'all 0.2s' }}>
+                      Cập Nhật Mã Mời
+                    </motion.button>
+                  </div>
+                </div>
+
                 {/* Gemini AI Config */}
                 <div style={G({ padding: '1.4rem' })}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span style={{ fontSize: '1.1rem' }}>🤖</span>
-                      <span style={{ fontWeight: 700, color: '#1a1714', fontSize: '0.95rem' }}>Cấu Hình Trí Tuệ Nhân Tạo (Gemini API)</span>
+                      <span style={{ fontWeight: 700, color: '#1a1714', fontSize: '0.95rem' }}>Cấu Hình Trí Tuệ Nhân Tạo (Gemini AI)</span>
                       <span style={{ fontSize: '0.72rem', color: hasGeminiKey ? '#16a34a' : '#dc2626', background: hasGeminiKey ? 'rgba(22,163,74,0.1)' : 'rgba(220,38,38,0.1)', padding: '2px 8px', borderRadius: 20, fontWeight:700 }}>
                         {hasGeminiKey ? 'ĐANG KẾT NỐI' : 'CHƯA CẤU HÌNH'}
                       </span>
@@ -1390,7 +1573,7 @@ export default function AdminDashboard() {
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                     <div>
-                      <p style={{ fontSize: '0.8rem', color: '#78726a', marginBottom: '0.8rem', lineHeight: 1.5 }}>Nhập Google Gemini API Key để hệ thống có khả năng phân tích bình chọn sâu sắc trên màn hình chiếu.</p>
+                      <p style={{ fontSize: '0.8rem', color: '#78726a', marginBottom: '0.8rem', lineHeight: 1.5 }}>Nhập <b>Google Gemini API Key</b> (miễn phí tại aistudio.google.com) để bật phân tích AI trên slide và chatbot tại /vote.</p>
                       <input type="password" value={geminiApiKeyInput} onChange={e => setGeminiApiKeyInput(e.target.value)}
                         placeholder="AIzaSy..."
                         style={{ width: '100%', padding: '0.75rem', borderRadius: 10, border: '1.5px solid rgba(0,0,0,0.1)', background: 'rgba(255,255,255,0.9)', color: '#1a1714', fontSize: '1rem', fontFamily: 'monospace', letterSpacing: '0.05em', boxSizing: 'border-box', outline: 'none' }} />

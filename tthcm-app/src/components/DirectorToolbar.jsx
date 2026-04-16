@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { Maximize, Minimize, ZoomIn, ZoomOut, QrCode, Timer, Gift, MessageSquareOff, MessageSquare, HeartOff, Heart, Play, Square } from 'lucide-react';
+import { Maximize, Minimize, ZoomIn, ZoomOut, QrCode, Timer, Gift, MessageSquareOff, MessageSquare, HeartOff, Heart, Play, Square, ChevronLeft, ChevronRight } from 'lucide-react';
 import { io } from 'socket.io-client';
 
 const ENV_URL = window.location.hostname === 'localhost' ? 'http://localhost:3001' : '';
 const socket  = io(ENV_URL, { transports: ['websocket', 'polling'] });
 
-export default function DirectorToolbar({ zoom, setZoom }) {
-  const [showQR,       setShowQR]   = useState(false);
-  const [qrSize,       setQrSize]   = useState(150);
+export default function DirectorToolbar({ zoom, setZoom, currentSlide, total, goTo, togglePoll: extTogglePoll, pollOn: extPollOn, authCode, qrConfig }) {
   const [isFS,         setIsFS]     = useState(false);
   const [time,         setTime]     = useState(0);      // seconds remaining
   const [timerInput,   setTimerInp] = useState('10');   // preset minutes
@@ -17,12 +15,7 @@ export default function DirectorToolbar({ zoom, setZoom }) {
   const [pollOn,       setPollOn]   = useState(true);
   const [showReactions,setShowR]    = useState(true);
   const [showComments, setShowC]    = useState(true);
-  const [qrUrl,        setQrUrl]    = useState('');
   const intervalRef = useRef(null);
-
-  useEffect(() => {
-    setQrUrl(`${window.location.protocol}//${window.location.host}/vote`);
-  }, []);
 
   // Timer tick
   useEffect(() => {
@@ -83,6 +76,22 @@ export default function DirectorToolbar({ zoom, setZoom }) {
         padding: '6px 10px',
         boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
       }}>
+        {/* Navigation */}
+        {goTo && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <button style={{...btnBase, opacity: currentSlide > 0 ? 1 : 0.4}} onClick={() => currentSlide > 0 && goTo(currentSlide - 1)} title="Back">
+              <ChevronLeft size={20}/>
+            </button>
+            <span style={{ color:'rgba(255,255,255,0.6)', fontSize:'0.75rem', fontWeight:600, minWidth:'36px', textAlign:'center' }}>
+              {currentSlide + 1} / {total}
+            </span>
+            <button style={{...btnBase, opacity: currentSlide < total - 1 ? 1 : 0.4}} onClick={() => currentSlide < total - 1 && goTo(currentSlide + 1)} title="Next">
+              <ChevronRight size={20}/>
+            </button>
+            <div style={sep}/>
+          </div>
+        )}
+
         {/* ZOOM */}
         <button style={btnBase} onClick={() => setZoom(z => Math.max(z - 0.1, 0.5))} title="Thu nhỏ">
           <ZoomOut size={18}/>
@@ -143,8 +152,9 @@ export default function DirectorToolbar({ zoom, setZoom }) {
         <div style={sep}/>
 
         {/* QR */}
-        <button style={showQR ? btnActive : btnBase} onClick={() => setShowQR(q => !q)} title="Mã QR">
+        <button style={qrConfig?.show ? btnActive : btnBase} onClick={() => socket.emit('update_qr_config', { show: !qrConfig?.show })} title="Bật/Tắt Mã QR (Toàn cục)">
           <QrCode size={18}/>
+          <span>QR</span>
         </button>
 
         {/* SPIN */}
@@ -170,29 +180,7 @@ export default function DirectorToolbar({ zoom, setZoom }) {
         </div>
       )}
 
-      {/* QR corner widget */}
-      {showQR && (
-        <div style={{
-          position: 'fixed', bottom: '90px', right: '24px',
-          zIndex: 1000,
-          background: 'rgba(10,10,20,0.85)',
-          backdropFilter: 'blur(30px)',
-          border: '1px solid rgba(255,255,255,0.15)',
-          borderRadius: '16px',
-          padding: '1rem',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.6rem',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
-        }}>
-          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-            <button onClick={() => setQrSize(s => Math.max(s-20,80))} style={{ ...btnBase, padding:'4px 8px', fontSize:'1rem' }}>−</button>
-            <span style={{ color: 'var(--gold)', fontSize: '0.75rem', fontWeight: 600 }}>TƯƠNG TÁC</span>
-            <button onClick={() => setQrSize(s => Math.min(s+20,250))} style={{ ...btnBase, padding:'4px 8px', fontSize:'1rem' }}>+</button>
-          </div>
-          <QRCodeSVG value={qrUrl} size={qrSize} level="H"
-            bgColor="transparent" fgColor="#ffffff" />
-          <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.35)', textAlign: 'center' }}>Quét để tham gia</p>
-        </div>
-      )}
+
     </>
   );
 }

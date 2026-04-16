@@ -74,7 +74,12 @@ export default function SlideTitle({ data }) {
               {title}
             </span>
           </h1>
-          <p style={{ fontSize: 'var(--fs-lg)', color: 'var(--text-tertiary)', fontWeight: 400, lineHeight: 1.5, margin: 0 }}>
+          <p style={{
+            fontSize: '1.45rem', color: 'var(--text-primary)', fontWeight: 600,
+            lineHeight: 1.4, margin: 0,
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(232,184,75,0.7) 100%)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+          }}>
             {subtitle}
           </p>
         </motion.div>
