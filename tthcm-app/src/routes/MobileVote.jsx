@@ -362,7 +362,8 @@ export default function MobileVote() {
                     <input
                       key={i}
                       id={`invite-input-${i}`}
-                      type="text"
+                      type="tel"
+                      inputMode="numeric"
                       maxLength={1}
                       value={password[i] || ''}
                       autoComplete="off"
@@ -372,7 +373,6 @@ export default function MobileVote() {
                         borderRadius: '12px',
                         border: '1.5px solid rgba(0,0,0,0.15)',
                         background: 'rgba(0,0,0,0.02)',
-                        textTransform: 'uppercase',
                         color: 'var(--gold)',
                         ...S.input,
                         padding: 0
@@ -380,7 +380,8 @@ export default function MobileVote() {
                       onFocus={e => { e.target.style.borderColor = 'rgba(181,134,13,0.5)'; e.target.style.background = '#fff'; }}
                       onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.15)'; e.target.style.background = 'rgba(0,0,0,0.02)'; }}
                       onChange={e => {
-                        const val = e.target.value.toUpperCase();
+                        const val = e.target.value.replace(/\D/g, '');
+                        if (!val && e.target.value) return; // ignore non-numeric typing
                         let newPass = password.split('');
                         newPass[i] = val;
                         setPassword(newPass.join('').slice(0,4));
