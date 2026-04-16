@@ -1,0 +1,1609 @@
+{
+  "polls": [
+    {
+      "id": "default",
+      "title": "Bạn nghĩ chiều hướng nào sẽ xảy ra?",
+      "active": false,
+      "options": [
+        {
+          "id": "Tổng lực",
+          "label": "Chiến Tranh Tổng Lực",
+          "icon": "💥",
+          "color": "#dc2626"
+        },
+        {
+          "id": "Giới hạn",
+          "label": "Xung Đột Giới Hạn",
+          "icon": "⚠️",
+          "color": "#b5860d"
+        },
+        {
+          "id": "Hòa bình",
+          "label": "Hạ Nhiệt Ngoại Giao",
+          "icon": "🕊️",
+          "color": "#16a34a"
+        }
+      ],
+      "votes": {
+        "Hòa bình": [
+          "Doan Ngoc Son"
+        ]
+      }
+    },
+    {
+      "id": "lanh-dao-sang-suot",
+      "title": "Ai là người có quyết định sáng suốt nhất?",
+      "active": false,
+      "options": [
+        {
+          "id": "trump",
+          "label": "Donald Trump",
+          "icon": "🇺🇸",
+          "color": "#3b82f6"
+        },
+        {
+          "id": "netanyahu",
+          "label": "Benjamin Netanyahu",
+          "icon": "🇮🇱",
+          "color": "#60a5fa"
+        },
+        {
+          "id": "khamenei",
+          "label": "Ali Khamenei",
+          "icon": "🇮🇷",
+          "color": "#f97316"
+        },
+        {
+          "id": "mbs",
+          "label": "Mohammed bin Salman",
+          "icon": "🇸🇦",
+          "color": "#22c55e"
+        },
+        {
+          "id": "abbas",
+          "label": "Mahmoud Abbas",
+          "icon": "🇵🇸",
+          "color": "#a855f7"
+        }
+      ],
+      "votes": {}
+    },
+    {
+      "id": "poll_1776308407893",
+      "title": "Liệu 5 vị lãnh đạo có thể đạt được một thỏa thuận nào đó hay không?",
+      "options": [
+        {
+          "id": "C",
+          "label": "Có thể",
+          "icon": "✅",
+          "color": "#3dd68c",
+          "explanation": ""
+        },
+        {
+          "id": "D",
+          "label": "Không thể",
+          "icon": "❌",
+          "color": "#4f86f7",
+          "explanation": ""
+        },
+        {
+          "id": "OPT_mo1113hce8nr",
+          "label": "Phiếu trắng",
+          "icon": "❔",
+          "color": "#3dd68c",
+          "explanation": ""
+        }
+      ],
+      "votes": {
+        "C": [
+          "Doan Ngoc Son",
+          "Hoang Thi Be Nhi"
+        ],
+        "D": [
+          "Nguyen Dang Minh"
+        ],
+        "OPT_mo1113hce8nr": []
+      },
+      "active": false
+    },
+    {
+      "id": "lanh-dao-leo-thang",
+      "title": "Ai gây leo thang nguy hiểm nhất?",
+      "active": false,
+      "options": [
+        {
+          "id": "trump",
+          "label": "Donald Trump",
+          "icon": "🇺🇸",
+          "color": "#3b82f6"
+        },
+        {
+          "id": "netanyahu",
+          "label": "Benjamin Netanyahu",
+          "icon": "🇮🇱",
+          "color": "#60a5fa"
+        },
+        {
+          "id": "khamenei",
+          "label": "Ali Khamenei",
+          "icon": "🇮🇷",
+          "color": "#f97316"
+        },
+        {
+          "id": "mbs",
+          "label": "Mohammed bin Salman",
+          "icon": "🇸🇦",
+          "color": "#22c55e"
+        },
+        {
+          "id": "abbas",
+          "label": "Mahmoud Abbas",
+          "icon": "🇵🇸",
+          "color": "#a855f7"
+        }
+      ],
+      "votes": {}
+    }
+  ],
+  "quizBank": [
+    {
+      "id": "quiz_1775836618641",
+      "question": "test chức năng câu hỏi trắc nghiệm",
+      "options": [
+        {
+          "id": "A",
+          "text": "f"
+        },
+        {
+          "id": "B",
+          "text": "g"
+        },
+        {
+          "id": "C",
+          "text": "d"
+        },
+        {
+          "id": "D",
+          "text": "t"
+        },
+        {
+          "id": "E",
+          "text": "b"
+        }
+      ],
+      "correctId": "D",
+      "explanation": "abcdđ",
+      "duration": 300
+    },
+    {
+      "id": "quiz_1776252712969",
+      "type": "mcq",
+      "question": "Vì sao yếu tố tôn giáo trong các xung đột ở Trung Đông thường bị xem là “khó thỏa hiệp” hơn so với các yếu tố địa chính trị?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Vì tôn giáo gắn với các thiết chế quyền lực nên các bên không thể nhượng bộ mà không làm suy yếu vị thế chính trị của mình"
+        },
+        {
+          "id": "B",
+          "text": "Vì tôn giáo liên quan trực tiếp đến tài nguyên chiến lược như dầu mỏ và tuyến hàng hải"
+        },
+        {
+          "id": "C",
+          "text": "Vì niềm tin tôn giáo mang tính tuyệt đối, gắn với bản sắc và tính chính danh tồn tại của cộng đồng, nên việc nhượng bộ dễ bị xem là phản bội"
+        },
+        {
+          "id": "D",
+          "text": "Vì các tổ chức tôn giáo cực đoan kiểm soát hoàn toàn quyết định của các quốc gia"
+        }
+      ],
+      "correctId": "C",
+      "explanation": "Thể hiện đúng bản chất: tôn giáo gắn với niềm tin tuyệt đối, bản sắc cộng đồng và tính chính danh thiêng liêng, nên việc nhượng bộ không chỉ là mất lợi ích mà còn là phủ nhận chính mình.",
+      "duration": 30
+    },
+    {
+      "id": "quiz_1776252818064",
+      "type": "mcq",
+      "question": "Quan điểm “Địa chính trị là bàn cờ, tôn giáo là quân cờ” phản ánh chính xác nhất điều gì trong bản chất các xung đột Trung Đông?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Tôn giáo chỉ là hệ quả phụ của các quyết định chính trị nên không có vai trò độc lập"
+        },
+        {
+          "id": "B",
+          "text": "Địa chính trị và tôn giáo là hai hệ thống tách biệt, mỗi bên chi phối một phần riêng của xung đột"
+        },
+        {
+          "id": "C",
+          "text": "Lợi ích quyền lực và chiến lược xác định mục tiêu, trong khi tôn giáo cung cấp động lực, bản sắc và tính chính danh để triển khai xung đột"
+        },
+        {
+          "id": "D",
+          "text": "Tôn giáo giữ vai trò trung tâm trong việc định hình cả mục tiêu lẫn phương thức của xung đột, khi các niềm tin thiêng liêng, lịch sử tôn giáo và bản sắc cộng đồng không chỉ ảnh hưởng đến cách các bên hành động mà còn quyết định họ theo đuổi những mục tiêu nào, từ đó khiến các tính toán địa chính trị trở nên phụ thuộc vào hệ tư tưởng tôn giáo"
+        }
+      ],
+      "correctId": "C",
+      "explanation": "Phản ánh đúng bản chất: địa chính trị quyết định “đích đến” (mục tiêu quyền lực), còn tôn giáo quyết định “cách huy động và duy trì xung đột” (động lực + chính danh + bản sắc).",
+      "duration": 30
+    },
+    {
+      "id": "quiz_1776252873884",
+      "type": "mcq",
+      "question": "Vì sao eo biển Hormuz được coi là một trong những “điểm nghẽn chiến lược” quan trọng nhất trong cấu trúc an ninh năng lượng toàn cầu?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Vì khu vực này tập trung mật độ cao các căn cứ quân sự của nhiều cường quốc, khiến mọi xung đột tại đây dễ leo thang thành đối đầu quốc tế"
+        },
+        {
+          "id": "B",
+          "text": "Vì đây là tuyến vận chuyển phần lớn dầu mỏ toàn cầu, khiến bất kỳ sự gián đoạn nào cũng có thể gây biến động lớn đến thị trường năng lượng và kinh tế thế giới"
+        },
+        {
+          "id": "C",
+          "text": "Vì đây là không gian giao thoa giữa nhiều nền văn minh và tôn giáo, khiến các xung đột tại đây mang tính biểu tượng và lan tỏa rộng"
+        },
+        {
+          "id": "D",
+          "text": "Vì eo biển này nằm trong phạm vi kiểm soát địa lý của các quốc gia có khả năng sử dụng nó như một công cụ gây áp lực chiến lược, từ đó ảnh hưởng đến chuỗi cung ứng năng lượng toàn cầu và buộc các cường quốc phải can dự để bảo vệ lợi ích của mình"
+        }
+      ],
+      "correctId": "B",
+      "explanation": "Phản ánh đúng bản chất: Hormuz là choke point năng lượng, nơi một tỷ lệ lớn dầu mỏ toàn cầu đi qua → bất kỳ gián đoạn nào cũng tác động trực tiếp đến giá dầu và kinh tế thế giới.",
+      "duration": 30
+    },
+    {
+      "id": "quiz_1776252974382",
+      "type": "mcq",
+      "question": "Nguyên tắc “dĩ bất biến, ứng vạn biến” trong tư tưởng Hồ Chí Minh được vận dụng trong chính sách đối ngoại Việt Nam hiện nay thể hiện rõ nhất ở điểm nào?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Điều chỉnh mục tiêu chiến lược theo từng giai đoạn nhằm tối ưu hóa lợi ích quốc gia trong bối cảnh quốc tế biến động"
+        },
+        {
+          "id": "B",
+          "text": "Kiên định lợi ích cốt lõi của quốc gia – dân tộc, đồng thời linh hoạt về phương thức, đối tác và cách tiếp cận trong quan hệ quốc tế"
+        },
+        {
+          "id": "C",
+          "text": "Duy trì trạng thái trung lập tuyệt đối bằng cách hạn chế tham gia vào các cơ chế hợp tác quốc tế để tránh rủi ro chiến lược"
+        },
+        {
+          "id": "D",
+          "text": "Ưu tiên thiết lập quan hệ sâu rộng với các cường quốc nhằm tận dụng bảo đảm an ninh và nâng cao vị thế quốc tế"
+        }
+      ],
+      "correctId": "B",
+      "explanation": "Phản ánh đúng bản chất: “bất biến” = lợi ích quốc gia – dân tộc; “vạn biến” = sách lược, đối tác, phương thức → vừa giữ nguyên tắc vừa thích ứng linh hoạt",
+      "duration": 30
+    },
+    {
+      "id": "quiz_1776253041134",
+      "type": "mcq",
+      "question": "Từ thực tiễn xung đột Trung Đông, bài học cốt lõi nào phù hợp nhất với tư tưởng Hồ Chí Minh trong việc bảo vệ và phát triển đất nước Việt Nam?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Kiên định độc lập, tự chủ trong đường lối; đồng thời giải quyết mâu thuẫn bằng biện pháp hòa bình, kết hợp linh hoạt giữa hợp tác và đấu tranh"
+        },
+        {
+          "id": "B",
+          "text": "Ưu tiên phát triển kinh tế nhanh chóng, kể cả chấp nhận những đánh đổi về phụ thuộc chiến lược để tận dụng nguồn lực từ bên ngoài"
+        },
+        {
+          "id": "C",
+          "text": "Thiết lập các liên minh an ninh linh hoạt với các cường quốc nhằm tạo thế răn đe và bảo đảm lợi ích quốc gia trong môi trường cạnh tranhThiết lập các liên minh an ninh linh hoạt với các cường quốc nhằm tạo thế răn đe và bảo đảm lợi ích quốc gia trong môi trường cạnh tranh"
+        },
+        {
+          "id": "D",
+          "text": "Chủ động gia tăng ảnh hưởng khu vực thông qua can dự sâu vào các điểm nóng nhằm nâng cao vị thế địa chính trị của quốc gia"
+        }
+      ],
+      "correctId": "A",
+      "explanation": "A: Phản ánh đúng bản chất: độc lập – tự chủ là nền tảng, kết hợp với giải quyết xung đột bằng hòa bình và linh hoạt sách lược → phù hợp cả với tư tưởng Hồ Chí Minh lẫn thực tiễn Việt Nam.",
+      "duration": 30
+    },
+    {
+      "id": "quiz_1776253109303",
+      "type": "mcq",
+      "question": "Trong bối cảnh cạnh tranh chiến lược giữa các nước lớn tại Biển Đông, cách tiếp cận nào phản ánh đầy đủ nhất tư tưởng Hồ Chí Minh trong việc bảo vệ lợi ích quốc gia của Việt Nam?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Chủ động lựa chọn liên kết chiến lược với một cường quốc nhằm tạo thế cân bằng quyền lực và tăng cường khả năng răn đe trước các thách thức an ninh"
+        },
+        {
+          "id": "B",
+          "text": "Duy trì trạng thái trung lập tương đối bằng cách hạn chế cam kết sâu trong các quan hệ quốc tế để tránh bị cuốn vào cạnh tranh giữa các nước lớn"
+        },
+        {
+          "id": "C",
+          "text": "Tăng cường sức mạnh quân sự và ưu tiên giải pháp răn đe cứng nhằm bảo vệ chủ quyền trước các sức ép địa chính trị"
+        },
+        {
+          "id": "D",
+          "text": "Kiên định độc lập, tự chủ; đồng thời đa phương hóa, đa dạng hóa quan hệ, tận dụng hợp tác quốc tế nhưng không để rơi vào phụ thuộc chiến lược"
+        }
+      ],
+      "correctId": "D",
+      "explanation": "D: Phản ánh đúng bản chất: giữ vững nguyên tắc (độc lập, tự chủ) và linh hoạt trong quan hệ (đa phương hóa, không phụ thuộc) → phù hợp cả lý luận và thực tiễn Việt Nam.",
+      "duration": 15
+    }
+  ],
+  "questions": [],
+  "voterProfiles": {
+    "202212538": {
+      "name": "Dinh Thi Trang Nhung",
+      "fingerprint": "wkjswd"
+    },
+    "020232543": {
+      "name": "Nguyen Duy Thai",
+      "fingerprint": "2zt1x0"
+    },
+    "020203824": {
+      "name": "Doan Ngoc Son",
+      "fingerprint": "7ff3nq"
+    },
+    "020233679": {
+      "name": "Mai Duc Trung",
+      "fingerprint": "8lr6h8"
+    },
+    "020232386": {
+      "name": "Vo Alexander",
+      "fingerprint": "dbalo9"
+    },
+    "020226760": {
+      "name": "Do Thanh Trung",
+      "fingerprint": "avwhai"
+    },
+    "020233080": {
+      "name": "Cao Xuan Nam",
+      "fingerprint": "hi5281"
+    },
+    "020221253": {
+      "name": "Dinh Thi Trang Nhung",
+      "fingerprint": "wkjswd"
+    },
+    "020223299": {
+      "name": "Hoang Thi Be Nhi",
+      "fingerprint": "oe4ba"
+    },
+    "020221236": {
+      "name": "Nguyen Dang Minh",
+      "fingerprint": "rmweuw"
+    }
+  },
+  "blockedIPs": [],
+  "blockedMSSV": [],
+  "mutedMSSV": [],
+  "blockedFP": [],
+  "adminCode": "202600",
+  "slidePassword": "115100",
+  "authCode": "8386",
+  "aiChats": {
+    "20203824": [
+      {
+        "id": "1775888474603",
+        "role": "user",
+        "text": "Hình ảnh con đỉa hai đầu và con rắn độc?"
+      },
+      {
+        "id": "1775888474604",
+        "role": "ai",
+        "text": "Chào bạn Doan Ngoc Son. Cảm ơn câu hỏi với những hình ảnh rất mạnh!\n\n*   Hình ảnh \"đỉa hai đầu\" hay \"rắn độc\" thường ám chỉ sự thiếu trung thực, cơ hội chủ nghĩa, hoặc tiềm ẩn nguy hiểm trong quan hệ quốc tế.\n*   Ngoại giao cây tre của Việt Nam thì khác. Đó là *kiên định về nguyên tắc* (độc lập, tự chủ, vì hòa bình) và *mềm dẻo về sách lược* (linh hoạt ứng biến, tránh đối đầu).\n    *   Không phải bám víu hay lật lọng. Mà là *tự tin, chủ động kết bạn rộng rãi*, nhưng luôn giữ vững lập trường quốc gia, vì hòa bình và phát triển bền vững.\n*   Còn đường lối linh hoạt của Trung Đông, tuy đôi khi phải xoay sở để bảo vệ lợi ích trong bối cảnh địa chính trị phức tạp, cũng là nhằm mưu cầu an ninh, phát triển cho đất nước họ.\n*   Cả hai chiến lược đều có mục tiêu rõ ràng, khác biệt với ý nghĩa tiêu cực mà bạn nêu ra."
+      }
+    ],
+    "20226760": [
+      {
+        "id": "1775914987360",
+        "role": "user",
+        "text": "Dua hấu có màu gì"
+      },
+      {
+        "id": "1775914987361",
+        "role": "ai",
+        "text": "Chào bạn Do Thanh Trung, cảm ơn bạn đã đặt câu hỏi!\n\nCâu hỏi về màu dưa hấu rất thú vị, tuy nhiên, để tập trung vào chủ đề chính của buổi hội thảo \"Bức tranh địa chính trị Trung Đông và bài học cho Việt Nam\", chúng ta sẽ ưu tiên các câu hỏi liên quan đến:\n*   Đường lối ngoại giao linh hoạt của các quốc gia Trung Đông.\n*   Ngoại giao cây tre của Việt Nam.\n*   Những bài học chính trị, ngoại giao mà Việt Nam có thể rút ra.\n\nBạn có câu hỏi nào về chủ đề này không ạ? Nhóm rất sẵn lòng giải đáp!"
+      },
+      {
+        "id": "1775915031032",
+        "role": "user",
+        "text": "Đường lối ngoại giao linh hoạt của các quốc gia Trung Đông."
+      },
+      {
+        "id": "1775915031033",
+        "role": "ai",
+        "text": "Chào bạn Do Thanh Trung, đây là một câu hỏi rất hay và đúng trọng tâm!\n\nĐường lối ngoại giao linh hoạt của các quốc gia Trung Đông có nghĩa là:\n\n*   **Không đặt tất cả trứng vào một giỏ:** Các nước này không phụ thuộc hoàn toàn vào một cường quốc hay một phe nào.\n*   **Duy trì quan hệ đa dạng:** Họ khéo léo thiết lập và duy trì quan hệ tốt với nhiều đối tác lớn (như Mỹ, Nga, Trung Quốc, EU) và cả các nước láng giềng, dù đôi khi có mâu thuẫn.\n*   **Thích ứng với tình hình:** Họ sẵn sàng thay đổi liên minh hoặc chính sách tùy theo lợi ích quốc gia tại từng thời điểm, nhằm bảo vệ an ninh và phát triển kinh tế tối đa.\n\nMục đích là để tăng cường vị thế, giữ cân bằng và tối ưu hóa lợi ích của mình trong một khu vực phức tạp."
+      }
+    ],
+    "020203824": [
+      {
+        "id": "1775886657853",
+        "role": "user",
+        "text": "Hi bro"
+      },
+      {
+        "id": "1775886657854",
+        "role": "ai",
+        "text": "Chào bạn Doan Ngoc Son! Rất vui được bạn quan tâm và tương tác.\n\nBạn có câu hỏi nào muốn đặt ra cho Nhóm 11, hoặc muốn thảo luận sâu hơn về:\n*   **Đường lối ngoại giao linh hoạt của Trung Đông**\n*   Hay **chiến lược ngoại giao cây tre của Việt Nam**\n\nĐừng ngại nhé, không cần chuyên môn chính trị, chúng ta vẫn có thể bàn luận để cùng hiểu rõ hơn về cách các quốc gia ứng xử trên trường quốc tế. Mời bạn!"
+      },
+      {
+        "id": "1775886817499",
+        "role": "user",
+        "text": "Nói về hình ảnh cây tre"
+      },
+      {
+        "id": "1775886817500",
+        "role": "ai",
+        "text": "Chào bạn Doan Ngoc Son, rất hay khi bạn muốn tìm hiểu về hình ảnh cây tre!\n\nTrong ngoại giao Việt Nam, \"cây tre\" tượng trưng cho đường lối đối ngoại của chúng ta, được đúc kết từ tư tưởng Hồ Chí Minh, với các đặc điểm:\n\n*   **Kiên định về nguyên tắc:** Như rễ tre bám sâu, vững chắc. Việt Nam luôn giữ vững độc lập, tự chủ, hòa bình và hợp tác.\n*   **Mềm dẻo, linh hoạt trong sách lược:** Như thân tre dẻo dai, uốn cong nhưng không gãy. Chúng ta sẵn sàng thích ứng, mở rộng quan hệ với mọi đối tác, tránh đối đầu không cần thiết.\n*   **Đoàn kết, tự cường:** Như bụi tre sum vầy, tạo sức mạnh tổng hợp. Sức mạnh nội lực kết hợp với tranh thủ sự ủng hộ quốc tế.\n\nNói cách khác, \"ngoại giao cây tre\" là vừa kiên định mục tiêu độc lập, vừa mềm dẻo ứng xử để đạt được mục tiêu đó trong thế giới phức tạp.\n\nBạn có thấy hình ảnh này gần gũi và dễ hình dung không?"
+      },
+      {
+        "id": "1775886898013",
+        "role": "user",
+        "text": "Áp dụng nó ở thời đại mới ntn"
+      },
+      {
+        "id": "1775886898014",
+        "role": "ai",
+        "text": "Chào bạn Doan Ngoc Son, đây là một câu hỏi rất hay, đi thẳng vào vấn đề thực tiễn!\n\nTrong thời đại mới, \"ngoại giao cây tre\" của Việt Nam vẫn giữ vững các nguyên tắc cốt lõi, nhưng được áp dụng linh hoạt hơn bao giờ hết để thích nghi với thế giới phức tạp:\n\n*   **Đa dạng hóa quan hệ:** Việt Nam kết bạn với mọi quốc gia, mọi đối tác, không phụ thuộc vào một bên nào. Giúp chúng ta có nhiều lựa chọn, không bị ràng buộc.\n*   **Chủ động hội nhập quốc tế:** Tham gia tích cực vào các tổ chức đa phương (ASEAN, LHQ, WTO) và ký nhiều hiệp định thương mại tự do. Điều này giúp chúng ta có tiếng nói, xây dựng luật chơi chung và phát triển kinh tế.\n*   **Ứng phó linh hoạt với thách thức:** Từ biến đổi khí hậu, dịch bệnh, đến cạnh tranh địa chính trị, \"cây tre\" giúp chúng ta vừa kiên định bảo vệ lợi ích, vừa mềm dẻo hợp tác để cùng giải quyết các vấn đề toàn cầu.\n*   **Mục tiêu cuối cùng:** Vẫn là bảo vệ độc lập, chủ quyền và phát triển đất nước bền vững trong bối cảnh thế giới nhiều biến động.\n\nHy vọng bạn thấy dễ hiểu!"
+      },
+      {
+        "id": "1775886967584",
+        "role": "user",
+        "text": "Hi"
+      },
+      {
+        "id": "1775886967585",
+        "role": "ai",
+        "text": "Chào bạn Doan Ngoc Son,\n\nBạn có câu hỏi nào khác muốn đặt ra, hoặc muốn chúng ta cùng nhìn nhận thêm về **ngoại giao cây tre của Việt Nam** hay **đường lối linh hoạt của Trung Đông** trong bối cảnh hiện nay không?\n\nRất sẵn lòng cùng bạn trao đổi thêm!"
+      },
+      {
+        "id": "1775887048422",
+        "role": "user",
+        "text": "Tình hình kinh tế việt nam 2026"
+      },
+      {
+        "id": "1775887048423",
+        "role": "ai",
+        "text": "Chào bạn Doan Ngoc Son, cảm ơn câu hỏi về kinh tế Việt Nam 2026!\n\nĐây là một chủ đề lớn và quan trọng, nhưng trong phạm vi buổi hội thảo hôm nay, chúng ta đang tập trung vào đường lối ngoại giao.\n\nTuy nhiên, có một mối liên hệ mật thiết:\n*   Chính **chiến lược ngoại giao cây tre** giúp Việt Nam mở rộng quan hệ quốc tế, thu hút đầu tư, và tạo môi trường hòa bình để kinh tế phát triển bền vững trong dài hạn, bao gồm cả giai đoạn 2026.\n\nBạn có muốn bàn luận thêm về cách ngoại giao hỗ trợ phát triển kinh tế không?"
+      },
+      {
+        "id": "1775887067897",
+        "role": "user",
+        "text": "Có"
+      },
+      {
+        "id": "1775887067898",
+        "role": "ai",
+        "text": "Cảm ơn bạn Doan Ngoc Son, chúng ta hãy cùng nhìn nhận mối liên hệ này nhé!\n\n\"Ngoại giao cây tre\" đóng vai trò cực kỳ quan trọng trong việc hỗ trợ kinh tế Việt Nam phát triển:\n\n*   **Thu hút Đầu tư nước ngoài (FDI):**\n    *   Mối quan hệ tốt đẹp với nhiều quốc gia giúp Việt Nam trở thành điểm đến an toàn, tin cậy cho các nhà đầu tư nước ngoài.\n    *   Các hiệp định thương mại (FTA) như EVFTA, CPTPP... là kết quả của ngoại giao, tạo ra môi trường kinh doanh thuận lợi, giảm thuế, thu hút FDI.\n\n*   **Mở rộng thị trường xuất khẩu:**\n    *   Quan hệ ngoại giao đa dạng giúp sản phẩm Việt Nam tiếp cận được nhiều thị trường hơn trên thế giới.\n    *   Giải quyết các rào cản thương mại, bảo vệ quyền lợi doanh nghiệp Việt Nam ở nước ngoài.\n\n*   **Đảm bảo môi trường hòa bình, ổn định:**\n    *   \"Cây tre\" giúp duy trì sự cân bằng, tránh xung đột, tạo điều kiện thuận lợi nhất để doanh nghiệp yên tâm sản xuất, kinh doanh.\n\nNói tóm lại, ngoại giao vững mạnh là nền tảng vững chắc để kinh tế Việt Nam vươn ra thế giới và phát triển bền vững."
+      },
+      {
+        "id": "1775913716962",
+        "role": "user",
+        "text": "Xin chào bro"
+      },
+      {
+        "id": "1775913716963",
+        "role": "ai",
+        "text": "Chào bạn Doan Ngoc Son, rất vui được bạn tiếp tục trò chuyện!\n\nBuổi hội thảo của chúng ta đang tập trung vào **đường lối ngoại giao linh hoạt của Trung Đông** và **chiến lược ngoại giao cây tre của Việt Nam**.\n\nBạn có câu hỏi nào muốn đặt ra, hoặc muốn chúng ta cùng thảo luận sâu hơn về chủ đề này không? Rất sẵn lòng lắng nghe bạn!"
+      },
+      {
+        "id": "1775913962522",
+        "role": "user",
+        "text": "Bạn là trợ lý AI của ai?"
+      },
+      {
+        "id": "1775913962523",
+        "role": "ai",
+        "text": "Chào bạn Doan Ngoc Son,\n\nTôi là một mô hình ngôn ngữ lớn, được huấn luyện bởi Google.\n\nVới vai trò là chuyên gia tại hội thảo này, tôi ở đây để hỗ trợ các bạn thảo luận và làm rõ hơn về chủ đề \"Bức tranh địa chính trị Trung Đông và bài học cho Việt Nam\", đặc biệt là về đường lối ngoại giao linh hoạt và ngoại giao cây tre.\n\nBạn có câu hỏi nào khác liên quan đến chủ đề của chúng ta không?"
+      },
+      {
+        "id": "1775914327439",
+        "role": "user",
+        "text": "Xin chào"
+      },
+      {
+        "id": "1775914327440",
+        "role": "ai",
+        "text": "Chào bạn Doan Ngoc Son, rất vui được bạn chào hỏi!\n\nTrong khuôn khổ buổi hội thảo về \"Bức tranh địa chính trị Trung Đông và bài học cho Việt Nam\", chúng ta đang cùng khám phá các chiến lược ngoại giao.\n\nBạn có điều gì muốn trao đổi thêm về:\n*   **Đường lối ngoại giao linh hoạt của Trung Đông**\n*   Hay **ngoại giao cây tre của Việt Nam**\n\nMời bạn tiếp tục đặt câu hỏi nhé!"
+      },
+      {
+        "id": "1775914355784",
+        "role": "user",
+        "text": "Helllo"
+      },
+      {
+        "id": "1775914355785",
+        "role": "ai",
+        "text": "Chào bạn Doan Ngoc Son, rất vui được bạn chào hỏi một lần nữa!\n\nChúng ta đang ở trong không khí sôi nổi của buổi hội thảo về \"Bức tranh địa chính trị Trung Đông và bài học cho Việt Nam\".\n\nNếu bạn có bất kỳ câu hỏi nào về:\n*   **Đường lối ngoại giao linh hoạt của các quốc gia Trung Đông**\n*   Hay **triết lý ngoại giao cây tre của Việt Nam**\n\nMời bạn cứ tự nhiên đặt câu hỏi nhé. Tôi rất sẵn lòng cùng bạn trao đổi!"
+      },
+      {
+        "id": "1775915900231",
+        "role": "user",
+        "text": "Xin chào"
+      },
+      {
+        "id": "1775915900232",
+        "role": "ai",
+        "text": "Chào bạn Doan Ngoc Son, rất vui được bạn chào hỏi!\n\nTrong khuôn khổ buổi hội thảo của chúng ta, nếu bạn có bất kỳ câu hỏi nào về:\n*   **Đường lối ngoại giao của Trung Đông**\n*   Hoặc **ngoại giao cây tre của Việt Nam**\n\nMời bạn cứ tự nhiên đặt câu hỏi nhé. Tôi sẵn lòng cùng bạn trao đổi!"
+      },
+      {
+        "id": "1775983472388",
+        "role": "user",
+        "text": "Helo"
+      },
+      {
+        "id": "1775983472389",
+        "role": "ai",
+        "text": "Chào bạn Doan Ngoc Son, rất vui được bạn chào hỏi!\n\nChúng ta đang ở trong buổi hội thảo quan trọng về \"Bức tranh địa chính trị Trung Đông và bài học cho Việt Nam\".\n\nNếu bạn có bất kỳ câu hỏi nào về **chiến lược ngoại giao linh hoạt của Trung Đông** hay **ngoại giao cây tre của Việt Nam**, mời bạn đặt ra để chúng ta cùng thảo luận nhé!"
+      },
+      {
+        "id": "1776262585957",
+        "role": "user",
+        "text": "Xin chào bro"
+      },
+      {
+        "id": "1776262585958",
+        "role": "ai",
+        "text": "Chào bạn Doan Ngoc Son, rất vui được bạn tiếp tục trò chuyện!\n\nChúng ta đang bàn về chủ đề thú vị: **\"Bức tranh địa chính trị Trung Đông và bài học cho Việt Nam\"**, đặc biệt là về đường lối ngoại giao linh hoạt và ngoại giao cây tre.\n\nBạn có muốn trao đổi gì thêm về:\n*   **Chiến lược ngoại giao của các nước Trung Đông**\n*   Hay **triết lý ngoại giao cây tre của Việt Nam**\n\nMời bạn cứ tự nhiên đặt câu hỏi nhé!"
+      },
+      {
+        "id": "1776262658372",
+        "role": "user",
+        "text": "Hôm nay là 28/02/2026, tình hình trung đông đang như thế nào"
+      },
+      {
+        "id": "1776262658373",
+        "role": "ai",
+        "text": "Chào bạn Doan Ngoc Son, cảm ơn bạn đã quan tâm.\n\nLà AI, tôi không thể dự đoán chính xác tình hình Trung Đông vào 28/02/2026.\n\nTuy nhiên, khu vực này luôn rất phức tạp, với các yếu tố như:\n*   Xung đột cục bộ\n*   Cạnh tranh ảnh hưởng cường quốc\n*   Dầu mỏ, kinh tế\n*   Nỗ lực ngoại giao linh hoạt\n\nĐây là bối cảnh mà **đường lối ngoại giao** của các nước Trung Đông luôn cần sự khéo léo, và cũng là nguồn **bài học quý giá cho ngoại giao cây tre của Việt Nam**.\n\nBạn có muốn thảo luận về những xu hướng này không?"
+      }
+    ]
+  },
+  "commentHistory": [
+    {
+      "id": 1775983509161.164,
+      "name": "Dinh Thi Trang Nhung",
+      "mssv": "020221253",
+      "text": "15p nữa hết tg nha =)))))",
+      "ip": "117.7.139.145",
+      "ts": "2026-04-12T08:45:09.162Z"
+    },
+    {
+      "id": 1775982410412.071,
+      "name": "Doan Ngoc Son",
+      "mssv": "020203824",
+      "text": "Mu he he he 😈",
+      "ip": "42.113.21.193",
+      "ts": "2026-04-12T08:26:50.412Z"
+    },
+    {
+      "id": 1775925200103.198,
+      "name": "Doan Ngoc Son",
+      "mssv": "020203824",
+      "text": "Muhehehe",
+      "ip": "42.113.21.193",
+      "ts": "2026-04-11T16:33:20.103Z"
+    }
+  ],
+  "pinnedItem": null,
+  "geminiApiKey": "AIzaSyB8PvDaKheYUEESSahDq9vt5sP6WT3RI_c",
+  "reactionHistory": [
+    {
+      "mssv": "020203824",
+      "emoji": "🔥",
+      "ts": 1775913101363
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913102427
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1775913103059
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913103574
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913103937
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913104254
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913111034
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913111156
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913111850
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913114213
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913114530
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913114674
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913114824
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913114975
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913115106
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913115254
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913115425
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913115555
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913115707
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913115838
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913115973
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913116118
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913116270
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913116418
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913116572
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913116736
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913116883
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913117054
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913117357
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913117486
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913117656
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913117955
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913118252
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🔥",
+      "ts": 1775913118725
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1775913118908
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🔥",
+      "ts": 1775913119457
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913120136
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913120302
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913120854
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🔥",
+      "ts": 1775913121696
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🔥",
+      "ts": 1775913122502
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1775913122649
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913122763
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913122981
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913123570
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913123800
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1775913123913
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🔥",
+      "ts": 1775913124030
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913124192
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913124296
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913124601
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1775913124759
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913125663
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913126649
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1775913126763
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913126960
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913127177
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1775913127296
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913127731
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913128245
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913128661
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913129183
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913129392
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1775913129839
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1775913130012
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913130161
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913131213
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913137481
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913137717
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1775913137932
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🔥",
+      "ts": 1775913138420
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913138852
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1775913139255
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913237253
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913237924
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913240117
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🔥",
+      "ts": 1775913240614
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1775913240777
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913240914
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913241077
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🔥",
+      "ts": 1775913241229
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1775913242297
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913242407
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1775913242508
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🔥",
+      "ts": 1775913242771
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1775913243505
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1775913244239
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913246726
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913247118
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913247254
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913247400
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1775913247757
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913248320
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913260839
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775913261706
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "😮",
+      "ts": 1775915045816
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "😮",
+      "ts": 1775915049295
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "😮",
+      "ts": 1775915050691
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "😮",
+      "ts": 1775915050974
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "🤣",
+      "ts": 1775915052184
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "🔥",
+      "ts": 1775915052819
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "🤣",
+      "ts": 1775915053445
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "😮",
+      "ts": 1775915053947
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "👍",
+      "ts": 1775915054456
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "❤️",
+      "ts": 1775915057989
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "❤️",
+      "ts": 1775915058296
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "❤️",
+      "ts": 1775915058592
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "❤️",
+      "ts": 1775915058924
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "❤️",
+      "ts": 1775915061215
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "❤️",
+      "ts": 1775915061525
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "❤️",
+      "ts": 1775915061843
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "❤️",
+      "ts": 1775915062160
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "❤️",
+      "ts": 1775915062480
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "❤️",
+      "ts": 1775915062805
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "❤️",
+      "ts": 1775915063145
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "❤️",
+      "ts": 1775915063493
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "❤️",
+      "ts": 1775915063810
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "😮",
+      "ts": 1775915147240
+    },
+    {
+      "mssv": "020226760",
+      "emoji": "😮",
+      "ts": 1775915148982
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775925202328
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🔥",
+      "ts": 1775925202861
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775925203796
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775925204077
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775925204341
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775925204626
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775925204896
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775925205192
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775925205477
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775925205761
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775925206206
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775925206721
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775925207003
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1775982392691
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1775982393001
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1775982394120
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1775982394432
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1775982394749
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1775982395082
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1775982395382
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1775982397135
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🔥",
+      "ts": 1775982397345
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1775982942794
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1775982945924
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1775982946239
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1775982946538
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1775982946869
+    },
+    {
+      "mssv": "020221253",
+      "emoji": "❤️",
+      "ts": 1775983150574
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1776086034377
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1776086034656
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1776086035500
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1776086035807
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1776086037167
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1776086037465
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1776086037687
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1776086037887
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1776086038087
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776086041407
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776086041687
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1776086043327
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1776086043607
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "👍",
+      "ts": 1776086043967
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1776086044567
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1776086044767
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1776086045007
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1776086045247
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1776086047007
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776086047489
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776086047727
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776086047939
+    },
+    {
+      "mssv": "020221253",
+      "emoji": "❤️",
+      "ts": 1776086098841
+    },
+    {
+      "mssv": "020221253",
+      "emoji": "👍",
+      "ts": 1776086100561
+    },
+    {
+      "mssv": "020221253",
+      "emoji": "😮",
+      "ts": 1776086100921
+    },
+    {
+      "mssv": "020221253",
+      "emoji": "🤣",
+      "ts": 1776086101202
+    },
+    {
+      "mssv": "020221253",
+      "emoji": "🔥",
+      "ts": 1776086101441
+    },
+    {
+      "mssv": "020221253",
+      "emoji": "🔥",
+      "ts": 1776086101641
+    },
+    {
+      "mssv": "020221253",
+      "emoji": "👍",
+      "ts": 1776086102139
+    },
+    {
+      "mssv": "020221253",
+      "emoji": "😮",
+      "ts": 1776086102681
+    },
+    {
+      "mssv": "020221253",
+      "emoji": "🔥",
+      "ts": 1776086103321
+    },
+    {
+      "mssv": "020221253",
+      "emoji": "😮",
+      "ts": 1776086103721
+    },
+    {
+      "mssv": "020221253",
+      "emoji": "🔥",
+      "ts": 1776086103921
+    },
+    {
+      "mssv": "020221253",
+      "emoji": "🔥",
+      "ts": 1776086104121
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268270575
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268271040
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268271372
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268271722
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268272080
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268272414
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268272772
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268273113
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268273439
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268273799
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268274147
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268274530
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268274880
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268275208
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268275807
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268276234
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "🤣",
+      "ts": 1776268276542
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "😮",
+      "ts": 1776268277639
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1776306852607
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1776306853022
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1776306853235
+    },
+    {
+      "mssv": "020203824",
+      "emoji": "❤️",
+      "ts": 1776306853473
+    }
+  ],
+  "openaiApiKey": ""
+}

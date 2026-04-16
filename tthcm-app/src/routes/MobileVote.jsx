@@ -878,8 +878,9 @@ export default function MobileVote() {
                     {myAnswer && (
                       <div style={{ background:'rgba(22,163,74,0.08)', border:'1px solid rgba(22,163,74,0.25)', borderRadius:'14px', padding:'1rem', marginBottom:'0.5rem' }}>
                         <div style={{ fontSize:'0.75rem', color:'#16a34a', fontWeight:700, marginBottom:'0.4rem', textTransform:'uppercase', letterSpacing:'0.05em' }}>🔔 Phản hồi từ Nhóm Diễn Giả</div>
-                        <div style={{ fontSize:'0.88rem', color:'#b0b8c8', fontWeight:600, fontStyle:'italic', marginBottom:'0.6rem', paddingLeft:'0.5rem', borderLeft:'2px solid rgba(255,255,255,0.2)' }}>"{myAnswer.questionText}"</div>
-                        <div style={{ fontSize:'0.9rem', color:'#ffffff', lineHeight:1.5, fontWeight:500 }}>{myAnswer.answer}</div>
+                        <div style={{ fontSize:'0.88rem', color:'#b0b8c8', fontWeight:600, fontStyle:'italic', marginBottom:'0.6rem', paddingLeft:'0.5rem', borderLeft:'2px solid rgba(255,255,255,0.2)' }}>"{myAnswer.question}"</div>
+                        <div style={{ fontSize:'0.9rem', color:'#ffffff', lineHeight:1.5, fontWeight:500, marginBottom:'0.6rem' }}>{myAnswer.answer}</div>
+                        <button onClick={() => setMyAnswer(null)} style={{ padding:'0.3rem 0.8rem', background:'rgba(22,163,74,0.15)', color:'#16a34a', border:'none', borderRadius:'6px', fontSize:'0.75rem', fontWeight:600, cursor:'pointer' }}>✕ Đóng</button>
                       </div>
                     )}
 

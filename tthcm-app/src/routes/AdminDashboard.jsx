@@ -594,8 +594,8 @@ export default function AdminDashboard() {
                       ))}
                       {newPollOpts.length < 6 && (
                         <button onClick={() => {
-                          const id = String.fromCharCode(65 + newPollOpts.length);
-                          setNPO([...newPollOpts, { id, label:`Lựa chọn ${id}`, icon:'', color: COLORS[newPollOpts.length % COLORS.length], explanation:'' }]);
+                          const id = 'OPT_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+                          setNPO([...newPollOpts, { id, label:`Lựa chọn mới`, icon:'', color: COLORS[newPollOpts.length % COLORS.length], explanation:'' }]);
                         }} style={{ alignSelf:'flex-start', background:'transparent', border:'none', color:'#2563eb', fontWeight:600, cursor:'pointer', fontSize:'0.8rem', padding:'0.2rem 0' }}>+ Thêm lựa chọn</button>
                       )}
                     </div>
