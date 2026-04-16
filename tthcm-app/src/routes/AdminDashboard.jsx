@@ -857,15 +857,18 @@ export default function AdminDashboard() {
                             <div style={{ fontSize:'0.72rem', fontWeight:700, color:'#b5860d', letterSpacing:'0.06em' }}>🏆 TRẢ LỜI ĐÚNG & NHANH NHẤT ({activeQuiz.winners.length} người)</div>
                           </div>
                           <div style={{ maxHeight:'160px', overflowY:'auto', display:'flex', flexDirection:'column', gap:'1px' }}>
-                            {activeQuiz.winners.map(w => (
-                              <div key={w.rank} style={{ display:'flex', alignItems:'center', gap:'0.5rem', padding:'0.22rem 0', borderBottom:'1px solid rgba(0,0,0,0.04)' }}>
-                                <span style={{ fontSize:'0.85rem', width:'1.6rem', textAlign:'center', flexShrink:0 }}>
-                                  {w.rank===1?'🥇':w.rank===2?'🥈':w.rank===3?'🥉':`${w.rank}.`}
-                                </span>
-                                <span style={{ fontWeight:w.rank<=3?700:400, color:'#1a1714', fontSize:'0.83rem', flex:1 }}>{w.name}</span>
-                                {w.mssv && <span style={{ fontSize:'0.68rem', color:'#a89e94', fontFamily:'monospace' }}>{w.mssv}</span>}
-                              </div>
-                            ))}
+                            {activeQuiz.winners.map((w, idx) => {
+                              const rank = idx + 1;
+                              return (
+                                <div key={idx} style={{ display:'flex', alignItems:'center', gap:'0.5rem', padding:'0.22rem 0', borderBottom:'1px solid rgba(0,0,0,0.04)' }}>
+                                  <span style={{ fontSize:'0.85rem', width:'1.6rem', textAlign:'center', flexShrink:0 }}>
+                                    {rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':`${rank}.`}
+                                  </span>
+                                  <span style={{ fontWeight:rank<=3?700:400, color:'#1a1714', fontSize:'0.83rem', flex:1 }}>{w.name}</span>
+                                  {w.mssv && <span style={{ fontSize:'0.68rem', color:'#a89e94', fontFamily:'monospace' }}>{w.mssv}</span>}
+                                </div>
+                              );
+                            })}
                           </div>
                         </div>
                       )}

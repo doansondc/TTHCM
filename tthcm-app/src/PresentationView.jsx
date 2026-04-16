@@ -222,18 +222,24 @@ function QuizOverlay({ quiz }) {
         {quiz.isFinished && quiz.winners && quiz.winners.length > 0 && (
           <motion.div initial={{ opacity:0, scale:0.9, y:10 }} animate={{ opacity:1, scale:1, y:0 }} transition={{ delay:0.3 }}
             style={{ marginTop:'0.5rem', padding:'1.2rem', background:'linear-gradient(135deg, rgba(61,214,140,0.15), rgba(61,214,140,0.05))', border:'1.5px solid rgba(61,214,140,0.4)', borderRadius:'1rem', boxShadow:'0 8px 32px rgba(61,214,140,0.1)' }}>
-            <div style={{ fontSize:'var(--fs-sm)', color:'#3dd68c', fontWeight:700, letterSpacing:'0.08em', marginBottom:'0.5rem', textTransform:'uppercase', textAlign:'center', display:'flex', gap:'0.4rem', justifyContent:'center', alignItems:'center' }}>
-              <span>🏆 Phản hồi xuất sắc nhất</span>
+            <div style={{ fontSize:'var(--fs-sm)', color:'#3dd68c', fontWeight:700, letterSpacing:'0.08em', marginBottom:'0.8rem', textTransform:'uppercase', textAlign:'center', display:'flex', gap:'0.4rem', justifyContent:'center', alignItems:'center' }}>
+              <span>🏆 Top 3 Phản Hồi Đúng & Nhanh Nhất</span>
             </div>
-            {quiz.winners.slice(0,1).map(w => (
-              <div key={w.rank} style={{ display:'flex', flexDirection:'column', alignItems:'center' }}>
-                <div style={{ fontSize:'1.6rem', fontWeight:800, color:'#fff', textAlign:'center' }}>{w.name}</div>
-                <div style={{ display:'flex', justifyContent:'center', gap:'1rem', marginTop:'0.4rem', color:'rgba(255,255,255,0.8)', fontSize:'1rem', fontFamily:'var(--font-mono)' }}>
-                  <span>{w.mssv || '—'}</span>
-                  <span>⏱️ {(w.timeTaken/1000).toFixed(2)}s</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              {quiz.winners.slice(0,3).map((w, idx) => (
+                <div key={w.rank || idx} style={{ display:'flex', alignItems:'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.06)', padding: '0.6rem 1rem', borderRadius: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+                    <span style={{ fontSize: '1.2rem', fontWeight: 800, color: idx === 0 ? '#fbbf24' : idx === 1 ? '#e2e8f0' : '#b45309' }}>
+                      #{idx + 1}
+                    </span>
+                    <span style={{ fontSize:'1.2rem', fontWeight:700, color:'#fff' }}>{w.name} {w.mssv && <span style={{ opacity: 0.6, fontSize: '0.8em', fontWeight: 500 }}>({w.mssv})</span>}</span>
+                  </div>
+                  <div style={{ color:'#3dd68c', fontSize:'1.1rem', fontFamily:'var(--font-mono)', fontWeight: 600 }}>
+                    ⏱️ {(w.timeTaken/1000).toFixed(2)}s
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </motion.div>
         )}
       </motion.div>

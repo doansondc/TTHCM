@@ -723,25 +723,30 @@ export default function MobileVote() {
                       <p style={{ fontSize:'0.88rem', color:'#1a1714', margin:0, lineHeight:1.6 }}>{activeQuiz.explanation}</p>
                     </div>
                   )}
-                  {/* Winner - chỉ hiện người nhanh nhất */}
-                  {activeQuiz.winners?.length > 0 && (() => {
-                    const w1 = activeQuiz.winners[0];
-                    return (
-                      <div style={{ padding:'0.8rem 1rem', background:'rgba(181,134,13,0.05)', border:'1px solid rgba(181,134,13,0.2)', borderRadius:'12px', display:'flex', alignItems:'center', gap:'0.8rem' }}>
-                        <span style={{ fontSize:'2rem' }}>🥇</span>
-                        <div>
-                          <div style={{ fontSize:'0.68rem', color:'#b5860d', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', marginBottom:'0.15rem' }}>Nhanh nhất & đúng</div>
-                          <div style={{ fontWeight:700, fontSize:'0.95rem', color: w1.name===name ? '#e8b84b' : '#3a3530' }}>
-                            {w1.name}{w1.name===name ? ' 🎉 (Bạn!)' : ''}
+                  {/* Winners - top 3 */}
+                  {activeQuiz.winners?.length > 0 && (
+                    <div style={{ padding:'0.8rem 1rem', background:'rgba(181,134,13,0.05)', border:'1px solid rgba(181,134,13,0.2)', borderRadius:'12px', display:'flex', flexDirection:'column', gap:'0.6rem' }}>
+                      <div style={{ fontSize:'0.72rem', color:'#b5860d', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', textAlign:'center', paddingBottom:'0.4rem', borderBottom:'1px dashed rgba(181,134,13,0.2)' }}>
+                        🏆 Top 3 Nhanh Nhất
+                      </div>
+                      {activeQuiz.winners.slice(0, 3).map((w, idx) => (
+                        <div key={w.rank || idx} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding: '0.4rem 0' }}>
+                          <div style={{ display:'flex', alignItems:'center', gap:'0.6rem' }}>
+                            <span style={{ fontSize:'1.2rem' }}>{idx === 0 ? '🥇' : idx === 1 ? '🥈' : '🥉'}</span>
+                            <div style={{ display:'flex', flexDirection:'column' }}>
+                              <span style={{ fontWeight:700, fontSize:'0.9rem', color: w.name===name ? '#e8b84b' : '#3a3530' }}>
+                                {w.name}{w.name===name ? ' 🎉 (Bạn!)' : ''}
+                              </span>
+                              {w.mssv && <span style={{ fontSize:'0.65rem', color:'#78726a', fontFamily:'monospace', marginTop:'1px' }}>{w.mssv}</span>}
+                            </div>
                           </div>
-                          <div style={{ fontSize:'0.68rem', color:'#78726a', marginTop:'2px' }}>
-                            {w1.mssv && <span style={{ fontFamily:'monospace' }}>{w1.mssv}</span>}
-                            <span> · ⏱️ {(w1.timeTaken / 1000).toFixed(2)}s</span>
+                          <div style={{ fontSize:'0.8rem', color:'#b5860d', fontWeight:600, fontFamily:'var(--font-mono)' }}>
+                            {(w.timeTaken / 1000).toFixed(2)}s
                           </div>
                         </div>
-                      </div>
-                    );
-                  })()}
+                      ))}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div style={{ display:'flex', flexDirection:'column', gap:'0.5rem' }}>
