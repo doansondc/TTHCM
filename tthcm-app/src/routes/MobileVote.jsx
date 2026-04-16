@@ -147,16 +147,28 @@ export default function MobileVote() {
       sessionStorage.removeItem('voterMssv');
     });
 
+    const handleConnect = () => {
+      const savedName = sessionStorage.getItem('voterName');
+      const savedMssv = sessionStorage.getItem('voterMssv');
+      if (savedName && savedMssv) {
+        setStep('main');
+        socket.emit('join', { name: savedName, mssv: savedMssv, fingerprint: DEVICE_FP });
+      }
+    };
+    
+    socket.on('connect', handleConnect);
+    // Explicitly run handler immediately if already connected
+    if (socket.connected) handleConnect();
+
     const savedName = sessionStorage.getItem('voterName');
     const savedMssv = sessionStorage.getItem('voterMssv');
-    if (savedName && savedMssv) {
+    if (savedName && savedMssv && !socket.connected) {
       setName(savedName);
       setMssv(savedMssv);
       setStep('main');
-      socket.emit('join', { name: savedName, mssv: savedMssv, fingerprint: DEVICE_FP });
     }
 
-    return () => ['slide_change','poll_status','update_polls','comments_status','questions_status','reactions_status','your_answer','quiz_state','comment_queued','feature_disabled','muted','unmuted','blocked','roleplay_questions_update'].forEach(e => socket.off(e));
+    return () => ['slide_change','poll_status','update_polls','comments_status','questions_status','reactions_status','your_answer','quiz_state','comment_queued','feature_disabled','muted','unmuted','blocked','roleplay_questions_update', 'connect'].forEach(e => socket.off(e));
   }, []);
   // Timer logic for active quiz
   useEffect(() => {
@@ -642,7 +654,8 @@ export default function MobileVote() {
                 onSubmit={e => {
                   e.preventDefault();
                   const txt = rpAskText.trim();
-                  if (!txt || rpAskLeader === null) return;
+                  if (!txt) return;
+                  if (rpAskLeader === null) return flashMsg('⚠️ Vui lòng chọn một Lãnh Đạo phía trên để đặt câu hỏi!');
                   socket.emit('roleplay_ask', { cardIdx: rpAskLeader, text: txt });
                   setRpAskText('');
                   setRpAskSent(true);
