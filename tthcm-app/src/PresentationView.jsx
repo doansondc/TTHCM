@@ -158,21 +158,22 @@ function QuizOverlay({ quiz }) {
         exit={{ opacity:0, y:-24, scale:0.96, x:"-50%" }}
         transition={{ type:'spring', stiffness:280, damping:26 }}
         style={{
-          position:'absolute', top:'6%', left:'50%', zIndex:800,
-          background:'rgba(13,17,23,0.92)',
+          position:'absolute', top:'4%', left:'50%', zIndex:800,
+          background:'rgba(13,17,23,0.96)',
           backdropFilter:'blur(40px)',
           border:'1.5px solid rgba(232,184,75,0.4)',
-          borderRadius:'1.25rem',
-          padding:'1.25rem 1.75rem',
+          borderRadius:'1rem',
+          padding:'1rem 1.5rem',
           boxShadow:'0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(232,184,75,0.15)',
-          maxWidth:'40rem', width:'90%',
-          display:'flex', flexDirection:'column', gap:'1rem',
+          maxWidth:'42rem', width:'90%',
+          maxHeight:'92vh', overflowY:'auto',
+          display:'flex', flexDirection:'column', gap:'0.8rem',
         }}
       >
-        <button onClick={() => setDismissed(true)} style={{ position:'absolute', top:'1rem', right:'1rem', background:'transparent', border:'none', color:'var(--text-tertiary)', fontSize:'1.2rem', cursor:'pointer' }}>✕</button>
-        <div style={{ display:'flex', alignItems:'center', gap:'0.6rem', justifyContent:'center', padding:'0 2rem' }}>
-          <span style={{ fontSize:'var(--fs-2xl)' }}>🎯</span>
-          <h2 style={{ fontSize:'var(--fs-2xl)', color:'var(--text-primary)', fontFamily:'var(--font-display)', textAlign:'center', margin:0, lineHeight:1.3, fontWeight:700 }}>
+        <button onClick={() => setDismissed(true)} style={{ position:'absolute', top:'0.8rem', right:'0.8rem', background:'transparent', border:'none', color:'var(--text-tertiary)', fontSize:'1.2rem', cursor:'pointer' }}>✕</button>
+        <div style={{ display:'flex', alignItems:'center', gap:'0.4rem', justifyContent:'center', padding:'0 1.5rem' }}>
+          <span style={{ fontSize:'1.8rem' }}>🎯</span>
+          <h2 style={{ fontSize:'1.8rem', color:'var(--text-primary)', fontFamily:'var(--font-display)', textAlign:'center', margin:0, lineHeight:1.3, fontWeight:700 }}>
             {quiz.question}
           </h2>
         </div>
@@ -180,7 +181,7 @@ function QuizOverlay({ quiz }) {
         {quiz.startTime && quiz.duration && !quiz.isFinished && (
           <TimerDisplay startTime={quiz.startTime} duration={quiz.duration} />
         )}
-        <div style={{ display:'flex', flexDirection:'column', gap:'0.6rem' }}>
+        <div style={{ display:'flex', flexDirection:'column', gap:'0.4rem' }}>
           {quiz.options?.map(opt => {
             const count = quiz.counts?.[opt.id] || 0;
             const pct = quiz.totalVotes ? Math.round((count / quiz.totalVotes) * 100) : 0;
@@ -188,14 +189,14 @@ function QuizOverlay({ quiz }) {
             const barColor = isCorrect ? '#3dd68c' : 'linear-gradient(90deg, #c9960f, #e8b84b)';
             const textColor = isCorrect ? '#3dd68c' : 'var(--gold)';
             return (
-              <div key={opt.id} style={{ display:'flex', flexDirection:'column', gap:'0.25rem' }}>
+              <div key={opt.id} style={{ display:'flex', flexDirection:'column', gap:'0.2rem' }}>
                 <div style={{ display:'flex', justifyContent:'space-between', alignItems:'baseline' }}>
-                  <span style={{ color:isCorrect ? '#fff' : 'var(--text-secondary)', fontWeight:isCorrect ? 800 : 600, fontSize:'var(--fs-md)' }}>
+                  <span style={{ color:isCorrect ? '#fff' : 'var(--text-secondary)', fontWeight:isCorrect ? 800 : 600, fontSize:'1.1rem' }}>
                     {isCorrect && '✅ '} {opt.id}. {opt.text}
                   </span>
-                  <span style={{ fontWeight:700, color:textColor, fontSize:'var(--fs-lg)', minWidth:'4rem', textAlign:'right' }}>{pct}% <span style={{ fontSize:'var(--fs-sm)', fontWeight:500, color:'var(--text-tertiary)' }}>({count})</span></span>
+                  <span style={{ fontWeight:700, color:textColor, fontSize:'1.2rem', minWidth:'4rem', textAlign:'right' }}>{pct}% <span style={{ fontSize:'0.85rem', fontWeight:500, color:'var(--text-tertiary)' }}>({count})</span></span>
                 </div>
-                <div style={{ height:'0.35rem', background:'rgba(255,255,255,0.06)', borderRadius:'0.25rem', overflow:'hidden' }}>
+                <div style={{ height:'0.3rem', background:'rgba(255,255,255,0.06)', borderRadius:'0.25rem', overflow:'hidden' }}>
                   <motion.div animate={{ width:`${pct}%` }} transition={{ duration:0.5, ease:[0.4,0,0.2,1] }}
                     style={{ height:'100%', background:barColor, borderRadius:'0.25rem' }} />
                 </div>
@@ -203,38 +204,38 @@ function QuizOverlay({ quiz }) {
             );
           })}
           {quiz.type === 'open' && (
-            <div style={{ color:'var(--text-secondary)', fontStyle:'italic', textAlign:'center', marginTop:'0.5rem' }}>
+            <div style={{ color:'var(--text-secondary)', fontStyle:'italic', textAlign:'center', marginTop:'0.4rem' }}>
               📝 Câu hỏi trả lời tự do. Người thuyết trình sẽ công bố sau.
             </div>
           )}
         </div>
-        <div style={{ textAlign:'center', fontSize:'var(--fs-sm)', color:'var(--text-tertiary)', marginTop:'0.25rem' }}>
-          Tổng: <strong style={{ color:'var(--gold)', fontSize:'var(--fs-md)' }}>{quiz.totalVotes||0}</strong> lượt trả lời
+        <div style={{ textAlign:'center', fontSize:'0.9rem', color:'var(--text-tertiary)' }}>
+          Tổng: <strong style={{ color:'var(--gold)', fontSize:'1.1rem' }}>{quiz.totalVotes||0}</strong> lượt trả lời
         </div>
 
         {quiz.isFinished && quiz.explanation && (
           <motion.div initial={{ opacity:0, y:5 }} animate={{ opacity:1, y:0 }}
-            style={{ marginTop:'0.5rem', padding:'1rem', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:'0.75rem', fontSize:'var(--fs-md)', color:'var(--text-secondary)', lineHeight:1.5 }}>
+            style={{ marginTop:'0.2rem', padding:'0.75rem', background:'rgba(255,255,255,0.04)', border:'1px solid rgba(255,255,255,0.1)', borderRadius:'0.5rem', fontSize:'1rem', color:'var(--text-secondary)', lineHeight:1.4 }}>
             <span style={{ color:'var(--gold)', fontWeight:700 }}>💡 Giải thích:</span> {quiz.explanation}
           </motion.div>
         )}
         
         {quiz.isFinished && quiz.winners && quiz.winners.length > 0 && (
           <motion.div initial={{ opacity:0, scale:0.9, y:10 }} animate={{ opacity:1, scale:1, y:0 }} transition={{ delay:0.3 }}
-            style={{ marginTop:'0.5rem', padding:'1.2rem', background:'linear-gradient(135deg, rgba(61,214,140,0.15), rgba(61,214,140,0.05))', border:'1.5px solid rgba(61,214,140,0.4)', borderRadius:'1rem', boxShadow:'0 8px 32px rgba(61,214,140,0.1)' }}>
-            <div style={{ fontSize:'var(--fs-sm)', color:'#3dd68c', fontWeight:700, letterSpacing:'0.08em', marginBottom:'0.8rem', textTransform:'uppercase', textAlign:'center', display:'flex', gap:'0.4rem', justifyContent:'center', alignItems:'center' }}>
-              <span>🏆 Top 3 Phản Hồi Đúng & Nhanh Nhất</span>
+            style={{ padding:'0.8rem 1rem', background:'linear-gradient(135deg, rgba(61,214,140,0.15), rgba(61,214,140,0.05))', border:'1.5px solid rgba(61,214,140,0.4)', borderRadius:'0.75rem', boxShadow:'0 8px 32px rgba(61,214,140,0.1)' }}>
+            <div style={{ fontSize:'0.85rem', color:'#3dd68c', fontWeight:700, letterSpacing:'0.08em', marginBottom:'0.6rem', textTransform:'uppercase', textAlign:'center', display:'flex', gap:'0.4rem', justifyContent:'center', alignItems:'center' }}>
+              <span>🏆 Top 3 Phản Hồi Nhanh Nhất</span>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
               {quiz.winners.slice(0,3).map((w, idx) => (
-                <div key={w.rank || idx} style={{ display:'flex', alignItems:'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.06)', padding: '0.6rem 1rem', borderRadius: '8px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-                    <span style={{ fontSize: '1.2rem', fontWeight: 800, color: idx === 0 ? '#fbbf24' : idx === 1 ? '#e2e8f0' : '#b45309' }}>
+                <div key={w.rank || idx} style={{ display:'flex', alignItems:'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.06)', padding: '0.4rem 0.8rem', borderRadius: '6px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                    <span style={{ fontSize: '1.05rem', fontWeight: 800, color: idx === 0 ? '#fbbf24' : idx === 1 ? '#e2e8f0' : '#b45309' }}>
                       #{idx + 1}
                     </span>
-                    <span style={{ fontSize:'1.2rem', fontWeight:700, color:'#fff' }}>{w.name} {w.mssv && <span style={{ opacity: 0.6, fontSize: '0.8em', fontWeight: 500 }}>({w.mssv})</span>}</span>
+                    <span style={{ fontSize:'1.05rem', fontWeight:700, color:'#fff' }}>{w.name} {w.mssv && <span style={{ opacity: 0.6, fontSize: '0.8em', fontWeight: 500 }}>({w.mssv})</span>}</span>
                   </div>
-                  <div style={{ color:'#3dd68c', fontSize:'1.1rem', fontFamily:'var(--font-mono)', fontWeight: 600 }}>
+                  <div style={{ color:'#3dd68c', fontSize:'1rem', fontFamily:'var(--font-mono)', fontWeight: 600 }}>
                     ⏱️ {(w.timeTaken/1000).toFixed(2)}s
                   </div>
                 </div>
