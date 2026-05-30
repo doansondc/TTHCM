@@ -6,5 +6,5 @@ RUN npm install
 COPY tthcm-app/ .
 RUN npm run build
 # Start Node.js Server
-EXPOSE 3001
+EXPOSE 3000
 CMD ["node", "server.js"]
